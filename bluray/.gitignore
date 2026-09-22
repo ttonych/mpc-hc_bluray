@@ -1,0 +1,11 @@
+/build/
+/downloads/
+/vendor/
+/dependencies/
+/out/
+/diagnostics/
+/runtime/
+/profiles/
+/tools/.venv/
+/tools/apache-ant-*/
+__pycache__/

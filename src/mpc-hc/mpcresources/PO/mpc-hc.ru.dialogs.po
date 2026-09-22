@@ -2091,3 +2091,127 @@ msgstr "v"
 msgctxt "IDD_PPAGETOOLBARLAYOUT_IDC_BUTTON1"
 msgid "Default"
 msgstr "По умолчанию"
+
+msgctxt "IDD_PPAGEBLURAY_IDC_STATIC"
+msgid "When opening Blu-ray:"
+msgstr "При открытии Blu-ray:"
+
+msgctxt "IDD_PPAGEBLURAY_IDC_STATIC"
+msgid "Menu playback requires madVR. Changes take effect when the disc is reopened."
+msgstr "Для меню требуется madVR. Изменения действуют после повторного открытия диска."
+
+msgctxt "IDD_PPAGEBLURAY_IDC_STATIC"
+msgid "Region:"
+msgstr "Регион:"
+
+msgctxt "IDD_PPAGEBLURAY_IDC_STATIC"
+msgid "Country:"
+msgstr "Страна:"
+
+msgctxt "IDD_PPAGEBLURAY_IDC_STATIC"
+msgid "Menu language:"
+msgstr "Язык меню:"
+
+msgctxt "IDD_PPAGEBLURAY_IDC_STATIC"
+msgid "Audio language:"
+msgstr "Язык звука:"
+
+msgctxt "IDD_PPAGEBLURAY_IDC_STATIC"
+msgid "Subtitle language:"
+msgstr "Язык субтитров:"
+
+msgctxt "IDD_PPAGEBLURAY_IDC_STATIC"
+msgid "Java (BD-J):"
+msgstr "Java (BD-J):"
+
+msgctxt "IDD_PPAGEBLURAY_IDC_BD_PERSISTENT"
+msgid "Keep BD-J saved data"
+msgstr "Сохранять данные BD-J"
+
+msgctxt "IDD_PPAGEBLURAY_IDC_STATIC"
+msgid "Saved data folder:"
+msgstr "Папка сохранений:"
+
+msgctxt "IDD_PPAGEBLURAY_IDC_STATIC"
+msgid "Cache folder:"
+msgstr "Папка кеша:"
+
+msgctxt "IDD_PPAGEBLURAY_IDC_STATIC"
+msgid "Changing folders does not move or delete existing saved data or cache."
+msgstr "Смена папок не переносит и не удаляет прежние сохранения и кеш."
+
+msgctxt "IDD_PPAGEBLURAY_IDC_BD_COMPATIBILITY"
+msgid "Compatibility..."
+msgstr "Совместимость..."
+
+msgctxt "IDD_BD_COMPATIBILITY_CAPTION"
+msgid "Blu-ray compatibility"
+msgstr "Совместимость Blu-ray"
+
+msgctxt "IDD_BD_COMPATIBILITY_IDC_STATIC"
+msgid "Changes take effect when the disc is reopened."
+msgstr "Изменения действуют после повторного открытия диска."
+
+msgctxt "IDD_BD_COMPATIBILITY_IDC_STATIC"
+msgid "Selected value:"
+msgstr "Значение:"
+
+msgctxt "IDD_BD_COMPATIBILITY_IDC_BD_ADV_DETAILS"
+msgid "Technical details"
+msgstr "Технические сведения"
+
+msgctxt "IDD_BD_COMPATIBILITY_IDC_BD_ADV_DEFAULT"
+msgid "Default"
+msgstr "По умолчанию"
+
+msgctxt "IDD_BD_COMPATIBILITY_IDC_BD_ADV_DEFAULTS"
+msgid "All defaults"
+msgstr "Сбросить все параметры"
+
+msgctxt "IDD_BD_COMPATIBILITY_IDOK"
+msgid "OK"
+msgstr "ОК"
+
+msgctxt "IDD_BD_COMPATIBILITY_IDCANCEL"
+msgid "Cancel"
+msgstr "Отмена"
+
+msgctxt "IDD_PPAGEBLURAY_IDC_BD_CHECK_JAVA"
+msgid "Check Java"
+msgstr "Проверить Java"
+
+msgctxt "IDD_PPAGEBLURAY_IDC_BD_DISCS"
+msgid "Disc data..."
+msgstr "Данные дисков..."
+
+msgctxt "IDD_BD_DISCS_CAPTION"
+msgid "Blu-ray saved data"
+msgstr "Данные дисков Blu-ray"
+
+msgctxt "IDD_BD_DISCS_IDC_STATIC"
+msgid "&Filter:"
+msgstr "&Поиск:"
+
+msgctxt "IDD_BD_DISCS_IDC_BD_DISC_RENAME"
+msgid "Rename"
+msgstr "Переименовать"
+
+msgctxt "IDD_BD_DISCS_IDC_BD_DISC_OPEN"
+msgid "Saved data folder"
+msgstr "Папка сохранений"
+
+msgctxt "IDD_BD_DISCS_IDC_BD_DISC_CACHE"
+msgid "Cache folder"
+msgstr "Папка кеша"
+
+msgctxt "IDD_BD_DISCS_IDC_BD_RESET_DISC"
+msgid "Reset data..."
+msgstr "Сбросить данные..."
+
+msgctxt "IDD_BD_DISCS_IDC_BD_DISC_REFRESH"
+msgid "Refresh"
+msgstr "Обновить"
+
+msgctxt "IDD_BD_DISCS_IDOK"
+msgid "Close"
+msgstr "Закрыть"

@@ -1,0 +1,76 @@
+name: Build Blu-ray candidate (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: bluray-build-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
+      - name: Set up pinned Temurin JDK
+        run: |
+          $archive = Join-Path $env:RUNNER_TEMP 'temurin-jdk.zip'
+          $destination = Join-Path $env:RUNNER_TEMP 'temurin-jdk'
+          Invoke-WebRequest -Uri 'https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.12.1%2B1/OpenJDK21U-jdk_x64_windows_hotspot_21.0.12.1_1.zip' -OutFile $archive
+          $expected = 'f9d6e191ab098c0d416e7d588a24420a8621cd2f4720dab2459b8b7b2d2d8b4e'
+          if ((Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant() -ne $expected) { throw 'Temurin JDK checksum mismatch.' }
+          Expand-Archive -LiteralPath $archive -DestinationPath $destination
+          $jdk = Join-Path $destination 'jdk-21.0.12.1+1'
+          "JAVA_HOME=$jdk" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Check publication inputs
+        run: |
+          python -m pip install -r bluray/tools/requirements-resources.txt
+          if ($LASTEXITCODE) { throw 'Resource checker dependencies failed.' }
+          python bluray/tools/check-public-tree.py
+          if ($LASTEXITCODE) { throw 'Publication checks failed.' }
+          python bluray/tools/check-docs-and-resources.py
+          if ($LASTEXITCODE) { throw 'Docs/resources checks failed.' }
+      - name: Prepare assembler and make
+        run: ./bluray/tools/prepare-build-tools.ps1
+      - name: Build pinned native dependencies
+        run: ./bluray/tools/prepare-dependencies.ps1
+      - name: Build libbluray
+        run: ./bluray/tools/build-libbluray.ps1 -DependencyRoot "$PWD/bluray/build/vcpkg_installed/x64-windows"
+      - name: Build Java components
+        run: ./bluray/tools/build-bdj.ps1 -JavaHome $env:JAVA_HOME
+      - name: Build player core
+        run: ./bluray/tools/build-player-core.ps1 -NasmDirectory $env:BLURAY_NASM
+      - name: Build custom LAV
+        run: ./bluray/tools/build-lav-msvc.ps1 -MsysRoot $env:BLURAY_MSYS -MakeDirectory $env:BLURAY_MAKE -NasmDirectory $env:BLURAY_NASM -Configure
+      - name: Build Russian resources
+        run: |
+          ./bluray/tools/.venv/Scripts/python.exe -m pip install -r bluray/tools/requirements-resources.txt
+          if ($LASTEXITCODE) { throw 'Resource generator dependencies failed.' }
+          ./bluray/tools/build-russian-resources.ps1
+      - name: Run component and built-JAR checks
+        run: ./bluray/tools/test-components.ps1 -JavaHome $env:JAVA_HOME
+      - name: Package clean test candidate
+        run: |
+          python bluray/tools/test-package.py
+          if ($LASTEXITCODE) { throw 'Packaging regressions failed.' }
+          python bluray/tools/package-player.py
+          if ($LASTEXITCODE) { throw 'Packaging failed.' }
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: mpc-hc-bluray-candidate-x64
+          path: |
+            bluray/out/packages/*.zip
+            bluray/out/packages/*.sha256
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0

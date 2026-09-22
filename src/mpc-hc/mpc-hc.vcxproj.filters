@@ -91,6 +91,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MainFrmBluray.cpp">
+      <Filter>Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="BlurayMenu.cpp">
+      <Filter>Graph</Filter>
+    </ClCompile>
     <ClCompile Include="AppSettings.cpp">
       <Filter>Player Config</Filter>
     </ClCompile>
@@ -239,6 +245,15 @@
       <Filter>Property Dialogs\Player Options\Pages</Filter>
     </ClCompile>
     <ClCompile Include="PPageDVD.cpp">
+      <Filter>Property Dialogs\Player Options\Pages</Filter>
+    </ClCompile>
+    <ClCompile Include="PPageBluray.cpp">
+      <Filter>Property Dialogs\Player Options\Pages</Filter>
+    </ClCompile>
+    <ClCompile Include="BlurayCompatibilityDlg.cpp">
+      <Filter>Property Dialogs\Player Options\Pages</Filter>
+    </ClCompile>
+    <ClCompile Include="BlurayDiscsDlg.cpp">
       <Filter>Property Dialogs\Player Options\Pages</Filter>
     </ClCompile>
     <ClCompile Include="PPageExternalFilters.cpp">
@@ -658,6 +673,48 @@
     <ClCompile Include="GPUInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BlurayAdvancedSettings.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurayArgbBuffer.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurayCatalog.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurayDiscStorage.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurayMediaMonitor.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurayMenu.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurayMenuAudio.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurayMenuAudioPlayer.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurayMenuBackground.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurayMenuColor.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurayMenuCoordinates.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurayMenuRle.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurayPlaybackClock.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="BluraySettings.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
     <ClInclude Include="AppSettings.h">
       <Filter>Player Config</Filter>
     </ClInclude>
@@ -812,6 +869,24 @@
       <Filter>Property Dialogs\Player Options\Pages</Filter>
     </ClInclude>
     <ClInclude Include="PPageDVD.h">
+      <Filter>Property Dialogs\Player Options\Pages</Filter>
+    </ClInclude>
+    <ClInclude Include="PPageBluray.h">
+      <Filter>Property Dialogs\Player Options\Pages</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurayCompatibilityDlg.h">
+      <Filter>Property Dialogs\Player Options\Pages</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurayJava.h">
+      <Filter>Property Dialogs\Player Options\Pages</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurayDiscsDlg.h">
+      <Filter>Property Dialogs\Player Options\Pages</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurayIso.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurayOpen.h">
       <Filter>Property Dialogs\Player Options\Pages</Filter>
     </ClInclude>
     <ClInclude Include="PPageExternalFilters.h">

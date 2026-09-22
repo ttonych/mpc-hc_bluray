@@ -21,6 +21,7 @@
 
 #include "stdafx.h"
 #include "MainFrm.h"
+#include "BlurayOpen.h"
 #include "mplayerc.h"
 #include "version.h"
 
@@ -1500,6 +1501,13 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 
 BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 {
+    if (pMsg->message == WM_KEYDOWN && m_blurayMenu && GetLoadState() == MLS::LOADED
+            && m_pVideoWnd && (pMsg->hwnd == m_hWnd || pMsg->hwnd == m_pVideoWnd->m_hWnd
+                || ::IsChild(m_pVideoWnd->m_hWnd, pMsg->hwnd))
+            && !(GetKeyState(VK_CONTROL) & 0x8000) && !(GetKeyState(VK_MENU) & 0x8000)
+            && !(GetKeyState(VK_SHIFT) & 0x8000) && m_blurayMenu->Key(UINT(pMsg->wParam))) {
+        return TRUE;
+    }
     if (pMsg->message == WM_KEYDOWN) {
         if (pMsg->wParam == VK_ESCAPE) {
             bool fEscapeNotAssigned = !AssignedToCmd(VK_ESCAPE);
@@ -2278,6 +2286,9 @@ double g_dRate = 1.0;
 void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 {
     switch (nIDEvent) {
+        case TIMER_BLURAY_MENU:
+            TickBlurayMenu();
+            break;
         case TIMER_WINDOW_FULLSCREEN:
             if (AfxGetAppSettings().iFullscreenDelay > 0 && IsWindows8OrGreater()) {//DWMWA_CLOAK not supported on 7
                 BOOL setEnabled = FALSE;
@@ -3222,7 +3233,14 @@ LRESULT CMainFrame::OnGraphNotify(WPARAM wParam, LPARAM lParam)
                 break;
             case EC_COMPLETE:
                 UpdateCachedMediaState();
-                GraphEventComplete();
+                if (m_blurayMenu) {
+                    if (m_blurayMenu->GraphComplete()) {
+                        m_pMC->Pause();
+                        m_CachedFilterState = State_Paused;
+                    }
+                } else {
+                    GraphEventComplete();
+                }
                 break;
             case EC_ERRORABORT:
                 UpdateCachedMediaState();
@@ -4470,6 +4488,14 @@ LRESULT CMainFrame::OnFilePostOpenmedia(WPARAM wParam, LPARAM lParam)
 
     MediaTransportControlSetMedia();
 
+    if (m_blurayMenu) {
+        m_blurayMenu->AttachRenderer(m_pCAP);
+        REFERENCE_TIME position = 0;
+        if (m_pMS) m_pMS->GetCurrentPosition(&position);
+        SetBlurayPlaybackPosition(position);
+        m_blurayMenu->SeekApplied(position);
+    }
+
     // start playback if requested
     m_bFirstPlay = true;
     const auto uModeChangeDelay = s.autoChangeFSMode.uDelay * 1000;
@@ -4524,6 +4550,7 @@ LRESULT CMainFrame::OnFilePostOpenmedia(WPARAM wParam, LPARAM lParam)
 
 LRESULT CMainFrame::OnOpenMediaFailed(WPARAM wParam, LPARAM lParam)
 {
+    StopBlurayMenu();
     ASSERT(GetLoadState() == MLS::LOADING);
     SetLoadState(MLS::FAILING);
 
@@ -4633,6 +4660,9 @@ LRESULT CMainFrame::OnOpenMediaFailed(WPARAM wParam, LPARAM lParam)
 
 void CMainFrame::OnFilePostClosemedia(bool bNextIsQueued/* = false*/)
 {
+    // All graph file handles are closed now. Navigation playlist changes keep
+    // the disc mounted; final close/failure releases only our own ISO handle.
+    if (!m_bluraySwitching) m_discImage.reset();
     SetPlaybackMode(PM_NONE);
     SetLoadState(MLS::CLOSED);
 
@@ -5711,6 +5741,11 @@ void CMainFrame::OnFileRecycle()
 
 void CMainFrame::OnFileReopen()
 {
+    if (m_discImage) {
+        const CString source = m_discImage->Source();
+        OpenDiscImage(source);
+        return;
+    }
     if (!m_LastOpenBDPath.IsEmpty() && OpenBD(m_LastOpenBDPath)) {
         return;
     }
@@ -9814,6 +9849,7 @@ void CMainFrame::OnPlayPlaypause()
 {
     if (GetLoadState() == MLS::LOADED) {
         OAFilterState fs = GetMediaState();
+        if (m_blurayMenu) fs = m_blurayMenu->PlaybackState(fs);
         if (fs == State_Running) {
             PostMessage(WM_COMMAND, ID_PLAY_PAUSE);
         } else if (fs == State_Stopped || fs == State_Paused) {
@@ -9841,6 +9877,10 @@ void CMainFrame::OnApiPlay()
 
 void CMainFrame::OnPlayStop()
 {
+    if (m_blurayMenu) {
+        CloseMedia();
+        return;
+    }
     OnPlayStop(false);
 }
 
@@ -11621,6 +11661,15 @@ bool CMainFrame::SeekToDVDChapter(int iChapter, bool bRelative /*= false*/)
 // navigate
 void CMainFrame::OnNavigateSkip(UINT nID)
 {
+    if (m_blurayMenu) {
+        REFERENCE_TIME position = 0;
+        unsigned chapter = 0, count = 0;
+        if (m_pMS && SUCCEEDED(m_pMS->GetCurrentPosition(&position))
+                && m_blurayMenu->Skip(nID == ID_NAVIGATE_SKIPFORWARD, position, chapter, count)) {
+            SeekTo(position);
+        }
+        return;
+    }
     const CAppSettings& s = AfxGetAppSettings();
 
     if (GetPlaybackMode() == PM_FILE || CanSkipFromClosedFile()) {
@@ -11777,6 +11826,13 @@ void CMainFrame::OnUpdateNavigateGoto(CCmdUI* pCmdUI)
 
 void CMainFrame::OnNavigateMenu(UINT nID)
 {
+    if (m_blurayMenu) {
+        if (GetLoadState() == MLS::LOADED) {
+            if (nID == ID_NAVIGATE_TITLEMENU) m_blurayMenu->Key(VK_HOME);
+            else if (nID == ID_NAVIGATE_ROOTMENU) m_blurayMenu->Key(VK_APPS);
+        }
+        return;
+    }
     nID -= ID_NAVIGATE_TITLEMENU;
 
     if (GetLoadState() != MLS::LOADED || GetPlaybackMode() != PM_DVD) {
@@ -11794,6 +11850,13 @@ void CMainFrame::OnNavigateMenu(UINT nID)
 
 void CMainFrame::OnUpdateNavigateMenu(CCmdUI* pCmdUI)
 {
+    if (m_blurayMenu) {
+        const UINT id = pCmdUI->m_nID;
+        pCmdUI->Enable(GetLoadState() == MLS::LOADED
+                       && (id == ID_NAVIGATE_TITLEMENU || id == ID_NAVIGATE_ROOTMENU)
+                       && m_blurayMenu->CanShowMenu(id == ID_NAVIGATE_ROOTMENU));
+        return;
+    }
     UINT nID = pCmdUI->m_nID - ID_NAVIGATE_TITLEMENU;
     ULONG ulUOPs;
 
@@ -11869,6 +11932,19 @@ void CMainFrame::OnNavigateJumpTo(UINT nID)
 
 void CMainFrame::OnNavigateMenuItem(UINT nID)
 {
+    if (m_blurayMenu) {
+        if (GetLoadState() == MLS::LOADED) {
+            switch (nID) {
+                case ID_NAVIGATE_MENU_LEFT: m_blurayMenu->Key(VK_LEFT); break;
+                case ID_NAVIGATE_MENU_RIGHT: m_blurayMenu->Key(VK_RIGHT); break;
+                case ID_NAVIGATE_MENU_UP: m_blurayMenu->Key(VK_UP); break;
+                case ID_NAVIGATE_MENU_DOWN: m_blurayMenu->Key(VK_DOWN); break;
+                case ID_NAVIGATE_MENU_ACTIVATE: m_blurayMenu->Key(VK_RETURN); break;
+                case ID_NAVIGATE_MENU_LEAVE: m_blurayMenu->Key(VK_ESCAPE); break;
+            }
+        }
+        return;
+    }
     nID -= ID_NAVIGATE_MENU_LEFT;
 
     if (GetPlaybackMode() == PM_DVD) {
@@ -11908,6 +11984,11 @@ void CMainFrame::OnNavigateMenuItem(UINT nID)
 
 void CMainFrame::OnUpdateNavigateMenuItem(CCmdUI* pCmdUI)
 {
+    if (m_blurayMenu) {
+        pCmdUI->Enable(GetLoadState() == MLS::LOADED && m_blurayMenu->MenuActive()
+                       && pCmdUI->m_nID != ID_NAVIGATE_MENU_BACK);
+        return;
+    }
     pCmdUI->Enable((GetLoadState() == MLS::LOADED) && ((GetPlaybackMode() == PM_DVD) || (GetPlaybackMode() == PM_FILE)));
 }
 
@@ -12699,6 +12780,10 @@ OAFilterState CMainFrame::UpdateCachedMediaState()
 
 bool CMainFrame::MediaControlRun(bool waitforcompletion)
 {
+    if (m_blurayMenu) {
+        m_blurayMenu->SetAudioState(State_Running);
+        if (m_blurayMenu->HoldsMenuStill()) return true;
+    }
     m_dwLastPause = 0ULL;
     if (m_pMC) {
         m_CachedFilterState = State_Running;
@@ -12718,6 +12803,7 @@ bool CMainFrame::MediaControlRun(bool waitforcompletion)
 
 bool CMainFrame::MediaControlPause(bool waitforcompletion)
 {
+    if (m_blurayMenu) m_blurayMenu->SetAudioState(State_Paused);
     m_dwLastPause = GetTickCount64();
     if (m_pMC) {
         m_CachedFilterState = State_Paused;
@@ -12737,6 +12823,7 @@ bool CMainFrame::MediaControlPause(bool waitforcompletion)
 
 bool CMainFrame::MediaControlStop(bool waitforcompletion)
 {
+    if (m_blurayMenu) m_blurayMenu->SetAudioState(State_Stopped);
     m_dwLastPause = 0ULL;
     if (m_pMC) {
         m_pMC->GetState(0, &m_CachedFilterState);
@@ -16251,7 +16338,9 @@ void CMainFrame::OpenSetupWindowTitle(bool reset /*= false*/)
 
     if (!reset && (i == 0 || i == 1)) {
         // There is no path in capture mode
-        if (IsPlaybackCaptureMode()) {
+        if (m_blurayMenu) {
+            title = m_blurayTitle;
+        } else if (IsPlaybackCaptureMode()) {
             title = GetCaptureTitle();
         } else if (i == 1) { // Show filename or title
             if (GetPlaybackMode() == PM_FILE) {
@@ -16883,7 +16972,7 @@ bool CMainFrame::OpenMediaPrivate(CAutoPtr<OpenMediaData> pOMD)
                 m_pMS->GetDuration(&rtDur);
             }
 
-            m_bRememberFilePos = s.fKeepHistory && s.fRememberFilePos && rtDur > (s.iRememberPosForLongerThan * 10000000i64 * 60i64) && (s.bRememberPosForAudioFiles || !m_fAudioOnly);
+            m_bRememberFilePos = pFileData->bAddToRecent && s.fKeepHistory && s.fRememberFilePos && rtDur > (s.iRememberPosForLongerThan * 10000000i64 * 60i64) && (s.bRememberPosForAudioFiles || !m_fAudioOnly);
 
             // Set start time but seek only after all files are loaded
             if (pFileData->rtStart > 0) { // Check if an explicit start time was given
@@ -16905,7 +16994,7 @@ bool CMainFrame::OpenMediaPrivate(CAutoPtr<OpenMediaData> pOMD)
             }
 
             auto* pMRU = &AfxGetAppSettings().MRU;
-            if (pMRU->rfe_array.GetCount()) {
+            if (pFileData->bAddToRecent && pMRU->rfe_array.GetCount()) {
                 if (!rtPos && m_bRememberFilePos) {
                     rtPos = pMRU->GetCurrentFilePosition();
                     if (rtPos >= rtDur || rtDur - rtPos < 50000000LL) {
@@ -19903,7 +19992,10 @@ void CMainFrame::DoSeekTo(REFERENCE_TIME rtPos, bool bShowOSD /*= true*/)
 
     if (GetPlaybackMode() == PM_FILE) {
         //SleepEx(5000, False); // artificial slow seek for testing purposes
-        if (FAILED(m_pMS->SetPositions(&rtPos, AM_SEEKING_AbsolutePositioning, nullptr, AM_SEEKING_NoPositioning))) {
+        const HRESULT seekResult = m_blurayMenu ? SetBlurayPlaybackPosition(rtPos)
+            : m_pMS->SetPositions(&rtPos, AM_SEEKING_AbsolutePositioning, nullptr, AM_SEEKING_NoPositioning);
+        if (SUCCEEDED(seekResult) && m_blurayMenu) m_blurayMenu->PlayerSeek(rtPos);
+        if (FAILED(seekResult)) {
             TRACE(_T("IMediaSeeking SetPositions failure\n"));
             if (abRepeat.positionA && rtPos == abRepeat.positionA) {
                 DisableABRepeat();
@@ -20575,6 +20667,14 @@ void CMainFrame::AddCurDevToPlaylist()
 
 void CMainFrame::OpenMedia(CAutoPtr<OpenMediaData> pOMD)
 {
+    // Also cover playlist/command-line entries that did not pass through OpenBD.
+    const auto imageData = dynamic_cast<const OpenFileData*>(pOMD.m_p);
+    if (!m_bluraySwitching && imageData && imageData->fns.GetCount() == 1
+            && CBlurayIso::IsImage(imageData->fns.GetHead())) {
+        OpenDiscImage(imageData->fns.GetHead());
+        return;
+    }
+    if (m_blurayMenu && !m_bluraySwitching) StopBlurayMenu();
     ASSERT(!InSendMessage());
 
     // Next media load: stop force-showing the status bar that an earlier error revealed. A
@@ -20626,10 +20726,16 @@ void CMainFrame::OpenMedia(CAutoPtr<OpenMediaData> pOMD)
     }
     m_bOpenMediaActive = true;
 
+    // Opening another clip from the same image must not release its attachment
+    // when the previous graph is destroyed.
+    auto retainedImage = m_discImage && pFileData && !pFileData->fns.IsEmpty()
+        && m_discImage->Contains(pFileData->fns.GetHead()) ? std::move(m_discImage) : nullptr;
     if (!CloseMediaBeforeOpen()) {
+        if (retainedImage) m_discImage = std::move(retainedImage);
         m_bOpenMediaActive = false;
         return;
     }
+    if (retainedImage) m_discImage = std::move(retainedImage);
 
     // if the file is on some removable drive and that drive is missing,
     // we yell at user before even trying to construct the graph
@@ -20674,7 +20780,7 @@ void CMainFrame::OpenMedia(CAutoPtr<OpenMediaData> pOMD)
     // clear BD playlist if we are not currently opening something from it
     if (!m_bIsBDPlay) {
         m_MPLSPlaylist.clear();
-        m_LastOpenBDPath = _T("");
+        if (!m_discImage) m_LastOpenBDPath = _T("");
     }
     m_bIsBDPlay = false;
 
@@ -20837,6 +20943,10 @@ void CMainFrame::ThrowAndForceClose()
 
 void CMainFrame::CloseMedia(bool bNextIsQueued/* = false*/, bool bPendingFileDelete/* = false*/)
 {
+    if (m_blurayMenu) {
+        m_blurayMenu->DetachRenderer();
+        if (!m_bluraySwitching) StopBlurayMenu();
+    }
     TRACE(_T("CMainFrame::CloseMedia\n"));
 
     ASSERT(!InSendMessage());
@@ -23670,10 +23780,15 @@ void CMainFrame::WTSUnRegisterSessionNotification()
     }
 }
 
-void CMainFrame::UpdateSeekbarChapterBag()
+void CMainFrame::UpdateSeekbarChapterBag(bool force)
 {
+    const bool hidden = m_blurayMenu && m_blurayMenu->MenuActive();
+    if (!force && hidden == m_blurayChaptersHidden) {
+        return;
+    }
+    m_blurayChaptersHidden = hidden;
     const auto& s = AfxGetAppSettings();
-    if (s.fShowChapters && m_pCB && m_pCB->ChapGetCount() > 0) {
+    if (!hidden && s.fShowChapters && m_pCB && m_pCB->ChapGetCount() > 0) {
         m_wndSeekBar.SetChapterBag(m_pCB);
         m_OSD.SetChapterBag(m_pCB);
     } else {
@@ -23931,6 +24046,17 @@ void CMainFrame::UpdateUILanguage()
 
 bool CMainFrame::OpenBD(CString Path)
 {
+    if (!m_bluraySwitching && CBlurayIso::IsImage(Path)) {
+        return OpenDiscImage(Path);
+    }
+    CString root;
+    if (!m_bluraySwitching && AfxGetApp()->GetProfileInt(L"Settings", L"BluRayMenus", FALSE)
+            && BlurayOpen::DiscRoot(Path, root)) {
+        OpenBlurayMenu(root);
+        // A menu request is handled even on failure: do not silently start the
+        // main movie or send the same Blu-ray source to the DVD fallback.
+        return true;
+    }
     CHdmvClipInfo ClipInfo;
     CString strPlaylistFile;
     CHdmvClipInfo::HdmvPlaylist MainPlaylist;
@@ -24768,6 +24894,9 @@ BOOL CMainFrame::AppendMenuEx(CMenu& menu, UINT nFlags, UINT nIDNewItem, CString
 }
 
 CString CMainFrame::getBestTitle(bool fTitleBarTextTitle) {
+    if (m_blurayMenu) {
+        return m_blurayTitle;
+    }
     CString title;
     if (fTitleBarTextTitle && m_pAMMC[0]) {
        for (const auto& pAMMC : m_pAMMC) {
