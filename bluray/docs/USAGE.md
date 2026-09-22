@@ -6,6 +6,10 @@ Extract a candidate ZIP into a new writable folder. Keep the supplied INI next t
 the EXE: it selects portable settings. Do not overlay an installed player or copy
 an existing personal profile into a package intended for redistribution.
 
+The MSVC-built LAV components require the x64 Microsoft Visual C++ v14 runtime
+(at least the build toolset version). If it is absent, use the
+[official Microsoft Redistributable installer](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist).
+
 1. Install madVR 210 x64 separately and select madVR in Options > Playback > Output.
    Use its D3D11 fullscreen windowed configuration; exclusive mode is not required.
 2. For BD-J, install a matching x64 Java runtime. The tested version is Temurin
