@@ -2,7 +2,7 @@ param([string]$JavaHome = $env:JAVA_HOME)
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'Enter-BuildEnvironment.ps1')
 & (Join-Path $PSScriptRoot 'test-bootstrap.ps1')
-foreach ($name in @('menu-components','disc-java','iso-opening','lav-runtime')) {
+foreach ($name in @('menu-components','portable-profile','disc-java','iso-opening','lav-runtime')) {
     & (Join-Path $PSScriptRoot "test-$name.ps1")
     if ($LASTEXITCODE) { throw "Failed: $name" }
 }

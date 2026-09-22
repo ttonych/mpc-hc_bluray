@@ -10,8 +10,8 @@ in the player ZIP. Ordinary media files can still use the usual MPC-HC paths.
 
 Download the candidate linked from the [project page](../../README.md). If GitHub
 wraps the artifact in another archive, extract the inner player ZIP into a new
-writable folder. Keep `mpc-hc64.ini` beside `mpc-hc64.exe`: its presence selects
-portable settings. Do not overlay your installed player. Launch that EXE directly
+writable folder. Current builds always store settings in `mpc-hc64.ini`
+beside `mpc-hc64.exe` and show the setup wizard on first launch. Do not overlay your installed player. Launch that EXE directly
 so file associations do not accidentally open another MPC-HC installation.
 
 The MSVC-built LAV components require the x64 Microsoft Visual C++ v14 runtime
@@ -44,8 +44,8 @@ different builds. Exact versions are in [sources.json](../sources.json).
 
 ## Opening a disc or ISO
 
-1. On the Blu-ray options page choose **Disc menu** or **Main movie**. Main movie
-   is the default in a fresh profile. Apply the choice before reopening a disc.
+1. On the Blu-ray options page choose **Disc menu** or **Main movie**. The first-run wizard
+   enables Disc menu. Apply the choice before reopening a disc.
 2. Use **Open DVD/BD** for a disc root or `BDMV` folder. The `index.bdmv` and
    `MovieObject.bdmv` entry points also follow the selected opening mode.
 3. Open or drag a readable `.iso` file into the player. Native Windows mounting
@@ -113,10 +113,27 @@ experiments and do not publish your catalogue or save files.
 
 ## Profiles and updates
 
-The profile-import wizard and mandatory portable behavior of MPC-BE Blu-ray are
-not yet ported. Keep the provided INI; without it, inherited MPC-HC behavior can
-use the installed player's registry profile. For testing, use a fresh folder
-and the supplied empty profile, then set only the options needed for the test.
+Current builds always use `mpc-hc64.ini` beside the EXE. On first launch choose
+the installed MPC-HC registry settings, an automatically found INI, a manually
+selected INI, or defaults. Import reads the source without changing it. It copies
+HLSL shaders from `Shaders`/`Shaders11`, including subfolders, without replacing
+existing destination files. External filter binaries are not copied; relative
+filter paths retain their source location.
+
+History, playlists, favourites and BD-J saves/cache are not imported. New disc
+data uses this copy's `bdj-data`. History, global media keys, WinLIRC, web control
+and fullscreen startup are initially disabled. Imported renderer/audio/key
+preferences are retained; defaults select madVR with volume 25. The wizard
+selects Disc menu for normal Blu-ray opening. Review renderer and Java settings
+before playback; madVR and external filters may share system settings.
+
+Cancel exits without creating/replacing the INI. The destination must be writable;
+a failure exits with an error and never uses the installed player's registry.
+Existing experimental INIs without the setup marker are preserved. Settings and
+history stay beside the EXE; switching to registry/AppData storage and registering
+file associations are disabled. To start over, use a separate empty folder or
+back up and remove this copy's INI while it is closed. `/reset` resets only this
+copy to portable defaults; it does not reset BD-J saved data.
 
 Current sources display **2.8.2-bluray.1** in About, the empty window caption and
 EXE ProductVersion; About also identifies the source commit. See the
@@ -158,3 +175,10 @@ sharing; do not attach disc contents, saves, personal profiles or memory dumps.
 
 See [validation and limitations](VALIDATION.md) for the checked scenarios and
 remaining gaps. A build that compiles or opens one menu is not a qualified release.
+
+## Offline guides
+
+In new packages open `Readme.html` or `Readme.ru.html`. HTML guides have embedded
+styles and links between local pages; Markdown is retained too. Source links
+outside the package point to its exact GitHub commit and need a connection.
+The old candidate 35781918063 contains neither the wizard nor HTML guides.

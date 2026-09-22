@@ -176,6 +176,42 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,205,94,50,14
 END
 
+IDD_BD_PORTABLE_SETUP DIALOGEX 0, 0, 340, 246
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "First start of MPC-HC Blu-ray"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT "Choose settings for this portable copy.", IDC_PT_INTRO, 10, 10, 320, 12
+    GROUPBOX "Settings", IDC_PT_GROUP, 10, 28, 320, 141
+    CONTROL "Windows &registry", IDC_PT_REGISTRY, "Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP, 20, 41, 215, 10
+    CONTROL "INI file (&automatic search)", IDC_PT_AUTO_INI, "Button", BS_AUTORADIOBUTTON, 20, 77, 215, 10
+    CONTROL "Select an INI file &manually", IDC_PT_MANUAL_INI, "Button", BS_AUTORADIOBUTTON, 20, 113, 215, 10
+    CONTROL "Use &default settings", IDC_PT_DEFAULTS, "Button", BS_AUTORADIOBUTTON, 20, 151, 285, 10
+    RTEXT "", IDC_PT_REGISTRY_STATUS, 245, 41, 75, 10
+    LTEXT "HKCU\\Software\\MPC-HC\\MPC-HC", IDC_PT_SOURCE_KEY, 32, 55, 280, 10, SS_NOPREFIX
+    RTEXT "", IDC_PT_INI_STATUS, 245, 77, 75, 10
+    LTEXT "", IDC_PT_AUTO_PATH, 32, 91, 280, 14, SS_PATHELLIPSIS | SS_CENTERIMAGE | SS_NOPREFIX | SS_NOTIFY
+    LTEXT "", IDC_PT_MANUAL_PATH, 32, 129, 280, 14, SS_PATHELLIPSIS | SS_CENTERIMAGE | SS_NOPREFIX | SS_NOTIFY
+    PUSHBUTTON "&Browse...", IDC_PT_BROWSE, 245, 111, 75, 14, WS_GROUP
+    LTEXT "The source is kept unchanged. History, playlists and BD-J saves are not copied. Settings and new disc data stay with this copy.", IDC_PT_NOTICE, 10, 179, 320, 28
+    DEFPUSHBUTTON "OK", IDOK, 224, 222, 50, 14, WS_GROUP
+    PUSHBUTTON "Cancel", IDCANCEL, 280, 222, 50, 14
+END
+
+STRINGTABLE
+BEGIN
+    IDS_BD_PT_FOUND "Found"
+    IDS_BD_PT_NOT_FOUND "Not found"
+    IDS_BD_PT_FILE_NOT_SELECTED "No file selected"
+    IDS_BD_PT_SEARCH_FOLDER "Searched in: %s"
+    IDS_BD_PT_INI_FILTER "MPC-HC settings (*.ini)|*.ini||"
+    IDS_BD_PT_SELECT_FILE "Select an MPC-HC settings file"
+    IDS_BD_PT_BAD_SOURCE "Select an INI settings file from another copy of MPC-HC."
+    IDS_BD_PT_IMPORT_FAILED "Could not copy the settings. Close the source player and check access to its profile and this folder. The source profile has not been changed."
+    IDS_BD_PT_WRITE_FAILED "Cannot open the portable profile for writing. Extract MPC-HC Blu-ray to a writable folder. The installed player profile will not be used."
+    IDS_BD_PT_ASSOC_DISABLED "File associations and Explorer integration are disabled in this portable fork."
+END
+
 IDD_ABOUTBOX DIALOGEX 0, 0, 260, 206
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "About"

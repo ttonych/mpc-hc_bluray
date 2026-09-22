@@ -115,13 +115,13 @@ external dependencies are absent. Validate normal-file/codec parity before a
 release. Build logs/manifests are in ignored `bluray/diagnostics`.
 
 `prepare-local-player.ps1` requires a new destination, copies only the explicit
-runtime list and creates an empty portable INI. It includes both Java JARs,
+runtime list and creates a portable INI with the first-run setup marker. It includes both Java JARs,
 the Russian resource DLL and source/license manifests. Java and madVR are
 external. In this test player, select madVR as the video renderer and open
 **Options > Playback > Blu-ray**. Select the pinned Java folder there, or leave
 automatic discovery enabled. Do not reuse an installed player's INI or BD-J data.
 
-The Blu-ray page selects **Main movie** (the default) or **Disc menu** for normal
+The Blu-ray page selects **Main movie** or **Disc menu** (selected by first-run setup) for normal
 opening, including **Open DVD/BD** and the disc's `index.bdmv` entry point.
 The shared opening path recognizes disc roots, `BDMV`, `index.bdmv` and
 `MovieObject.bdmv`; individual playlists/clips retain normal playback.
@@ -230,10 +230,15 @@ Use `python bluray/tools/package-player.py --verify <candidate.zip>` after downl
 It neither bundles Java/madVR nor publishes a Release. Qualify the exact archive
 with [the runtime matrix](VALIDATION.md) before publication.
 
-The complete version/tag/changelog and draft-to-publication procedure is in
-[Releasing](RELEASING.md). Current packaged guides are Markdown; MPC-BE's offline
-HTML documentation renderer is not ported. Relative links to files outside the
-package are rewritten to the exact source commit by the packager.
+The complete version/tag/changelog and publication procedure is in
+[Releasing](RELEASING.md). Packaging adds HTML for every bundled Markdown guide,
+verifies local files/anchors and pins source-only links to the exact commit.
+Styles are embedded without remote assets. Install the pinned dependency first:
+
+```powershell
+python -m pip install --require-hashes -r bluray/tools/requirements-package.txt
+python bluray/tools/test-package-docs.py
+```
 
 ## Updating the two sources and dependencies
 
@@ -302,3 +307,18 @@ explicitly. The response is limited to 4 MiB; transport has timeouts and a read
 deadline. Ignore-version and last-check settings use fork-specific keys.
 Verify native EN/RU dialogs separately from parser tests; an empty live feed
 does not verify downloading a future release. There is no installer in this path.
+
+## Portable profile and import
+
+This fork always runs portable; there is no opt-in build flag. `CProfile` uses
+the adjacent INI without an implicit registry fallback. Setup runs before normal
+settings/history loading; source reads and atomic destination commit are separate.
+DWORD/QWORD/binary conversion follows HC formats, not BE. New imports clear BD-J
+paths and exclude history/playlists; `/reset` restores portable defaults.
+Existing experimental INIs without a setup marker are preserved.
+
+`test-portable-profile.ps1` exercises the importer with synthetic files and a
+unique temporary HKCU key: encodings, source preservation, filtering, atomic
+failure and HLSL copies. It is included in the Windows component suite. Test the
+real EN/RU wizard, Cancel, restart and write failure separately; importer tests
+do not establish its integration with `CProfile`.

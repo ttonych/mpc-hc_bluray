@@ -26,10 +26,10 @@
 #include "base64/base64.h"
 
 // ---------------------------------------------------------------------------
-// Store location. MPC-HC keeps its historical settings location so external
-// tools (e.g. madVR) and older builds keep reading it: the HKCU registry key
-// below, or <exe-basename>.ini next to the executable in portable mode. Only
-// MediaHistory is relocated, into <exe-basename>.history.ini (portable mode).
+// This fork always stores settings beside its executable. The historical HKCU
+// key remains available only to explicit read-only import code; a missing or
+// unwritable INI must not switch the active profile to the installed player.
+// MediaHistory uses a separate <exe-basename>.history.ini in the same folder.
 // ---------------------------------------------------------------------------
 static const wchar_t* const REG_KEY            = L"Software\\MPC-HC\\MPC-HC"; // HKCU settings key
 static const wchar_t* const INI_SUFFIX         = L".ini";                     // <exe-basename>.ini (portable)
@@ -212,16 +212,9 @@ static bool ReadIniFileIntoMap(const CStringW& iniPath, ProfileMap& map)
 
 CProfile::CProfile()
 {
-    // Portable if <exe-basename>.ini exists next to the executable.
-    const CStringW iniPath = GetIniFilePath();
-    if (::PathFileExistsW(iniPath)) {
-        m_IniPath = iniPath;
-        return;
-    }
-
-    // Registry mode. Do NOT create the key here (this ctor runs at static-init
-    // time for the global theApp); it is opened lazily on first access.
-    m_bRegistryMode = true;
+    // The Blu-ray fork always owns a portable profile, even before its creation.
+    // Never select the installed player's registry as an implicit fallback.
+    m_IniPath = GetIniFilePath();
 }
 
 CProfile::CProfile(const CStringW& iniFilePath)
@@ -304,57 +297,21 @@ void CProfile::InitIni()
     m_IniLastAccessTick = GetTickCount64(); // reading the file can take a long time
 }
 
-bool CProfile::StoreSettingsTo(const SettingsLocation newLocation, const bool bKeepOldStore)
+bool CProfile::StoreSettingsTo(const SettingsLocation newLocation, const bool /*bKeepOldStore*/)
+{
+    // Import is a read-only copy, not the upstream destructive store migration.
+    return newLocation == SETS_PROGRAMDIR && !m_bRegistryMode;
+}
+
+bool CProfile::ReloadIni()
 {
     std::lock_guard<std::recursive_mutex> lock(m_Mutex);
-
-    if (newLocation == SETS_REGISTRY) {
-        if (m_bRegistryMode) {
-            return true; // already in the registry
-        }
-
-        InitIni();
-        if (::PathFileExistsW(m_IniPath) && _wremove(m_IniPath) != 0) {
-            return false; // ini can not be deleted; transfer canceled
-        }
-
-        m_bRegistryMode = true;
-        OpenRegistryKey();
-        if (m_hAppRegKey) {
-            m_IniPath.Empty();
-            return true;
-        }
-        m_bRegistryMode = false; // key creation failed; remain in INI mode
-        return false;
-    }
-
-    // SETS_PROGRAMDIR
-    if (!m_bRegistryMode && !m_IniPath.IsEmpty()) {
-        return true; // already stored in the program folder
-    }
-
-    if (m_bRegistryMode) {
-        OpenRegistryKey(); // ensure the handle so the registry store can be removed
-        if (m_hAppRegKey) {
-            if (!bKeepOldStore) {
-                RegDeleteTreeW(m_hAppRegKey, nullptr);
-            }
-            RegCloseKey(m_hAppRegKey);
-            m_hAppRegKey = nullptr;
-        }
-        m_bRegistryMode = false;
-    }
-
-    const CStringW newIniPath = GetIniFilePath();
-    CFile file;
-    if (file.Open(newIniPath, CFile::modeWrite | CFile::modeCreate | CFile::modeNoTruncate)) {
-        file.Close();
-        m_IniPath = newIniPath;
-        Flush(true);
-        return true;
-    }
-
-    return false;
+    if (m_bRegistryMode || m_bIniNeedFlush) return false;
+    if (!ReadIniFileIntoMap(m_IniPath, m_ProfileMap)) return false;
+    m_bIniFirstInit = true;
+    m_bIniReadFailed = false;
+    m_IniLastAccessTick = GetTickCount64();
+    return true;
 }
 
 bool CProfile::ReadBool(const wchar_t* section, const wchar_t* entry, bool& value)

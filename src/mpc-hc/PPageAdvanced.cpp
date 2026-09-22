@@ -183,7 +183,7 @@ void CPPageAdvanced::InitSettings()
     addBoolItem(FILE_POS_PLAYLIST, IDS_RS_FILEPOS_PLAYLIST, true, s.bRememberExternalPlaylistPos, StrRes(IDS_PPAGEADVANCED_FILEPOS_PLAYLIST));
     addBoolItem(FILE_POS_TRACK_SELECTION, IDS_RS_FILEPOS_TRACK_SELECTION, true, s.bRememberTrackSelection, StrRes(IDS_PPAGEADVANCED_FILEPOS_TRACK_SELECTION));
     addBoolItem(USE_TITLE_IN_RECENT_FILE_LIST, IDS_RS_USE_TITLE_IN_RECENT_FILE_LIST, true, s.bUseTitleInRecentFileList, StrRes(IDS_PPAGEADVANCED_USE_TITLE_IN_RECENT_FILE_LIST));
-    addBoolItem(HISTORY_IN_APPDATA, IDS_RS_HISTORY_IN_APPDATA, false, s.bHistoryInAppData, StrRes(IDS_PPAGEADVANCED_HISTORY_IN_APPDATA));
+    // Portable history is fixed beside the executable.
     addCStringItem(HISTORY_EXCLUDE_FILTER, IDS_RS_HISTORY_EXCLUDE_FILTER, _T(""), s.sHistoryExcludeFilter, StrRes(IDS_PPAGEADVANCED_HISTORY_EXCLUDE_FILTER));
 
     addHeaderItem(ResStr(IDS_INFOBAR_SUBTITLES));

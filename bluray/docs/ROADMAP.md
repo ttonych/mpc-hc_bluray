@@ -57,23 +57,23 @@
   x64/RU builds, version/tag/feed tests and actual EN/RU About/update dialogs pass.
   The previous cloud ZIP does not contain these changes.
 
+- Mandatory portable settings, EN/RU import setup and offline HTML guides are
+  implemented. Importer and native wizard checks cover cancellation, restart,
+  write failure and source preservation; new cloud-ZIP checks remain separate.
+
 ## Next open work
 
-1. Adapt mandatory portable-profile isolation and the first-run import wizard;
-   add offline HTML guides. See the [feature comparison](PARITY.md).
-
-2. Broader BD-J matrix: a mouse-capable menu, Java/saves lifecycle, other discs,
+1. Broader BD-J matrix: a mouse-capable menu, Java/saves lifecycle, other discs,
    menu audio/stills, language combinations and additional decoder paths.
-3. Qualify the exact cloud ZIP with the remaining clean-profile release matrix;
+2. Qualify the exact cloud ZIP with the remaining clean-profile release matrix;
    local results do not qualify a cloud package. See [Validation](VALIDATION.md).
 
 ## Donor features still to assess
 
-- Mandatory portable-profile behavior and first-run profile import, retaining
-  source settings and isolating history and BD-J data. Today isolation depends
-  on keeping the supplied INI beside the EXE.
-- Offline HTML guides and later Java-selection improvements. Current packaged
-  guides are Markdown; the donor's uncommitted work is not a transfer baseline.
+- Later Java-selection improvements require a reviewed fixed donor commit;
+  uncommitted experiments are not a transfer baseline.
+- Read-failure recovery needs an HC/LAV fault-injection check; BE `CMultiFiles`
+  is not the reader used in HC.
 
 These are explicit gaps, not claims of implemented parity or automatic approval
 to port every future donor feature. Use fixed commits and record the selection.

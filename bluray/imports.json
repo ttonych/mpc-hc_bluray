@@ -361,6 +361,54 @@
       "donor_path": "bluray/probe/release-version-test.cpp",
       "donor_sha256": "308b2220d21a897f0f4b08feff1fa584c9ff7229493c7ea695f38d5935d10d96",
       "adapted": true
+    },
+    {
+      "path": "src/mpc-hc/PortableProfileImport.h",
+      "donor_path": "src/apps/mplayerc/PortableProfileImport.h",
+      "donor_sha256": "1deee5e0fa1150a9cb0daf28cceca0682a7bc588ce6cbc59877bfcf669177ba3",
+      "adapted": true
+    },
+    {
+      "path": "src/mpc-hc/PortableTest.cpp",
+      "donor_path": "src/apps/mplayerc/PortableTest.cpp",
+      "donor_sha256": "6de34afb4df94618fe6dc93c8d882c60f2d0d0c594c77f452f6f5fc38312d2dd",
+      "adapted": true
+    },
+    {
+      "path": "src/mpc-hc/PortableTest.h",
+      "donor_path": "src/apps/mplayerc/PortableTest.h",
+      "donor_sha256": "83ba6eb8bdd3d8b604a4742bf17d5ee87d48980a5057180867484b0b9390ad1f",
+      "adapted": true
+    },
+    {
+      "path": "bluray/probe/portable-profile-test.cpp",
+      "donor_path": "bluray/probe/portable-profile-test.cpp",
+      "donor_sha256": "ee539e6a75e55abbaccee3783ca94aca2e71e35ad65e4e16168ac38b2604dea9",
+      "adapted": true
+    },
+    {
+      "path": "bluray/tools/test-portable-profile.ps1",
+      "donor_path": "bluray/tools/test-portable-profile.ps1",
+      "donor_sha256": "fcd28c523a539dedff6332c9cc2479b7be0daaa143be29702a6250de8102972e",
+      "adapted": true
+    },
+    {
+      "path": "bluray/tools/package_docs.py",
+      "donor_path": "bluray/tools/package_docs.py",
+      "donor_sha256": "e66cd8c170cd0eba1dd0158eec466252cab0e8dba6575e912a29ee941dbda678",
+      "adapted": true
+    },
+    {
+      "path": "bluray/tools/test-package-docs.py",
+      "donor_path": "bluray/tools/test-package-docs.py",
+      "donor_sha256": "7fe82300587b63dc32722a0f861b18c83e7f6187aa9c6c341161323eb69f98eb",
+      "adapted": true
+    },
+    {
+      "path": "bluray/tools/requirements-package.txt",
+      "donor_path": "bluray/tools/requirements-package.txt",
+      "donor_sha256": "36572bce9e20e45448563bb79018f581f33957ef53e8f93e6780c6f5fd7c5f15",
+      "adapted": false
     }
   ],
   "adapted_mpeg2_stills": {

@@ -44,7 +44,7 @@
 #include <mutex>
 #include <afxwinappex.h>
 
-#define MPC_WND_CLASS_NAME L"MediaPlayerClassicW"
+#define MPC_WND_CLASS_NAME L"MediaPlayerClassicBluRayW"
 #define MPC_RECOVERY_MUTEX_NAME L"MediaPlayerClassicW_RedirectRecovery"
 
 // define the default logo we use

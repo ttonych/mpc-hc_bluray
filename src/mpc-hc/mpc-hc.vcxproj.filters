@@ -100,6 +100,7 @@
     <ClCompile Include="AppSettings.cpp">
       <Filter>Player Config</Filter>
     </ClCompile>
+    <ClCompile Include="PortableTest.cpp" />
     <ClCompile Include="AboutDlg.cpp">
       <Filter>Modal Dialogs</Filter>
     </ClCompile>
@@ -714,6 +715,8 @@
     </ClInclude>
     <ClInclude Include="BlurayReleaseVersion.h" />
     <ClInclude Include="BlurayUpdateFeed.h" />
+    <ClInclude Include="PortableProfileImport.h" />
+    <ClInclude Include="PortableTest.h" />
     <ClInclude Include="..\..\include\BlurayVersion.h" />
     <ClInclude Include="BluraySettings.h">
       <Filter>Graph</Filter>

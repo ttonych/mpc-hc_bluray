@@ -72,7 +72,7 @@ def main():
             errors.append(f'Format arguments differ: {key}')
         count += 1
     dialogs = polib.pofile(str(po_root / 'mpc-hc.ru.dialogs.po'))
-    prefixes = ('IDD_PPAGEBLURAY_', 'IDD_BD_COMPATIBILITY_', 'IDD_BD_DISCS_')
+    prefixes = ('IDD_PPAGEBLURAY_', 'IDD_BD_COMPATIBILITY_', 'IDD_BD_DISCS_', 'IDD_BD_PORTABLE_SETUP_')
     for prefix in prefixes:
         entries = [e for e in dialogs if (e.msgctxt or '').startswith(prefix) and not e.obsolete]
         if not entries or any(not e.msgstr.strip() or 'fuzzy' in e.flags for e in entries):
