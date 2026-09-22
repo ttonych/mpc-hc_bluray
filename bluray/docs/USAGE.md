@@ -118,10 +118,17 @@ not yet ported. Keep the provided INI; without it, inherited MPC-HC behavior can
 use the installed player's registry profile. For testing, use a fresh folder
 and the supplied empty profile, then set only the options needed for the test.
 
-The inherited update checker still queries official MPC-HC releases. Decline
-automatic checking for this candidate and follow this fork's repository for
-updates. See the [version scheme](RELEASING.md); the EXE/About version does not
-yet show the complete fork release number.
+Current sources display **2.8.2-bluray.1** in About, the empty window caption and
+EXE ProductVersion; About also identifies the source commit. See the
+[version scheme](RELEASING.md). Help → Check for updates queries published GitHub
+releases of **ttonych/mpc-hc_bluray**, including prereleases. It compares numeric
+base/release components and offers the selected release page; it does not install
+or replace files. Automatic checks use the same source when enabled.
+
+No published fork releases is a normal result, distinct from a network/API error.
+Bare Git tags, draft releases and official MPC-HC releases are not fork updates.
+The old cloud ZIP from Actions run 35781918063 predates this implementation and
+still has the inherited updater; decline automatic checks in that candidate.
 
 For a new candidate, close the old player, extract into a separate folder and
 retain the old folder for rollback. Check the [changelog](../CHANGELOG.md).

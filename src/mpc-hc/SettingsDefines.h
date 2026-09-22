@@ -367,6 +367,8 @@
 #define IDS_RS_UPDATER_LAST_CHECK           _T("UpdaterLastCheck")
 #define IDS_RS_UPDATER_DELAY                _T("UpdaterDelay")
 #define IDS_RS_UPDATER_IGNORE_VERSION       _T("UpdaterIgnoreVersion")
+#define IDS_RS_BLURAY_UPDATER_LAST_CHECK    _T("BluRayUpdaterLastCheck")
+#define IDS_RS_BLURAY_UPDATER_IGNORE_VERSION _T("BluRayUpdaterIgnoreVersion")
 
 #define IDS_RS_JPEG_QUALITY                 _T("JpegQuality")
 

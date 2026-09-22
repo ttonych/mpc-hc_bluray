@@ -5892,3 +5892,27 @@ msgstr "Не удалось открыть ISO-образ как диск (ош�
 msgctxt "IDS_BD_ISO_NOT_VIDEO"
 msgid "The ISO image contains no supported Blu-ray or DVD video structure."
 msgstr "В ISO-образе не найдена поддерживаемая структура Blu-ray или DVD-Video."
+
+msgctxt "IDS_BD_UPDATE_NONE"
+msgid "No published MPC-HC Blu-ray releases are available yet."
+msgstr "Опубликованных выпусков MPC-HC Blu-ray пока нет."
+
+msgctxt "IDS_BD_UPDATE_CURRENT"
+msgid "No newer MPC-HC Blu-ray release is available.\n\nYour version: %s"
+msgstr "Новых выпусков MPC-HC Blu-ray нет.\n\nВаша версия: %s"
+
+msgctxt "IDS_BD_UPDATE_AVAILABLE"
+msgid "MPC-HC Blu-ray %s is available. You are using %s.\n\nOpen this fork release on GitHub?"
+msgstr "Доступен MPC-HC Blu-ray %s. Вы используете %s.\n\nОткрыть этот выпуск форка на GitHub?"
+
+msgctxt "IDS_BD_UPDATE_ERROR"
+msgid "Could not check MPC-HC Blu-ray releases.\n\nCheck your internet connection or try again later."
+msgstr "Не удалось проверить выпуски MPC-HC Blu-ray.\n\nПроверьте подключение к Интернету или повторите попытку позже."
+
+msgctxt "IDS_BD_UPDATE_AUTO_CHECK"
+msgid "Check for new MPC-HC Blu-ray releases automatically?"
+msgstr "Проверять новые выпуски MPC-HC Blu-ray автоматически?"
+
+msgctxt "IDS_BD_ABOUT_TITLE"
+msgid "MPC-HC Blu-ray (unofficial fork)"
+msgstr "MPC-HC Blu-ray (неофициальный форк)"

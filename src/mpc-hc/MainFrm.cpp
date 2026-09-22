@@ -20,6 +20,7 @@
  */
 
 #include "stdafx.h"
+#include "BlurayVersion.h"
 #include "MainFrm.h"
 #include "BlurayOpen.h"
 #include "mplayerc.h"
@@ -16327,7 +16328,7 @@ void CMainFrame::OpenSetupStatusBar()
 // Called from GraphThread
 void CMainFrame::OpenSetupWindowTitle(bool reset /*= false*/)
 {
-    CString title(StrRes(IDR_MAINFRAME));
+    CString title(MPCHC_BLURAY_NAME _T(" ") MPCHC_BLURAY_VERSION_STR);
 #ifdef MPCHC_LITE
     title += _T(" Lite");
 #endif

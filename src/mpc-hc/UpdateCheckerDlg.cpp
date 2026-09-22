@@ -26,27 +26,27 @@
 
 IMPLEMENT_DYNAMIC(UpdateCheckerDlg, CMPCThemeDialog)
 
-UpdateCheckerDlg::UpdateCheckerDlg(Update_Status updateStatus, const Version& latestVersion, CWnd* pParent /*=nullptr*/)
+UpdateCheckerDlg::UpdateCheckerDlg(Update_Status updateStatus, const Version& latestVersion, const CString& latestURL, CWnd* pParent /*=nullptr*/)
     : CMPCThemeDialog(UpdateCheckerDlg::IDD, pParent)
     , m_updateStatus(updateStatus)
+    , m_latestURL(latestURL)
 {
     switch (updateStatus) {
         case UPDATER_UPDATE_AVAILABLE:
         case UPDATER_UPDATE_AVAILABLE_IGNORED:
-            m_text.Format(IDS_NEW_UPDATE_AVAILABLE,
+            m_text.Format(IDS_BD_UPDATE_AVAILABLE,
                           latestVersion.ToString().GetString(),
                           UpdateChecker::MPC_HC_VERSION.ToString().GetString());
             break;
         case UPDATER_LATEST_STABLE:
-            m_text.LoadString(IDS_USING_LATEST_STABLE);
-            break;
         case UPDATER_NEWER_VERSION:
-            m_text.Format(IDS_USING_NEWER_VERSION,
-                          UpdateChecker::MPC_HC_VERSION.ToString().GetString(),
-                          latestVersion.ToString().GetString());
+            m_text.Format(IDS_BD_UPDATE_CURRENT, UpdateChecker::MPC_HC_VERSION.ToString().GetString());
+            break;
+        case UPDATER_NO_RELEASES:
+            m_text.LoadString(IDS_BD_UPDATE_NONE);
             break;
         case UPDATER_ERROR:
-            m_text.LoadString(IDS_UPDATE_ERROR);
+            m_text.LoadString(IDS_BD_UPDATE_ERROR);
             break;
         default:
             ASSERT(0); // should never happen
@@ -86,6 +86,7 @@ BOOL UpdateCheckerDlg::OnInitDialog()
             break;
         case UPDATER_LATEST_STABLE:
         case UPDATER_NEWER_VERSION:
+        case UPDATER_NO_RELEASES:
         case UPDATER_ERROR: {
             m_icon.SetIcon(LoadIcon(nullptr, (m_updateStatus == UPDATER_ERROR) ? IDI_WARNING : IDI_INFORMATION));
             m_dlButton.ShowWindow(SW_HIDE);
@@ -116,7 +117,9 @@ BOOL UpdateCheckerDlg::OnInitDialog()
 
 void UpdateCheckerDlg::OnOpenDownloadPage()
 {
-    ShellExecute(nullptr, _T("open"), DOWNLOAD_URL, nullptr, nullptr, SW_SHOWNORMAL);
+    if (!m_latestURL.IsEmpty()) {
+        ShellExecute(nullptr, _T("open"), m_latestURL, nullptr, nullptr, SW_SHOWNORMAL);
+    }
 
     EndDialog(IDC_UPDATE_DL_BUTTON);
 }

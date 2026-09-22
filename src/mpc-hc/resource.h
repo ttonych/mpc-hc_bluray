@@ -2077,3 +2077,10 @@
 #define _APS_NEXT_SYMED_VALUE           24052
 #endif
 #endif
+
+#define IDS_BD_UPDATE_NONE                   58340
+#define IDS_BD_UPDATE_CURRENT                58341
+#define IDS_BD_UPDATE_AVAILABLE              58342
+#define IDS_BD_UPDATE_ERROR                  58343
+#define IDS_BD_UPDATE_AUTO_CHECK             58344
+#define IDS_BD_ABOUT_TITLE                   58345

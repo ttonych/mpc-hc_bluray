@@ -53,12 +53,15 @@
   runtime remains unverified for that ZIP because its current test ISO could not
   be mounted by Windows; this is recorded in [Validation](VALIDATION.md).
 
+- Fork version branding and fork-only release checking are implemented. Local
+  x64/RU builds, version/tag/feed tests and actual EN/RU About/update dialogs pass.
+  The previous cloud ZIP does not contain these changes.
+
 ## Next open work
 
-1. Implement fork version branding and update behavior before the first release:
-   one version source, EXE/About/package consistency, official-base revision
-   calculation and updates from this fork. The planned first version is
-   `2.8.2-bluray.1`; see [versioning and releases](RELEASING.md).
+1. Adapt mandatory portable-profile isolation and the first-run import wizard;
+   add offline HTML guides. See the [feature comparison](PARITY.md).
+
 2. Broader BD-J matrix: a mouse-capable menu, Java/saves lifecycle, other discs,
    menu audio/stills, language combinations and additional decoder paths.
 3. Qualify the exact cloud ZIP with the remaining clean-profile release matrix;

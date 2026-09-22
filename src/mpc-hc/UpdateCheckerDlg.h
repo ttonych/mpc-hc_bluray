@@ -31,7 +31,7 @@ class UpdateCheckerDlg : public CMPCThemeDialog
     DECLARE_DYNAMIC(UpdateCheckerDlg)
 
 public:
-    UpdateCheckerDlg(Update_Status updateStatus, const Version& latestVersion, CWnd* pParent = nullptr);
+    UpdateCheckerDlg(Update_Status updateStatus, const Version& latestVersion, const CString& latestURL, CWnd* pParent = nullptr);
     virtual ~UpdateCheckerDlg();
 
     enum { IDD = IDD_UPDATE_DIALOG };
@@ -47,6 +47,7 @@ protected:
 private:
     Update_Status m_updateStatus;
     CString m_text;
+    CString m_latestURL;
     CStatic m_icon;
     CMPCThemeButton m_dlButton;
     CMPCThemeButton m_laterButton;

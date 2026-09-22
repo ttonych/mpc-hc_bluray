@@ -712,6 +712,9 @@
     <ClInclude Include="BlurayPlaybackClock.h">
       <Filter>Graph</Filter>
     </ClInclude>
+    <ClInclude Include="BlurayReleaseVersion.h" />
+    <ClInclude Include="BlurayUpdateFeed.h" />
+    <ClInclude Include="..\..\include\BlurayVersion.h" />
     <ClInclude Include="BluraySettings.h">
       <Filter>Graph</Filter>
     </ClInclude>

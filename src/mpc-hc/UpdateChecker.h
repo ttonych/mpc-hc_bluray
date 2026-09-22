@@ -31,10 +31,7 @@ struct Version {
     CString ToString() const {
         CString versionStr;
 
-        versionStr.Format(_T("%u.%u.%u"), major, minor, patch);
-        if (revision) {
-            versionStr.AppendFormat(_T(".%u"), revision);
-        }
+        versionStr.Format(_T("%u.%u.%u-bluray.%u"), major, minor, patch, revision);
 
         return versionStr;
     }
@@ -45,7 +42,8 @@ enum Update_Status {
     UPDATER_LATEST_STABLE,
     UPDATER_NEWER_VERSION,
     UPDATER_UPDATE_AVAILABLE,
-    UPDATER_UPDATE_AVAILABLE_IGNORED
+    UPDATER_UPDATE_AVAILABLE_IGNORED,
+    UPDATER_NO_RELEASES
 };
 
 enum AutoUpdate_Status {
@@ -63,10 +61,10 @@ public:
     UpdateChecker(CString versionFileURL);
     ~UpdateChecker();
 
-    Update_Status IsUpdateAvailable(const Version& currentVersion, bool useBackupURL);
     Update_Status IsUpdateAvailable(const Version& currentVersion);
     Update_Status IsUpdateAvailable();
     const Version& GetLatestVersion() const { return latestVersion; };
+    const CString& GetLatestURL() const { return latestURL; }
     void IgnoreLatestVersion();
 
     static bool IsAutoUpdateEnabled();
@@ -79,6 +77,7 @@ private:
 
     CString versionFileURL;
     Version latestVersion;
+    CString latestURL;
 
     static bool ParseVersion(const CString& versionStr, Version& version);
     static int CompareVersion(const Version& v1, const Version& v2);

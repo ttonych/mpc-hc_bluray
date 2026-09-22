@@ -30,6 +30,7 @@
 #include "FileVersionInfo.h"
 #include "PathUtils.h"
 #include "VersionInfo.h"
+#include "BlurayVersion.h"
 #include <VersionHelpers.h>
 #include "Monitors.h"
 #include "GPUInfo.h"
@@ -56,11 +57,12 @@ BOOL CAboutDlg::OnInitDialog()
 #endif
 
     __super::OnInitDialog();
+    SetWindowText(ResStr(IDS_BD_ABOUT_TITLE));
 
     // Because we set LR_SHARED, there is no need to explicitly destroy the icon
     m_icon.SetIcon((HICON)LoadImage(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDR_MAINFRAME), IMAGE_ICON, 48, 48, LR_SHARED));
 
-    m_appname = _T("MPC-HC");
+    m_appname = MPCHC_BLURAY_NAME;
     if (VersionInfo::Is64Bit()) {
         m_appname += _T(" (64-bit)");
     }

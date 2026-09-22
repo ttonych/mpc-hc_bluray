@@ -4566,6 +4566,17 @@ BEGIN
     IDS_BD_ISO_NOT_VIDEO "The ISO image contains no supported Blu-ray or DVD video structure."
 END
 
+STRINGTABLE
+BEGIN
+    IDS_BD_UPDATE_NONE           "No published MPC-HC Blu-ray releases are available yet."
+    IDS_BD_UPDATE_CURRENT        "No newer MPC-HC Blu-ray release is available.\n\nYour version: %s"
+    IDS_BD_UPDATE_AVAILABLE      "MPC-HC Blu-ray %s is available. You are using %s.\n\nOpen this fork release on GitHub?"
+    IDS_BD_UPDATE_ERROR          "Could not check MPC-HC Blu-ray releases.\n\nCheck your internet connection or try again later."
+    IDS_BD_UPDATE_AUTO_CHECK     "Check for new MPC-HC Blu-ray releases automatically?"
+    IDS_BD_ABOUT_TITLE           "MPC-HC Blu-ray (unofficial fork)"
+END
+
+
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
