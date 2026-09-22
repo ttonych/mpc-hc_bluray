@@ -2071,9 +2071,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        20083
+#define _APS_NEXT_RESOURCE_VALUE        20084
 #define _APS_NEXT_COMMAND_VALUE         33466
-#define _APS_NEXT_CONTROL_VALUE         22137
+#define _APS_NEXT_CONTROL_VALUE         22150
 #define _APS_NEXT_SYMED_VALUE           24052
 #endif
 #endif
@@ -2084,3 +2084,28 @@
 #define IDS_BD_UPDATE_ERROR                  58343
 #define IDS_BD_UPDATE_AUTO_CHECK             58344
 #define IDS_BD_ABOUT_TITLE                   58345
+
+#define IDD_BD_PORTABLE_SETUP                20083
+#define IDC_PT_REGISTRY                      22137
+#define IDC_PT_AUTO_INI                      22138
+#define IDC_PT_MANUAL_INI                    22139
+#define IDC_PT_DEFAULTS                      22140
+#define IDC_PT_REGISTRY_STATUS               22141
+#define IDC_PT_INI_STATUS                    22142
+#define IDC_PT_AUTO_PATH                     22143
+#define IDC_PT_MANUAL_PATH                   22144
+#define IDC_PT_BROWSE                        22145
+#define IDC_PT_INTRO                         22146
+#define IDC_PT_NOTICE                        22147
+#define IDC_PT_SOURCE_KEY                    22148
+#define IDC_PT_GROUP                         22149
+#define IDS_BD_PT_FOUND                      58360
+#define IDS_BD_PT_NOT_FOUND                  58361
+#define IDS_BD_PT_FILE_NOT_SELECTED          58362
+#define IDS_BD_PT_SEARCH_FOLDER              58363
+#define IDS_BD_PT_INI_FILTER                 58364
+#define IDS_BD_PT_SELECT_FILE                58365
+#define IDS_BD_PT_BAD_SOURCE                 58366
+#define IDS_BD_PT_IMPORT_FAILED              58367
+#define IDS_BD_PT_WRITE_FAILED               58368
+#define IDS_BD_PT_ASSOC_DISABLED             58369

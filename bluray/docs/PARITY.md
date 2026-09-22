@@ -30,8 +30,8 @@ with every disc or qualification of a downloadable package.
 | Disc-data catalogue, aliases, per-disc reset retaining old data | Present | Present | Shared catalogue/storage algorithms, HC dialogs |
 | Explicit Java architecture check and cancellable startup diagnostic | Limited file checks in this donor revision | Implemented | HC has additional diagnostics; later donor Java work is outside this baseline |
 | Fork version and own published-release checker | Present | Implemented in current sources | HC uses its own releases, including prereleases; previous cloud ZIP predates this |
-| First-run settings import and mandatory writable portable profile | Present | Missing | Actual HC gap; an adjacent INI is currently required for isolation |
-| Offline HTML guides inside the ZIP | Present | Markdown guides | Actual packaging/documentation gap |
+| First-run settings import and mandatory writable portable profile | Present | Adapted | HC registry/INI formats, source preservation, native EN/RU checks |
+| Offline HTML guides inside the ZIP | Present | Adapted | Local pages/anchors verified; source links pin exact commit |
 
 The shared `mouse-page-v1`, `playmark-seek-v1` and `bdj-toggle-v1` patches, and the
 common graphics, clock, catalogue, storage and menu-audio helpers, are recorded
@@ -40,15 +40,11 @@ with BE filters. A similar feature name alone is not evidence of identical code.
 
 ## Boundaries and remaining work
 
-1. Port the first-run import and portable-profile guard with HC-specific profile
-   filtering. The donor preserves source settings and excludes history/saves from
-   ordinary import; HC must avoid accidentally using installed-player data.
-2. Add offline HTML guides to HC packaging and verify their links.
-3. Expand the HC disc matrix and qualify a new exact cloud ZIP. The donor has a
+1. Expand the HC disc matrix and qualify a new exact cloud ZIP. The donor has a
    published prerelease with HDMV/BD-J checks; HC has local BD-J evidence but its
    existing cloud ZIP has no completed BD-J runtime check. This is a validation
    gap, not proof that a navigation algorithm is absent.
-4. The donor's bounded reopen/read-error fix is in BE's `CMultiFiles`. HC uses
+2. The donor's bounded reopen/read-error fix is in BE's `CMultiFiles`. HC uses
    LAV rather than that reader, so copying the patch would not close the problem.
    Equivalent read-failure recovery needs its own HC/LAV fault-injection check.
 

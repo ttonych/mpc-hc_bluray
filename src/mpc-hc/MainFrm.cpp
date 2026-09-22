@@ -15112,7 +15112,7 @@ void CMainFrame::OpenFile(OpenFileData* pOFD)
                             r.fns.AddHeadList(&pli.m_fns);
                         }
                         if (!s.IsExcludedFromHistory(fn)) {
-                            SHAddToRecentDocs(SHARD_PATH, fn);
+                            // Portable fork: do not add media to the Windows recent list.
                         }
                     }
                     if (pli.m_cue) {
@@ -15624,7 +15624,7 @@ void CMainFrame::OpenDVD(OpenDVDData* pODD)
             pMRU->Add(pODD->title, llDVDGuid);
         }
         if (!s.IsExcludedFromHistory(pODD->title)) {
-            SHAddToRecentDocs(SHARD_PATH, pODD->title);
+            // Portable fork: do not add media to the Windows recent list.
         }
     }
 

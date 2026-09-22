@@ -13,6 +13,7 @@ import subprocess
 import zipfile
 from urllib.parse import quote, urlsplit, unquote
 from fork_version import read_version
+from package_docs import add_documents, verify_links
 
 ROOT = Path(__file__).resolve().parents[2]
 NATIVE = ('bluray-4.dll', 'udfread-3.dll', 'freetype.dll', 'libxml2.dll',
@@ -25,7 +26,7 @@ LAV = ('LAVSplitter.ax', 'LAVVideo.ax', 'LAVAudio.ax', 'libbluray.dll',
 JARS = ('libbluray-awt-j2se-1.5.0.jar', 'libbluray-j2se-1.5.0.jar')
 LICENSES = ('libbluray', 'libudfread', 'freetype', 'libxml2', 'brotli',
             'bzip2', 'libpng', 'zlib', 'libiconv', 'vcpkg-port')
-PROFILE = '[Settings]\r\nBluRayMenus=1\r\nKeepHistory=0\r\nEnableWebServer=0\r\n'.encode('utf-16')
+PROFILE = '[Settings]\r\nBluRayMenus=1\r\nKeepHistory=0\r\nEnableWebServer=0\r\n[PortableTest]\r\nFirstRunComplete=0\r\n'.encode('utf-16')
 PRIVATE_PATH = re.compile(r'[A-Za-z]:[\\/]+(?:Users|dev|temp|Ghidra\d*)[\\/]', re.I)
 
 
@@ -68,6 +69,7 @@ def verify_zip(path):
                 raise ValueError('Package checksum mismatch: ' + name)
         if z.read(prefix + 'mpc-hc64.ini') != PROFILE:
             raise ValueError('Portable profile is not clean')
+        verify_links({name: z.read(prefix + name) for name in manifest['files']})
         forbidden = {'.log', '.dmp', '.pdb', '.iso', '.mpcpl'}
         for name in manifest['files']:
             p = PurePosixPath(name)
@@ -123,23 +125,8 @@ def main():
     docs += git('ls-files', 'bluray/docs', 'bluray/patches').splitlines()
     mapping.update({n: ROOT / n for n in docs})
     data = {n: checked_file(p) for n, p in sorted(mapping.items())}
-    # Keep packaged links local where possible; source-only targets point to the
-    # exact commit instead of broken paths in the smaller binary distribution.
-    source_url = 'https://github.com/' + os.environ['GITHUB_REPOSITORY'] + '/blob/' + head + '/'
-    for name in list(data):
-        if not name.endswith('.md'):
-            continue
-        def link(match):
-            label, target = match.groups()
-            url = urlsplit(target)
-            if url.scheme or url.netloc or not url.path:
-                return match[0]
-            path = (ROOT / name).parent / unquote(url.path)
-            relative = path.resolve().relative_to(ROOT.resolve()).as_posix()
-            if relative in data:
-                return match[0]
-            return '[' + label + '](' + source_url + quote(relative) + ('#' + url.fragment if url.fragment else '') + ')'
-        data[name] = re.sub(r'\[([^\]]*)\]\(([^\s)]+)\)', link, data[name].decode('utf-8-sig')).encode('utf-8')
+    add_documents(data, ROOT, head)
+    verify_links(data)
     # Cross-check the native, Java and LAV outputs against their build records.
     for manifest_name, field, prefix in (
         ('build-info/libbluray-native.json', 'files', ''),

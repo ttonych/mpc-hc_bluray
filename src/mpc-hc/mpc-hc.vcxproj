@@ -143,6 +143,7 @@ if not exist "$(OutDir)LAVFilters" if exist "$(SolutionDir)bin\mpc-hc_x86\LAVFil
   <ItemGroup>
     <ClCompile Include="..\thirdparty\MessageBoxDialog\MessageBoxDialog.cpp" />
     <ClCompile Include="..\thirdparty\XeScrollBar\XeScrollBarBase.cpp" />
+    <ClCompile Include="PortableTest.cpp" />
     <ClCompile Include="AboutDlg.cpp" />
     <ClCompile Include="AddCommandDlg.cpp" />
     <ClCompile Include="BlurayMenu.cpp" />
@@ -369,6 +370,8 @@ if not exist "$(OutDir)LAVFilters" if exist "$(SolutionDir)bin\mpc-hc_x86\LAVFil
     <ClInclude Include="BlurayPlaybackClock.h" />
     <ClInclude Include="BlurayReleaseVersion.h" />
     <ClInclude Include="BlurayUpdateFeed.h" />
+    <ClInclude Include="PortableProfileImport.h" />
+    <ClInclude Include="PortableTest.h" />
     <ClInclude Include="..\..\include\BlurayVersion.h" />
     <ClInclude Include="BluraySettings.h" />
     <ClInclude Include="AppSettings.h" />

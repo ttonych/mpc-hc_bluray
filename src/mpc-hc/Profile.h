@@ -128,6 +128,7 @@ public:
     bool DeleteValue(const wchar_t* section, const wchar_t* entry);
     bool DeleteSection(const wchar_t* section);
 
+    bool ReloadIni(); // Only before settings load, after first-run atomic import.
     void Flush(bool bForce);
     void Clear();
 

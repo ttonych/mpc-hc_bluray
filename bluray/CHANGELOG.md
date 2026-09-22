@@ -14,12 +14,17 @@ are recorded separately in [Validation](docs/VALIDATION.md).
 
 ### Added
 
+- Mandatory portable settings and EN/RU first-run registry/INI import, with
+  HLSL subfolder copying and unchanged sources. History/playlists and BD-J saves
+  are excluded; a write failure never selects the installed player profile.
+- Offline EN/RU HTML guides in the ZIP, with embedded styles and checked links.
+
 - Experimental HDMV/BD-J navigation, keyboard and authored mouse input, madVR
   menu graphics and a separate menu audio graph.
 - Standard top/popup menu commands (Alt+T/Alt+R), disc captions and chapter
   markers that hide in menus and return during film playback.
-- Normal disc/folder opening with a main-movie/menu preference. Main movie
-  remains the default; the temporary separate menu-opening command was removed.
+- Normal disc/folder opening with a main-movie/menu preference. The first-run wizard
+  selects Disc menu; the temporary separate menu-opening command was removed.
 - Read-only Windows ISO opening, including drag-and-drop. Player-owned mounts
   survive graph changes and release on close; external mounts are preserved
   and mounting errors are reported.
@@ -73,7 +78,6 @@ are recorded separately in [Validation](docs/VALIDATION.md).
   Java/saves and mouse-capable-menu coverage are incomplete.
 - The MSVC LAV configuration differs from the standard GCC build; full codec/audio
   parity, HDR accuracy, MVC/stereo and DVD ISO support are unqualified.
-- Profile import, mandatory portable behavior and offline HTML guides from
-  MPC-BE Blu-ray are not yet ported. The old cloud ZIP predates fork branding/updating.
+- The old cloud ZIP predates fork branding/updater, setup and HTML guides.
 - See [Validation](docs/VALIDATION.md) for the distinction between component
   tests, local playback, user reports and checks of the exact cloud ZIP.

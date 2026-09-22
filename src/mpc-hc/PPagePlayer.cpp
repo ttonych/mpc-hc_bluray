@@ -101,7 +101,8 @@ BOOL CPPagePlayer::OnInitDialog()
     m_fRememberWindowPos = s.fRememberWindowPos;
     m_fRememberWindowSize = s.fRememberWindowSize;
     m_fSavePnSZoom = s.fSavePnSZoom;
-    m_fUseIni = AfxGetMyApp()->IsIniValid();
+    m_fUseIni = TRUE;
+    GetDlgItem(IDC_CHECK8)->EnableWindow(FALSE);
     m_fKeepHistory = s.fKeepHistory;
     m_fHideCDROMsSubMenu = s.fHideCDROMsSubMenu;
     m_priority = s.dwPriority != NORMAL_PRIORITY_CLASS;
@@ -145,10 +146,10 @@ BOOL CPPagePlayer::OnApply()
         s.ClearRecentFiles();
 
         // Ensure no new items are added in Windows recent menu and in the "Recent" jump list
-        s.fileAssoc.SetNoRecentDocs(true, true);
+        s.fileAssoc.SetNoRecentDocs(true, false);
     } else {
         // Re-enable Windows recent menu and the "Recent" jump list if needed
-        s.fileAssoc.SetNoRecentDocs(false, true);
+        s.fileAssoc.SetNoRecentDocs(false, false);
     }
 
     // Check if the settings location needs to be changed
@@ -187,20 +188,6 @@ void CPPagePlayer::OnUpdatePos(CCmdUI* pCmdUI)
 
 void CPPagePlayer::OnUpdateSaveToIni(CCmdUI* pCmdUI)
 {
-    ULONGLONG dwTick = GetTickCount64();
-    // run this check no often than once per second
-    if (dwTick - m_dwCheckIniLastTick >= 1000ULL) {
-        CPath iniPath = AfxGetMyApp()->GetIniPath();
-        HANDLE hFile = CreateFile(iniPath, GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
-        if (hFile == INVALID_HANDLE_VALUE) {
-            CPath iniDirPath(iniPath);
-            VERIFY(iniDirPath.RemoveFileSpec());
-            HANDLE hDir = CreateFile(iniDirPath, GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
-            // gray-out "save to .ini" option when we don't have writing permissions in the target directory
-            pCmdUI->Enable(hDir != INVALID_HANDLE_VALUE);
-            CloseHandle(hDir);
-        }
-        CloseHandle(hFile);
-        m_dwCheckIniLastTick = dwTick;
-    }
+    pCmdUI->SetCheck(TRUE);
+    pCmdUI->Enable(FALSE);
 }

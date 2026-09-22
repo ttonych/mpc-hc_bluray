@@ -22,8 +22,9 @@ artifact `mpc-hc-bluray-candidate-x64`. GitHub sign-in may be required; artifact
 are retained for 14 days. Its exact commit, ZIP SHA-256 and completed checks are
 recorded in [Validation](bluray/docs/VALIDATION.md).
 
-1. Extract the inner player ZIP into a new writable folder. Keep `mpc-hc64.ini`
-   beside `mpc-hc64.exe` so the test player uses portable settings.
+1. Extract the inner player ZIP into a new writable folder. New builds offer
+   settings import or defaults; the profile always stays beside the EXE.
+   The older candidate linked above predates the setup wizard.
 2. Make sure the x64 Microsoft Visual C++ v14 runtime is installed; see
    [requirements](bluray/docs/USAGE.md#requirements-and-first-launch).
 3. Use an external **madVR 210 x64** installation and select **Options → Playback
@@ -55,10 +56,11 @@ Local tests and tests of the downloadable ZIP are listed separately in
 
 ## Profiles and updates
 
-Keep test builds separate from installed MPC-HC/MPC-BE and retain the portable
-INI. MPC-BE Blu-ray's profile-import wizard and mandatory portable-profile
-behavior are not yet implemented here. madVR and other external filters may
-still share system settings between players.
+Current builds enforce a portable profile and offer first-run import of MPC-HC
+settings from registry or INI. The source remains unchanged; history, playlists
+and BD-J saves are not imported. A write failure reports an error. madVR and
+external filters may still share system settings. See the
+[profile guide](bluray/docs/USAGE.md#profiles-and-updates).
 
 Current sources check published releases of **ttonych/mpc-hc_bluray**, including
 prereleases, and offer their GitHub page without installing anything. The older
@@ -80,6 +82,9 @@ checks. See [profiles and updates](bluray/docs/USAGE.md#profiles-and-updates).
 
 For symptoms and useful report details, see
 [troubleshooting](bluray/docs/USAGE.md#troubleshooting-and-feedback).
+
+New ZIPs also contain `Readme.html`, `Readme.ru.html` and paired HTML guides
+for offline reading.
 
 ## Documentation and attribution
 

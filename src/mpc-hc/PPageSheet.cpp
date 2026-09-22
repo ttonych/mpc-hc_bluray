@@ -50,7 +50,7 @@ CPPageSheet::CPPageSheet(LPCTSTR pszCaption, IFilterGraph* pFG, CWnd* pParentWnd
     AddPage(&m_toolBar);
     AddPage(&m_toolBarLayout);
     AddPage(&m_theme);
-    AddPage(&m_formats);
+    // File associations belong to the installed player, not this portable fork.
     AddPage(&m_acceltbl);
 	AddPage(&m_mouse);
     AddPage(&m_logo);

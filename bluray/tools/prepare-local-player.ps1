@@ -35,8 +35,8 @@ foreach ($name in ($mapping.Keys | Sort-Object)) {
     Copy-Item -LiteralPath $mapping[$name] -Destination $target
     $files += [ordered]@{name=$name;sha256=(Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash.ToLowerInvariant()}
 }
-# Existence of this writable INI selects HC's portable settings backend.
-Set-Content -LiteralPath (Join-Path $dest 'mpc-hc64.ini') -Encoding unicode -Value '[Settings]'
+# Explicit seed opens the mandatory portable-profile setup on first launch.
+Set-Content -LiteralPath (Join-Path $dest 'mpc-hc64.ini') -Encoding unicode -Value "[Settings]`r`n[PortableTest]`r`nFirstRunComplete=0"
 $licenseDestination = Join-Path $dest 'licenses'
 New-Item -ItemType Directory -Force -Path $licenseDestination | Out-Null
 Get-ChildItem -LiteralPath (Join-Path $runtime 'licenses') | Copy-Item -Destination $licenseDestination -Recurse

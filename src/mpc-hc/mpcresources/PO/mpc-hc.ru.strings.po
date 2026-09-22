@@ -5916,3 +5916,43 @@ msgstr "Проверять новые выпуски MPC-HC Blu-ray автома
 msgctxt "IDS_BD_ABOUT_TITLE"
 msgid "MPC-HC Blu-ray (unofficial fork)"
 msgstr "MPC-HC Blu-ray (неофициальный форк)"
+
+msgctxt "IDS_BD_PT_FOUND"
+msgid "Found"
+msgstr "Найдено"
+
+msgctxt "IDS_BD_PT_NOT_FOUND"
+msgid "Not found"
+msgstr "Не найдено"
+
+msgctxt "IDS_BD_PT_FILE_NOT_SELECTED"
+msgid "No file selected"
+msgstr "Файл не выбран"
+
+msgctxt "IDS_BD_PT_SEARCH_FOLDER"
+msgid "Searched in: %s"
+msgstr "Поиск в папке: %s"
+
+msgctxt "IDS_BD_PT_INI_FILTER"
+msgid "MPC-HC settings (*.ini)|*.ini||"
+msgstr "Настройки MPC-HC (*.ini)|*.ini||"
+
+msgctxt "IDS_BD_PT_SELECT_FILE"
+msgid "Select an MPC-HC settings file"
+msgstr "Выберите файл настроек MPC-HC"
+
+msgctxt "IDS_BD_PT_BAD_SOURCE"
+msgid "Select an INI settings file from another copy of MPC-HC."
+msgstr "Выберите INI с настройками другой копии MPC-HC."
+
+msgctxt "IDS_BD_PT_IMPORT_FAILED"
+msgid "Could not copy the settings. Close the source player and check access to its profile and this folder. The source profile has not been changed."
+msgstr "Не удалось скопировать настройки. Закройте исходный плеер и проверьте доступ к его профилю и этой папке. Исходный профиль не изменён."
+
+msgctxt "IDS_BD_PT_WRITE_FAILED"
+msgid "Cannot open the portable profile for writing. Extract MPC-HC Blu-ray to a writable folder. The installed player profile will not be used."
+msgstr "Не удалось открыть portable-профиль для записи. Распакуйте MPC-HC Blu-ray в папку с правом записи. Профиль установленного плеера использоваться не будет."
+
+msgctxt "IDS_BD_PT_ASSOC_DISABLED"
+msgid "File associations and Explorer integration are disabled in this portable fork."
+msgstr "Ассоциации файлов и интеграция с Проводником отключены в portable-форке."

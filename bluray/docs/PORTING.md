@@ -288,3 +288,19 @@ caption/package checks pass. Native EN/RU About and live empty-release dialogs
 were inspected; no published-release download or disc playback is claimed by
 this change. The earlier cloud ZIP is unchanged. Portable import and offline HTML
 remain open; [Parity](PARITY.md) records the committed feature comparison.
+
+## Portable profile and HTML, 2026-09-23
+
+Source remains pinned MPC-BE `270cfdd4369224dd4108d0b1d1b8a4ab7b8fc56d`.
+Adapted `PortableTest`, `PortableProfileImport`, its component test and
+`package_docs.py`; `imports.json` records exact source paths/hashes. HC has no
+opt-in portable flag: it is mandatory. Import preserves sources, uses HC formats
+(A–P binary and decimal DWORD), excludes history/playlists and resets BD-J paths.
+HLSL subfolders retain their structure. A separate window class/AppID and blocked
+association writes separate the fork from an installed HC.
+
+Native importer and complete actual-JAR component tests, x64/RU builds, EN/RU
+setup, cancellation, manual import, restart, write rejection and unchanged
+source/installed profiles pass locally. HTML/package tests verify local links
+and anchors. This is local evidence; the new cloud ZIP and its BD-J session
+require separate qualification.

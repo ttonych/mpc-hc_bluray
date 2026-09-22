@@ -2215,3 +2215,51 @@ msgstr "Обновить"
 msgctxt "IDD_BD_DISCS_IDOK"
 msgid "Close"
 msgstr "Закрыть"
+
+msgctxt "IDD_BD_PORTABLE_SETUP_CAPTION"
+msgid "First start of MPC-HC Blu-ray"
+msgstr "Первый запуск MPC-HC Blu-ray"
+
+msgctxt "IDD_BD_PORTABLE_SETUP_IDC_PT_INTRO"
+msgid "Choose settings for this portable copy."
+msgstr "Выберите настройки этой portable-копии."
+
+msgctxt "IDD_BD_PORTABLE_SETUP_IDC_PT_GROUP"
+msgid "Settings"
+msgstr "Настройки"
+
+msgctxt "IDD_BD_PORTABLE_SETUP_IDC_PT_REGISTRY"
+msgid "Windows &registry"
+msgstr "&Реестр Windows"
+
+msgctxt "IDD_BD_PORTABLE_SETUP_IDC_PT_AUTO_INI"
+msgid "INI file (&automatic search)"
+msgstr "INI-файл (&автоматический поиск)"
+
+msgctxt "IDD_BD_PORTABLE_SETUP_IDC_PT_MANUAL_INI"
+msgid "Select an INI file &manually"
+msgstr "Выбрать INI-файл &вручную"
+
+msgctxt "IDD_BD_PORTABLE_SETUP_IDC_PT_DEFAULTS"
+msgid "Use &default settings"
+msgstr "Использовать настройки по &умолчанию"
+
+msgctxt "IDD_BD_PORTABLE_SETUP_IDC_PT_SOURCE_KEY"
+msgid "HKCU\\Software\\MPC-HC\\MPC-HC"
+msgstr "HKCU\\Software\\MPC-HC\\MPC-HC"
+
+msgctxt "IDD_BD_PORTABLE_SETUP_IDC_PT_BROWSE"
+msgid "&Browse..."
+msgstr "&Обзор..."
+
+msgctxt "IDD_BD_PORTABLE_SETUP_IDC_PT_NOTICE"
+msgid "The source is kept unchanged. History, playlists and BD-J saves are not copied. Settings and new disc data stay with this copy."
+msgstr "Источник остаётся неизменным. История, плейлисты и сохранения BD-J не копируются. Настройки и новые данные дисков хранятся с этой копией."
+
+msgctxt "IDD_BD_PORTABLE_SETUP_IDOK"
+msgid "OK"
+msgstr "ОК"
+
+msgctxt "IDD_BD_PORTABLE_SETUP_IDCANCEL"
+msgid "Cancel"
+msgstr "Отмена"

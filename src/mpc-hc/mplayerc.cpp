@@ -20,6 +20,8 @@
  */
 
 #include "stdafx.h"
+#include "PortableTest.h"
+#include "Translations.h"
 #include "mplayerc.h"
 #include "AboutDlg.h"
 #include "CmdLineHelpDlg.h"
@@ -778,15 +780,7 @@ bool CMPlayerCApp::StoreSettingsToIni(bool bKeepRegistryCopy)
 
 bool CMPlayerCApp::StoreSettingsToRegistry()
 {
-    CString historyini;
-    if (m_HistoryProfile) {
-        historyini = m_HistoryProfile->GetIniPath();
-    }
-    bool result = m_Profile.StoreSettingsTo(SETS_REGISTRY);
-    if (result && !historyini.IsEmpty() && ::PathFileExistsW(historyini)) {
-        _wremove(historyini);
-    }
-    return result;
+    return false; // A portable fork never changes the installed player's store.
 }
 
 CString CMPlayerCApp::GetIniPath() const
@@ -998,66 +992,18 @@ void CMPlayerCApp::ApplyHKLMDefaults()
 
 bool CMPlayerCApp::UseAppDataForHistory()
 {
-    if (m_iHistoryInAppData < 0) {
-        // First call happens before LoadSettings() has run, so read the raw
-        // option value once; later calls use the cached copy.
-        bool inAppData = false;
-        m_Profile.ReadBool(IDS_R_SETTINGS, IDS_RS_HISTORY_IN_APPDATA, inAppData);
-        m_iHistoryInAppData = inAppData ? 1 : 0;
-    }
-    return m_iHistoryInAppData > 0;
+    return false;
 }
 
-void CMPlayerCApp::SetHistoryInAppData(bool inAppData)
+void CMPlayerCApp::SetHistoryInAppData(bool /*inAppData*/)
 {
-    m_iHistoryInAppData = inAppData ? 1 : 0;
+    m_iHistoryInAppData = 0;
 }
 
 CStringW CMPlayerCApp::ResolveHistoryIniPath()
 {
-    const CStringW programPath = CProfile::HistoryIniPath();
-
-    CString appDataDir;
-    if (!GetAppDataPath(appDataDir)) {
-        return programPath;
-    }
-    CPath historyFileName(programPath);
-    historyFileName.StripPath(); // filename incl. extension (PathUtils::FileName drops the extension)
-    const CStringW appDataPath = PathUtils::CombinePaths(appDataDir, historyFileName);
-
-    bool useAppData = UseAppDataForHistory();
-    if (!useAppData && !PathUtils::Exists(programPath)) {
-        // Fall back to %APPDATA% when the history file cannot be created next
-        // to the executable (e.g. installed in a read-only folder but running
-        // portable off a shared settings INI).
-        HANDLE hProbe = ::CreateFileW(programPath, GENERIC_WRITE, 0, nullptr,
-                                      CREATE_NEW, FILE_ATTRIBUTE_NORMAL, nullptr);
-        if (hProbe == INVALID_HANDLE_VALUE) {
-            useAppData = true;
-            if (m_iHistoryInAppData != 1) {
-                m_iHistoryInAppData = 1;
-                m_Profile.WriteInt(IDS_R_SETTINGS, IDS_RS_HISTORY_IN_APPDATA, m_iHistoryInAppData);
-            }
-        } else {
-            ::CloseHandle(hProbe);
-            ::DeleteFileW(programPath); // probe only, leave no empty file behind
-        }
-    }
-
-    const CStringW target = useAppData ? appDataPath : programPath;
-    const CStringW other  = useAppData ? programPath : appDataPath;
-    if (useAppData) {
-        ::CreateDirectoryW(appDataDir, nullptr);
-    }
-    // Carry an existing history file over when the location changes (option
-    // toggled, or the fallback newly triggered), so history is not lost.
-    if (!PathUtils::Exists(target) && PathUtils::Exists(other)) {
-        if (!::MoveFileExW(other, target, MOVEFILE_COPY_ALLOWED)) {
-            ::CopyFileW(other, target, TRUE); // source not deletable; copy is enough
-        }
-    }
-
-    return target;
+    // Do not move or copy installed-player history from AppData.
+    return CProfile::HistoryIniPath();
 }
 
 bool CMPlayerCApp::GetPlaylistSavePath(CString& path)
@@ -1100,6 +1046,7 @@ bool CMPlayerCApp::GetAppDataPath(CString& path)
 
 bool CMPlayerCApp::ChangeSettingsLocation(bool useIni)
 {
+    if (!useIni) return false;
     bool success;
 
     // Load favorites so that they can be correctly saved to the new location
@@ -2111,19 +2058,25 @@ BOOL CMPlayerCApp::InitInstance()
 
     PreProcessCommandLine();
 
-    // The settings store auto-detects its location (portable INI or registry) on
-    // construction. In portable mode this splits MediaHistory into its own file.
-    SetupSettingsStore();
-
     m_s->ParseCommandLine(m_cmdln);
+
+    if (m_s->nCLSwitches & (CLSW_REGEXTVID | CLSW_REGEXTAUD | CLSW_REGEXTPL | CLSW_UNREGEXT | CLSW_ADMINOPTION | CLSW_ICONSASSOC | CLSW_EMBEDDING)) {
+        Translations::SetDefaultLanguage();
+        AfxMessageBox(IDS_BD_PT_ASSOC_DISABLED, MB_ICONINFORMATION);
+        return FALSE;
+    }
 
     VERIFY(SetCurrentDirectory(PathUtils::GetProgramPath()));
 
     if (m_s->nCLSwitches & (CLSW_HELP | CLSW_UNRECOGNIZEDSWITCH)) { // show commandline help window
-        m_s->LoadSettings();
+        Translations::SetDefaultLanguage();
         ShowCmdlnSwitches();
         return FALSE;
     }
+
+    if ((m_s->nCLSwitches & CLSW_CLOSE) && m_s->slFiles.IsEmpty()) return FALSE;
+    if (!InitializePortableTest()) return FALSE;
+    SetupSettingsStore();
 
     if (m_s->nCLSwitches & CLSW_RESET) { // reset settings
         // We want the other instances to be closed before resetting the settings.
@@ -2142,7 +2095,7 @@ BOOL CMPlayerCApp::InitInstance()
         // Remove the settings, then re-mark the history split so the next run
         // does not try to re-split an already-empty store.
         m_Profile.Clear();
-        m_Profile.WriteString(_T("Version"), _T("HistorySplit"), _T("1")); // history is separate; don't re-split
+        SetPortableDefaults(); // local defaults, including separate history
         m_Profile.Flush(true);
         if (m_HistoryProfile) {
             m_HistoryProfile->Clear();
@@ -2312,7 +2265,7 @@ BOOL CMPlayerCApp::InitInstance()
     // single-instance forwarding have returned above), apply the deferred
     // settings policies (newer-version warning + HKLM machine defaults) before
     // settings are read.
-    ApplySettingsPolicies();
+    // Portable profiles are user-selected; do not apply installed-player HKLM defaults.
 
     m_s->MigrateSettings(); // migrate old settings
     m_s->LoadSettings();    // read settings
@@ -2393,7 +2346,7 @@ BOOL CMPlayerCApp::InitInstance()
     // From here on Explorer can hand this instance a selection through COM. Registered
     // before anything below pumps messages, so an instance COM started for that purpose
     // is reachable before the first-run prompt can hold it up.
-    m_shellDropTargetServer.Register(pFrame);
+    // Explorer COM verbs belong to installed MPC-HC; normal window drag-and-drop remains available.
 
     if (AfxGetAppSettings().HasFixedWindowSize() && IsWindows8OrGreater()) {//make adjustments for drop shadow frame
         CRect rect, frame;
