@@ -1,6 +1,22 @@
 # Development
 
-[Русский](DEVELOPMENT.ru.md) · [Rules](../../AGENTS.md)
+[Русский](DEVELOPMENT.ru.md) · [Rules](../../AGENTS.md) · [Contributing](../../CONTRIBUTING.md) · [Releases](RELEASING.md)
+
+## Repository layout
+
+| Path | Purpose |
+| --- | --- |
+| `src/mpc-hc`, `include`, `src/thirdparty` | MPC-HC source and recorded dependencies, including LAV |
+| `bluray/sources.json`, `bluray/imports.json` | Exact component pins and donor provenance |
+| `bluray/patches`, `bluray/ports` | Maintained library/LAV patches and source adaptations |
+| `bluray/tools` | Build, regression, publication and packaging tools |
+| `bluray/docs`, `bluray/CHANGELOG*.md` | Paired guides, validation, porting records and fork changes |
+| `bluray/vendor`, `bluray/dependencies`, `bluray/build`, `bluray/out`, `bluray/diagnostics`, `bluray/runtime` | Ignored local inputs, outputs and test data |
+
+Clone this fork with its Git history; run the commands below from its root.
+Keep `origin` for the fork and `upstream` for official MPC-HC. Inspect source
+revisions before building; do not substitute a downloaded snapshot for history.
+The version scheme is [MPC-HC base plus fork release number](RELEASING.md).
 
 ## Sources and tools
 
@@ -190,7 +206,8 @@ python ./bluray/tools/test-bluray-compatibility.py
 
 When adapting menu mouse input, keep fullscreen toolbar visibility updates even
 when the disc consumes movement. Verify bottom-edge hover in menu/film/return;
-check native toolbars separately from the renderer-specific exclusive OSD bar.
+check native toolbars separately from renderer OSD. Use D3D11 fullscreen windowed
+as the primary madVR mode; do not enable exclusive as a test prerequisite.
 
 ISO regression: run `./bluray/tools/test-iso-opening.ps1`; optionally pass a local
 `-ImagePath` for native mount ownership checks. In the MSVC environment, run
@@ -212,3 +229,48 @@ INI, checks recorded hashes and writes a new ZIP without overwriting earlier one
 Use `python bluray/tools/package-player.py --verify <candidate.zip>` after download.
 It neither bundles Java/madVR nor publishes a Release. Qualify the exact archive
 with [the runtime matrix](VALIDATION.md) before publication.
+
+The complete version/tag/changelog and draft-to-publication procedure is in
+[Releasing](RELEASING.md). Current packaged guides are Markdown; MPC-BE's offline
+HTML documentation renderer is not ported. Relative links to files outside the
+package are rewritten to the exact source commit by the packager.
+
+## Updating the two sources and dependencies
+
+Select updates deliberately in an `update/` branch. Preserve original history,
+authors and licenses, and finish local checks before the PR. A newer upstream
+release alone does not authorize changing the base.
+
+- **MPC-HC:** adopt a selected official tag, resolve HC/Blu-ray integration
+  conflicts and update submodules to the tag's recorded revisions. Recheck graph,
+  settings, resources, revision calculation and normal playback. Change source
+  pins and paired changelogs together.
+- **MPC-BE Blu-ray:** compare a fixed donor commit with the last recorded one.
+  Classify each change as shared, adapted, already present, inapplicable or
+  deferred, with dependent patches/tests. Do not merge the whole donor branch.
+  Keep common algorithms close, and document HC-specific results in Porting.
+- **LAV:** preserve the maintained bridge's PID selection, PlayItem boundaries,
+  timestamps and MPEG-2 still behavior. Rebase its patch against the selected
+  revision with new reviewed manifests; test both menu and ordinary-file paths.
+  LAV's internal libbluray remains a separate dependency.
+- **libbluray:** review upstream fixes before removing or adapting a patch.
+  Verify DLL/JAR/header versions together, including the internal playlist
+  structures used for menu audio; these are not a stable public ABI. The menu
+  engine currently accepts 1.5.0. Update version checks and package/source/license
+  records deliberately; passing a checksum is not an API/ABI compatibility test.
+- **Java:** pin build JDK and tested playback runtime separately as applicable.
+  Rebuild both JARs and run actual-JAR HAVi tests after Java changes, then check
+  BD-J startup, navigation and saves in the player.
+
+For each update, preserve the old candidate, use a new isolated portable test
+folder and qualify the resulting cloud ZIP before release. Avoid replacing
+manifests merely to silence an unexplained hash or source mismatch.
+
+## Text encoding
+
+Fork Markdown is UTF-8. In PowerShell use explicit `-Encoding UTF8` when reading
+or writing it; a system-default encoding round trip can corrupt Russian labels
+even in the English README. Preserve resource encodings/BOMs and existing line
+endings, especially `.rc`, rather than applying a bulk conversion. The fast
+documentation checker requires valid UTF-8 and exact EN/RU navigation labels;
+review the displayed text as well as its automatic checks.

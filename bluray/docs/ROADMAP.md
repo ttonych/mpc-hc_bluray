@@ -55,10 +55,25 @@
 
 ## Next open work
 
-1. Broader BD-J matrix: a mouse-capable menu, Java/saves lifecycle, other discs,
+1. Implement fork version branding and update behavior before the first release:
+   one version source, EXE/About/package consistency, official-base revision
+   calculation and updates from this fork. The planned first version is
+   `2.8.2-bluray.1`; see [versioning and releases](RELEASING.md).
+2. Broader BD-J matrix: a mouse-capable menu, Java/saves lifecycle, other discs,
    menu audio/stills, language combinations and additional decoder paths.
-2. Qualify the exact cloud ZIP with the remaining clean-profile release matrix;
+3. Qualify the exact cloud ZIP with the remaining clean-profile release matrix;
    local results do not qualify a cloud package. See [Validation](VALIDATION.md).
+
+## Donor features still to assess
+
+- Mandatory portable-profile behavior and first-run profile import, retaining
+  source settings and isolating history and BD-J data. Today isolation depends
+  on keeping the supplied INI beside the EXE.
+- Offline HTML guides and later Java-selection improvements. Current packaged
+  guides are Markdown; the donor's uncommitted work is not a transfer baseline.
+
+These are explicit gaps, not claims of implemented parity or automatic approval
+to port every future donor feature. Use fixed commits and record the selection.
 
 This remains experimental. Full compatibility, HDR accuracy, DVD ISO and MVC
 stereo output are unqualified. New upstream versions do not replace pins automatically.
