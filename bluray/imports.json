@@ -505,5 +505,7 @@
     "donor_commit": "270cfdd4369224dd4108d0b1d1b8a4ab7b8fc56d",
     "scope": "History/content scanner, metadata review, docs/resource checks, manual CI and clean allowlist packaging adapted to HC/LAV. Dedicated package/metadata regressions added.",
     "verification": "Local source checks and component/built-JAR checks pass; cloud build and exact-ZIP runtime qualification are separate."
-  }
+  },
+  "initial_hc_port_commit": "5004099e31c7fb7833060b3d9b8c8d0fa4b1b9d5",
+  "initial_hc_pull_request": "https://github.com/ttonych/mpc-hc_bluray/pull/1"
 }

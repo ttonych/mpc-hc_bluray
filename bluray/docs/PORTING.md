@@ -250,3 +250,6 @@ cover LAV manifests/licenses, PO translations, public identities and the exact H
 build sequence. Local scanner/package regressions and all component checks pass.
 Renderer identity, ISO lifecycle and ordinary-file results are in [VALIDATION.md](VALIDATION.md).
 D3D11 fullscreen windowed is primary; no global renderer setting is bundled.
+
+The initial HC port is commit `5004099e31c7fb7833060b3d9b8c8d0fa4b1b9d5`, reviewed
+with publication follow-ups in [PR #1](https://github.com/ttonych/mpc-hc_bluray/pull/1).
