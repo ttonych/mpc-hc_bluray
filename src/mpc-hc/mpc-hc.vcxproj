@@ -76,7 +76,7 @@
       <SupportUnloadOfDelayLoadedDLL>true</SupportUnloadOfDelayLoadedDLL>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\include;..\DSUtil;..\filters\renderer\VideoRenderers;..\thirdparty;..\thirdparty\AudioTools;..\thirdparty\MediaInfo\library\Source;..\thirdparty\freetype2\freetype2\include;..\thirdparty\ResizableLib\ResizableLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\bluray\out\libbluray-1.5.0-x64\include;..\..\bluray\vendor\libbluray-1.5.0\src;..\DSUtil;..\filters\renderer\VideoRenderers;..\thirdparty;..\thirdparty\AudioTools;..\thirdparty\MediaInfo\library\Source;..\thirdparty\freetype2\freetype2\include;..\thirdparty\ResizableLib\ResizableLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Manifest>
       <AdditionalManifestFiles>$(ProjectDir)res\mpc-hc.exe.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -145,6 +145,8 @@ if not exist "$(OutDir)LAVFilters" if exist "$(SolutionDir)bin\mpc-hc_x86\LAVFil
     <ClCompile Include="..\thirdparty\XeScrollBar\XeScrollBarBase.cpp" />
     <ClCompile Include="AboutDlg.cpp" />
     <ClCompile Include="AddCommandDlg.cpp" />
+    <ClCompile Include="BlurayMenu.cpp" />
+    <ClCompile Include="MainFrmBluray.cpp" />
     <ClCompile Include="AppSettings.cpp" />
     <ClCompile Include="AuthDlg.cpp" />
     <ClCompile Include="BaseGraph.cpp" />
@@ -276,6 +278,9 @@ if not exist "$(OutDir)LAVFilters" if exist "$(SolutionDir)bin\mpc-hc_x86\LAVFil
     <ClCompile Include="PPageBase.cpp" />
     <ClCompile Include="PPageCapture.cpp" />
     <ClCompile Include="PPageDVD.cpp" />
+    <ClCompile Include="PPageBluray.cpp" />
+    <ClCompile Include="BlurayCompatibilityDlg.cpp" />
+    <ClCompile Include="BlurayDiscsDlg.cpp" />
     <ClCompile Include="PPageExternalFilters.cpp" />
     <ClCompile Include="PPageFileInfoClip.cpp" />
     <ClCompile Include="PPageFileInfoDetails.cpp" />
@@ -349,6 +354,20 @@ if not exist "$(OutDir)LAVFilters" if exist "$(SolutionDir)bin\mpc-hc_x86\LAVFil
     <ClInclude Include="..\thirdparty\XeScrollBar\xescrollbarbase.h" />
     <ClInclude Include="AboutDlg.h" />
     <ClInclude Include="AddCommandDlg.h" />
+    <ClInclude Include="BlurayAdvancedSettings.h" />
+    <ClInclude Include="BlurayArgbBuffer.h" />
+    <ClInclude Include="BlurayCatalog.h" />
+    <ClInclude Include="BlurayDiscStorage.h" />
+    <ClInclude Include="BlurayMediaMonitor.h" />
+    <ClInclude Include="BlurayMenu.h" />
+    <ClInclude Include="BlurayMenuAudio.h" />
+    <ClInclude Include="BlurayMenuAudioPlayer.h" />
+    <ClInclude Include="BlurayMenuBackground.h" />
+    <ClInclude Include="BlurayMenuColor.h" />
+    <ClInclude Include="BlurayMenuCoordinates.h" />
+    <ClInclude Include="BlurayMenuRle.h" />
+    <ClInclude Include="BlurayPlaybackClock.h" />
+    <ClInclude Include="BluraySettings.h" />
     <ClInclude Include="AppSettings.h" />
     <ClInclude Include="AuthDlg.h" />
     <ClInclude Include="BaseGraph.h" />
@@ -488,6 +507,12 @@ if not exist "$(OutDir)LAVFilters" if exist "$(SolutionDir)bin\mpc-hc_x86\LAVFil
     <ClInclude Include="PPageBase.h" />
     <ClInclude Include="PPageCapture.h" />
     <ClInclude Include="PPageDVD.h" />
+    <ClInclude Include="PPageBluray.h" />
+    <ClInclude Include="BlurayCompatibilityDlg.h" />
+    <ClInclude Include="BlurayJava.h" />
+    <ClInclude Include="BlurayDiscsDlg.h" />
+    <ClInclude Include="BlurayOpen.h" />
+    <ClInclude Include="BlurayIso.h" />
     <ClInclude Include="PPageExternalFilters.h" />
     <ClInclude Include="PPageFileInfoClip.h" />
     <ClInclude Include="PPageFileInfoDetails.h" />

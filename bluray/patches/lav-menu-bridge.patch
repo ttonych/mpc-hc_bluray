@@ -1,0 +1,453 @@
+diff --git a/decoder/LAVVideo/LAVVideo.h b/decoder/LAVVideo/LAVVideo.h
+index 0381d04e..18df3095 100644
+--- a/decoder/LAVVideo/LAVVideo.h
++++ b/decoder/LAVVideo/LAVVideo.h
+@@ -199,6 +199,7 @@ class __declspec(uuid("EE30215D-164F-4A92-A4EB-9D4C13390F9F")) CLAVVideo
+             return FilterInGraphSafe(m_pOutput, clsid);
+     }
+     STDMETHODIMP_(DWORD) GetDecodeFlags() { return m_dwDecodeFlags; }
++    STDMETHODIMP_(BOOL) IsInputFlushing() { return m_pInput && m_pInput->IsFlushing(); }
+     STDMETHODIMP_(CMediaType &) GetInputMediaType() { return m_pInput->CurrentMediaType(); }
+     STDMETHODIMP GetLAVPinInfo(LAVPinInfo &info)
+     {
+diff --git a/decoder/LAVVideo/decoders/ILAVDecoder.h b/decoder/LAVVideo/decoders/ILAVDecoder.h
+index f39c8976..3b39efc6 100644
+--- a/decoder/LAVVideo/decoders/ILAVDecoder.h
++++ b/decoder/LAVVideo/decoders/ILAVDecoder.h
+@@ -260,6 +260,8 @@ interface ILAVVideoCallback
+      * @return flags
+      */
+     STDMETHOD_(DWORD, GetDecodeFlags)() PURE;
++    // Abort bounded still-frame repetition when the input is being flushed.
++    STDMETHOD_(BOOL, IsInputFlushing)() PURE;
+ #define LAV_VIDEO_DEC_FLAG_STREAMAR_BLACKLIST 0x00000001
+ #define LAV_VIDEO_DEC_FLAG_ONLY_DTS 0x00000002
+ #define LAV_VIDEO_DEC_FLAG_LAVSPLITTER 0x00000008
+diff --git a/decoder/LAVVideo/decoders/avcodec.cpp b/decoder/LAVVideo/decoders/avcodec.cpp
+index 769165c4..e5046873 100644
+--- a/decoder/LAVVideo/decoders/avcodec.cpp
++++ b/decoder/LAVVideo/decoders/avcodec.cpp
+@@ -783,6 +783,7 @@ STDMETHODIMP CDecAvcodec::InitDecoder(AVCodecID codec, const CMediaType *pmt, co
+ 
+ STDMETHODIMP CDecAvcodec::DestroyDecoder()
+ {
++    ClearMpeg2Still();
+     m_pAVCodec = nullptr;
+ 
+     if (m_pParser)
+@@ -953,6 +954,59 @@ STDMETHODIMP CDecAvcodec::Decode(const BYTE *buffer, int buflen, REFERENCE_TIME
+     return S_OK;
+ }
+ 
++// MPEG-2 still additions: (C) 2006-2026 MPC-BE authors, GPL-3.0-or-later.
++// See the host project's bluray/ports/MPC-BE-Authors.txt and COPYING.txt.
++// Adapted from MPC-BE's isolated MPEG-2 still handling. Keep the compressed
++// I-picture, so software and avcodec-based hardware paths use their normal output.
++void CDecAvcodec::ClearMpeg2Still()
++{
++    m_mpeg2StillPacket.clear();
++    m_rtMpeg2Still = AV_NOPTS_VALUE;
++}
++
++HRESULT CDecAvcodec::DecodeMpeg2Still(const BYTE *buffer, int size, REFERENCE_TIME time, REFERENCE_TIME stop)
++{
++    AVPacket *packet = av_packet_alloc();
++    if (!packet)
++        return E_OUTOFMEMORY;
++    HRESULT hr = FillAVPacketData(packet, buffer, size, nullptr, false);
++    if (SUCCEEDED(hr))
++    {
++        packet->pts = time;
++        hr = DecodePacket(packet, time, stop);
++    }
++    av_packet_free(&packet);
++    return hr;
++}
++
++HRESULT CDecAvcodec::RepeatMpeg2Still(REFERENCE_TIME next)
++{
++    if (m_mpeg2StillPacket.empty() || m_rtMpeg2Still < 0 || next <= m_rtMpeg2Still)
++        return S_OK;
++    const REFERENCE_TIME step = GetFrameDuration();
++    if (step <= 0)
++        return S_OK;
++    const REFERENCE_TIME gap = next - m_rtMpeg2Still;
++    // Bound malformed timestamps and cadence before entering the loop.
++    if (gap / 2 < step || gap > 60 * UNITS || gap / step > 3600)
++        return S_OK;
++    const BYTE sequenceEnd[] = {0, 0, 1, 0xb7};
++    for (REFERENCE_TIME offset = step; offset < gap - step / 2; offset += step)
++    {
++        if (m_pCallback->IsInputFlushing())
++            return S_FALSE;
++        const REFERENCE_TIME time = m_rtMpeg2Still + offset;
++        HRESULT hr = DecodeMpeg2Still(m_mpeg2StillPacket.data(), int(m_mpeg2StillPacket.size()), time, time + min(step, next - time));
++        if (FAILED(hr))
++            return hr;
++        // Release the delayed reference picture without draining the decoder.
++        hr = DecodeMpeg2Still(sequenceEnd, sizeof(sequenceEnd), AV_NOPTS_VALUE, AV_NOPTS_VALUE);
++        if (FAILED(hr))
++            return hr;
++    }
++    return S_OK;
++}
++
+ STDMETHODIMP CDecAvcodec::ParsePacket(const BYTE *buffer, int buflen, REFERENCE_TIME rtStartIn, REFERENCE_TIME rtStopIn,
+                                       IMediaSample *pSample)
+ {
+@@ -1028,6 +1082,19 @@ STDMETHODIMP CDecAvcodec::ParsePacket(const BYTE *buffer, int buflen, REFERENCE_
+         // decode any parsed data
+         if (pOutLen > 0)
+         {
++            const BYTE sequenceEnd[] = {0, 0, 1, 0xb7};
++            const bool endsSequence = m_nCodecId == AV_CODEC_ID_MPEG2VIDEO && pOutLen > 4
++                && !memcmp(pOutBuffer + pOutLen - 4, sequenceEnd, sizeof(sequenceEnd));
++            hr = RepeatMpeg2Still(rtStart);
++            ClearMpeg2Still();
++            if (hr != S_OK)
++                return hr;
++            if (endsSequence && m_pParser->pict_type == AV_PICTURE_TYPE_I && rtStart >= 0
++                && pOutLen <= 16 * 1024 * 1024 && (!pSample || pSample->IsPreroll() != S_OK))
++            {
++                m_mpeg2StillPacket.assign(pOutBuffer, pOutBuffer + pOutLen);
++                m_rtMpeg2Still = rtStart;
++            }
+             AVPacket *avpkt = av_packet_alloc();
+ 
+             // set data pointers
+@@ -1045,6 +1112,9 @@ STDMETHODIMP CDecAvcodec::ParsePacket(const BYTE *buffer, int buflen, REFERENCE_
+             // and free it after
+             av_packet_free(&avpkt);
+ 
++            if (SUCCEEDED(hr) && endsSequence)
++                hr = DecodeMpeg2Still(sequenceEnd, sizeof(sequenceEnd), AV_NOPTS_VALUE, AV_NOPTS_VALUE);
++
+             if (FAILED(hr))
+             {
+                 return hr;
+@@ -1053,6 +1123,7 @@ STDMETHODIMP CDecAvcodec::ParsePacket(const BYTE *buffer, int buflen, REFERENCE_
+         // or perform a flush at the end
+         else if (bFlush)
+         {
++            ClearMpeg2Still();
+             hr = DecodePacket(nullptr, AV_NOPTS_VALUE, AV_NOPTS_VALUE);
+             if (FAILED(hr))
+             {
+@@ -1473,6 +1544,7 @@ send_packet:
+ 
+ STDMETHODIMP CDecAvcodec::Flush()
+ {
++    ClearMpeg2Still();
+     if (m_pAVCtx && avcodec_is_open(m_pAVCtx))
+     {
+         avcodec_flush_buffers(m_pAVCtx);
+diff --git a/decoder/LAVVideo/decoders/avcodec.h b/decoder/LAVVideo/decoders/avcodec.h
+index c3aa2aa7..6846159c 100644
+--- a/decoder/LAVVideo/decoders/avcodec.h
++++ b/decoder/LAVVideo/decoders/avcodec.h
+@@ -22,6 +22,7 @@
+ #include "DecBase.h"
+ 
+ #include <map>
++#include <vector>
+ 
+ #define AVCODEC_MAX_THREADS 32
+ 
+@@ -62,6 +63,9 @@ class CDecAvcodec : public CDecBase
+     STDMETHODIMP FillAVPacketData(AVPacket *avpkt, const BYTE *buffer, int buflen, IMediaSample *pSample,
+                                   bool bRefCounting);
+     STDMETHODIMP DecodePacket(AVPacket *avpkt, REFERENCE_TIME rtStartIn, REFERENCE_TIME rtStopIn);
++    HRESULT DecodeMpeg2Still(const BYTE *buffer, int size, REFERENCE_TIME time, REFERENCE_TIME stop);
++    HRESULT RepeatMpeg2Still(REFERENCE_TIME next);
++    void ClearMpeg2Still();
+     STDMETHODIMP ParsePacket(const BYTE *buffer, int buflen, REFERENCE_TIME rtStart, REFERENCE_TIME rtStop,
+                              IMediaSample *pSample);
+ 
+@@ -98,6 +102,8 @@ class CDecAvcodec : public CDecBase
+     TimingCache m_tcThreadBuffer[AVCODEC_MAX_THREADS];
+     int m_CurrentThread = 0;
+ 
++    std::vector<BYTE> m_mpeg2StillPacket;
++    REFERENCE_TIME m_rtMpeg2Still = AV_NOPTS_VALUE;
+     REFERENCE_TIME m_rtStartCache = AV_NOPTS_VALUE;
+     BOOL m_bResumeAtKeyFrame = FALSE;
+     BOOL m_bWaitingForKeyFrame = FALSE;
+diff --git a/demuxer/Demuxers/BDDemuxer.cpp b/demuxer/Demuxers/BDDemuxer.cpp
+index d0487119..7dc0fd82 100644
+--- a/demuxer/Demuxers/BDDemuxer.cpp
++++ b/demuxer/Demuxers/BDDemuxer.cpp
+@@ -31,6 +31,14 @@ extern "C"
+ int CBDDemuxer::BDByteStreamRead(void *opaque, uint8_t *buf, int buf_size)
+ {
+     CBDDemuxer *demux = (CBDDemuxer *)opaque;
++    const uint64_t limit = demux->m_menuReadStop.load();
++    if (limit != UINT64_MAX)
++    {
++        const uint64_t position = bd_tell(demux->m_pBD);
++        if (position >= limit)
++            return AVERROR_EOF;
++        buf_size = (int)std::min<uint64_t>(buf_size, limit - position);
++    }
+     int ret = bd_read(demux->m_pBD, buf, buf_size);
+     return (ret != 0) ? ret : AVERROR_EOF;
+ }
+@@ -535,6 +543,14 @@ STDMETHODIMP CBDDemuxer::FillMVCExtensionQueue(REFERENCE_TIME rtBase)
+         return E_FAIL;
+ }
+ 
++HRESULT CBDDemuxer::SetPlayItemStop(UINT endExclusive)
++{
++    if (!endExclusive || endExclusive >= m_clipByteStarts.size())
++        return E_INVALIDARG;
++    m_menuReadStop.store(m_clipByteStarts[endExclusive]);
++    return S_OK;
++}
++
+ STDMETHODIMP CBDDemuxer::SetTitle(int idx)
+ {
+     HRESULT hr = S_OK;
+@@ -555,6 +571,26 @@ STDMETHODIMP CBDDemuxer::SetTitle(int idx)
+         return E_FAIL;
+     }
+ 
++    // Cache immutable boundaries before the demux thread starts. The UI only
++    // publishes an atomic read limit; it never calls libbluray concurrently.
++    m_menuReadStop.store(UINT64_MAX);
++    m_clipByteStarts.clear();
++    if (m_pTitle)
++    {
++        for (unsigned i = 0; i < m_pTitle->clip_count; ++i)
++        {
++            uint64_t position = 0;
++            if (!bd_get_clip_infos(m_pBD, i, nullptr, nullptr, &position, nullptr))
++            {
++                m_clipByteStarts.clear();
++                break;
++            }
++            m_clipByteStarts.push_back(position);
++        }
++        if (!m_clipByteStarts.empty())
++            m_clipByteStarts.push_back(bd_get_title_size(m_pBD));
++    }
++
+     MPLS_PL *mpls = bd_get_title_mpls(m_pBD);
+     if (mpls)
+     {
+diff --git a/demuxer/Demuxers/BDDemuxer.h b/demuxer/Demuxers/BDDemuxer.h
+index ffd2a6e9..6b4cc1df 100644
+--- a/demuxer/Demuxers/BDDemuxer.h
++++ b/demuxer/Demuxers/BDDemuxer.h
+@@ -19,6 +19,7 @@
+ 
+ #pragma once
+ 
++#include <atomic>
+ #include "BaseDemuxer.h"
+ #include "LAVFDemuxer.h"
+ 
+@@ -51,11 +52,21 @@ class CBDDemuxer
+     STDMETHODIMP Open(LPCOLESTR pszFileName, LPCOLESTR pszUserAgent = NULL, LPCOLESTR pszReferrer = NULL);
+     STDMETHODIMP Start();
+     REFERENCE_TIME GetDuration() const;
++    int GetTransportPID(DWORD stream) const override
++    {
++        return m_lavfDemuxer ? m_lavfDemuxer->GetTransportPID(stream) : -1;
++    }
++    HRESULT SetPlayItemStop(UINT endExclusive) override;
+     STDMETHODIMP GetNextPacket(Packet **ppPacket) { return m_lavfDemuxer->GetNextPacket(ppPacket); }
+     STDMETHODIMP Seek(REFERENCE_TIME rTime);
+     STDMETHODIMP Reset() { return E_NOTIMPL; }
+     const char *GetContainerFormat() const;
+-    virtual DWORD GetContainerFlags() { return LAVFMT_TS_DISCONT | LAVFMT_TS_DISCONT_NO_DOWNSTREAM; }
++    virtual DWORD GetContainerFlags()
++    {
++        // Navigation uses authored playlist time, including long gaps between
++        // still frames. Generic TS discontinuity repair would collapse them.
++        return m_menuReadStop.load() != UINT64_MAX ? 0 : LAVFMT_TS_DISCONT | LAVFMT_TS_DISCONT_NO_DOWNSTREAM;
++    }
+ 
+     CStreamList *GetStreams(StreamType type)
+     {
+@@ -142,6 +153,8 @@ class CBDDemuxer
+     static int64_t CBDDemuxer::BDByteStreamSeek(void *opaque, int64_t offset, int whence);
+ 
+   private:
++    std::atomic<uint64_t> m_menuReadStop{UINT64_MAX};
++    std::vector<uint64_t> m_clipByteStarts;
+     BLURAY *m_pBD = nullptr;
+     AVIOContext *m_pb = nullptr;
+     char m_cBDRootPath[4096] = {0};
+diff --git a/demuxer/Demuxers/BaseDemuxer.h b/demuxer/Demuxers/BaseDemuxer.h
+index 9e0c076e..0865d172 100644
+--- a/demuxer/Demuxers/BaseDemuxer.h
++++ b/demuxer/Demuxers/BaseDemuxer.h
+@@ -93,6 +93,11 @@ class CBaseDemuxer : public CUnknown
+     virtual STDMETHODIMP Start() { return E_NOTIMPL; }
+     // Abort opening the file
+     virtual STDMETHODIMP AbortOpening(int mode = 1, int timeout = 0) { return E_NOTIMPL; }
++    // Optional Blu-ray navigator bridge. Ordinary playback leaves it unused.
++    virtual int GetTransportPID(DWORD stream) const { return -1; }
++    virtual HRESULT SetPlayItemStop(UINT endExclusive) { return E_NOTIMPL; }
++    virtual HRESULT GetPresentationStart(REFERENCE_TIME *start) { return E_NOTIMPL; }
++
+     // Get Duration
+     virtual REFERENCE_TIME GetDuration() const = 0;
+     // Get the next packet from the file
+diff --git a/demuxer/Demuxers/LAVFDemuxer.cpp b/demuxer/Demuxers/LAVFDemuxer.cpp
+index 9f117271..0a42da8f 100644
+--- a/demuxer/Demuxers/LAVFDemuxer.cpp
++++ b/demuxer/Demuxers/LAVFDemuxer.cpp
+@@ -3061,6 +3061,23 @@ STDMETHODIMP CLAVFDemuxer::CreateDOVIEnhancementLayerSubStream(DWORD dwParentStr
+     return S_OK;
+ }
+ 
++int CLAVFDemuxer::GetTransportPID(DWORD stream) const
++{
++    if (!m_avFormat || stream >= m_avFormat->nb_streams || !m_bMPEGTS)
++        return -1;
++    return m_avFormat->streams[stream]->id;
++}
++
++HRESULT CLAVFDemuxer::GetPresentationStart(REFERENCE_TIME *start)
++{
++    if (!start)
++        return E_POINTER;
++    if (!m_avFormat || m_avFormat->start_time == AV_NOPTS_VALUE)
++        return E_UNEXPECTED;
++    *start = GetStartTime();
++    return S_OK;
++}
++
+ REFERENCE_TIME CLAVFDemuxer::GetStartTime() const
+ {
+     return av_rescale(m_avFormat->start_time, DSHOW_TIME_BASE, AV_TIME_BASE);
+diff --git a/demuxer/Demuxers/LAVFDemuxer.h b/demuxer/Demuxers/LAVFDemuxer.h
+index a075bb48..f5e11eda 100644
+--- a/demuxer/Demuxers/LAVFDemuxer.h
++++ b/demuxer/Demuxers/LAVFDemuxer.h
+@@ -165,6 +165,8 @@ class CLAVFDemuxer
+     unsigned int GetNumStreams() const { return m_avFormat->nb_streams; }
+ 
+     REFERENCE_TIME GetStartTime() const;
++    int GetTransportPID(DWORD stream) const override;
++    HRESULT GetPresentationStart(REFERENCE_TIME *start) override;
+     void SetBluRay(CBDDemuxer *pBluRay) { m_pBluRay = pBluRay; }
+ 
+     void AddMPEGTSStream(int pid, uint32_t stream_type);
+diff --git a/demuxer/LAVSplitter/LAVSplitter.cpp b/demuxer/LAVSplitter/LAVSplitter.cpp
+index f313c94c..48a3fc90 100644
+--- a/demuxer/LAVSplitter/LAVSplitter.cpp
++++ b/demuxer/LAVSplitter/LAVSplitter.cpp
+@@ -336,7 +336,7 @@ STDMETHODIMP CLAVSplitter::NonDelegatingQueryInterface(REFIID riid, void **ppv)
+ 
+     return QI(IMediaSeeking) QI(IAMStreamSelect) QI(ISpecifyPropertyPages) QI(ISpecifyPropertyPages2) QI2(ILAVFSettings)
+         QI2(ILAVFSettingsMPCHCCustom)
+-        QI2(ILAVFSettingsInternal) QI2(ILAVFSettingsEnhancementLayers) QI(IObjectWithSite) QI(IBufferInfo) __super::NonDelegatingQueryInterface(riid, ppv);
++        QI2(ILAVFSettingsInternal) QI2(ILAVFSettingsEnhancementLayers) QI(IObjectWithSite) QI(IBufferInfo) QI(IBlurayStreamSelect) QI(IBlurayPlaybackControl) __super::NonDelegatingQueryInterface(riid, ppv);
+ 
+ }
+ 
+@@ -1612,6 +1612,47 @@ STDMETHODIMP CLAVSplitter::Enable(long lIndex, DWORD dwFlags)
+     return S_FALSE;
+ }
+ 
++STDMETHODIMP CLAVSplitter::FindStream(WORD pid, DWORD *index, DWORD *group, DWORD *ordinal)
++{
++    CheckPointer(index, E_POINTER);
++    CheckPointer(group, E_POINTER);
++    CheckPointer(ordinal, E_POINTER);
++    CAutoLock lock(this);
++    CheckPointer(m_pDemuxer, E_UNEXPECTED);
++    DWORD offset = 0;
++    for (int type = 0; type < CBaseDemuxer::unknown; ++type)
++    {
++        if (type == CBaseDemuxer::video_el && !m_settings.DemuxEnhancementLayer)
++            continue;
++        const auto *streams = m_pDemuxer->GetStreams((CBaseDemuxer::StreamType)type);
++        for (DWORD i = 0; i < streams->size(); ++i)
++        {
++            if (m_pDemuxer->GetTransportPID(streams->at(i).pid) == pid)
++            {
++                *index = offset + i;
++                *group = type;
++                *ordinal = i;
++                return S_OK;
++            }
++        }
++        offset += (DWORD)streams->size();
++    }
++    return VFW_E_NOT_FOUND;
++}
++
++STDMETHODIMP CLAVSplitter::SetPlayItemStop(UINT endExclusive)
++{
++    CAutoLock lock(this);
++    return m_pDemuxer ? m_pDemuxer->SetPlayItemStop(endExclusive) : E_UNEXPECTED;
++}
++
++STDMETHODIMP CLAVSplitter::GetPresentationStart(REFERENCE_TIME *start)
++{
++    CheckPointer(start, E_POINTER);
++    CAutoLock lock(this);
++    return m_pDemuxer ? m_pDemuxer->GetPresentationStart(start) : E_UNEXPECTED;
++}
++
+ STDMETHODIMP CLAVSplitter::Info(long lIndex, AM_MEDIA_TYPE **ppmt, DWORD *pdwFlags, LCID *plcid, DWORD *pdwGroup,
+                                 WCHAR **ppszName, IUnknown **ppObject, IUnknown **ppUnk)
+ {
+diff --git a/demuxer/LAVSplitter/LAVSplitter.h b/demuxer/LAVSplitter/LAVSplitter.h
+index 8e7bc492..08489f06 100644
+--- a/demuxer/LAVSplitter/LAVSplitter.h
++++ b/demuxer/LAVSplitter/LAVSplitter.h
+@@ -34,6 +34,7 @@
+ #include "LAVSplitterSettingsInternal.h"
+ #include "SettingsProp.h"
+ #include "IBufferInfo.h"
++#include "IBlurayStreamSelect.h"
+ #include "IURLSourceFilterLAV.h"
+ 
+ #include "ISpecifyPropertyPages2.h"
+@@ -68,6 +69,8 @@ class __declspec(uuid("171252A0-8820-4AFE-9DF8-5C92B2D66B04")) CLAVSplitter
+     , public ISpecifyPropertyPages2
+     , public IObjectWithSite
+     , public IBufferInfo
++    , public IBlurayStreamSelect
++    , public IBlurayPlaybackControl
+ {
+   public:
+     CLAVSplitter(LPUNKNOWN pUnk, HRESULT *phr);
+@@ -115,6 +118,11 @@ class __declspec(uuid("171252A0-8820-4AFE-9DF8-5C92B2D66B04")) CLAVSplitter
+     STDMETHODIMP GetRate(double *pdRate);
+     STDMETHODIMP GetPreroll(LONGLONG *pllPreroll);
+ 
++    // Blu-ray navigator (opt-in, separate from persistent filter settings).
++    STDMETHODIMP FindStream(WORD pid, DWORD *index, DWORD *group, DWORD *ordinal);
++    STDMETHODIMP SetPlayItemStop(UINT endExclusive);
++    STDMETHODIMP GetPresentationStart(REFERENCE_TIME *start);
++
+     // IAMStreamSelect
+     STDMETHODIMP Count(DWORD *pcStreams);
+     STDMETHODIMP Enable(long lIndex, DWORD dwFlags);
+diff --git a/include/IBlurayStreamSelect.h b/include/IBlurayStreamSelect.h
+new file mode 100644
+--- /dev/null
++++ b/include/IBlurayStreamSelect.h
+@@ -0,0 +1,18 @@
++// SPDX-License-Identifier: GPL-3.0-or-later
++#pragma once
++
++// Translate a disc PID into IAMStreamSelect's index and per-group ordinal.
++// Kept separate from the public IMpegSplitterFilter settings interface.
++interface __declspec(uuid("75951DA2-2B84-47C0-8D8D-6476E25E6706"))
++IBlurayStreamSelect : public IUnknown {
++    STDMETHOD(FindStream)(WORD pid, DWORD* index, DWORD* group, DWORD* ordinal) PURE;
++};
++
++// Restrict the demuxer to complete play items while the disc navigator holds
++// a still. Set before IMediaSeeking::SetPositions (which flushes queued data).
++interface __declspec(uuid("89E5DF56-9B39-4C91-8847-6ACB52DEBD75"))
++IBlurayPlaybackControl : public IUnknown {
++    STDMETHOD(SetPlayItemStop)(UINT endExclusive) PURE;
++    // PTS origin used to normalize a standalone M2TS file's media positions.
++    STDMETHOD(GetPresentationStart)(REFERENCE_TIME* start) PURE;
++};

@@ -22,6 +22,8 @@
 #pragma once
 
 #include "ChildView.h"
+#include "BlurayMenu.h"
+#include "BlurayIso.h"
 #include "DVBChannel.h"
 #include "DebugShadersDlg.h"
 #include "DropTarget.h"
@@ -226,6 +228,7 @@ private:
         TIMER_HIDER,
         TIMER_WINDOW_FULLSCREEN,
         TIMER_DELAYEDSEEK,
+        TIMER_BLURAY_MENU,
         TIMER_ONETIME_START,
         TIMER_ONETIME_END = TIMER_ONETIME_START + 127,
     };
@@ -1037,6 +1040,21 @@ public:
     afx_msg LRESULT OnCommandLineReceived(WPARAM wParam, LPARAM lParam);
     void ProcessCommandLine(CAtlList<CString>& cmdln, ULONGLONG tArrived);
     afx_msg void OnFileOpendvd();
+    bool OpenBlurayMenu(const CString& path);
+    bool OpenDiscImage(const CString& path);
+    std::unique_ptr<CBlurayIso> m_discImage;
+    void TickBlurayMenu();
+    void StopBlurayMenu();
+    void UpdateBlurayTitle(const CString& root);
+    HRESULT SetBlurayPlaybackPosition(REFERENCE_TIME position);
+    bool BlurayMouse(HWND window, CPoint point, UINT message);
+    std::unique_ptr<CBlurayMenu> m_blurayMenu;
+    bool m_bluraySwitching = false;
+    bool m_blurayTicking = false;
+    bool m_blurayMouseDown = false;
+    bool m_bluraySubtitleEnabled = true;
+    bool m_blurayChaptersHidden = false;
+    CString m_blurayTitle;
     afx_msg void OnFileOpendevice();
     afx_msg void OnFileOpenOpticalDisk(UINT nID);
     afx_msg void OnFileReopen();
@@ -1408,7 +1426,7 @@ protected:
     CMenu* m_pActiveContextMenu;
     CMenu* m_pActiveSystemMenu;
 
-    void UpdateSeekbarChapterBag();
+    void UpdateSeekbarChapterBag(bool force = true);
     void UpdateAudioSwitcher();
 
     void LoadArtToViews(const CString& imagePath);

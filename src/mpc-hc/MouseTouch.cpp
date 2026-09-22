@@ -307,6 +307,9 @@ bool CMouse::MVRUp(UINT nFlags, const CPoint& point)
 // Left button
 void CMouse::InternalOnLButtonDown(UINT nFlags, const CPoint& point)
 {
+    if (m_pMainFrame->BlurayMouse(GetWnd().m_hWnd, point, WM_LBUTTONDOWN)) {
+        return;
+    }
     m_bLeftDown = false;
     GetWnd().SetFocus();
     SetCursor(nFlags, point);
@@ -422,6 +425,9 @@ void CMouse::OnTimerLeftUp(HWND hWnd, UINT nMsg, UINT_PTR nIDEvent, DWORD dwTime
 
 void CMouse::InternalOnLButtonUp(UINT nFlags, const CPoint& point)
 {
+    if (m_pMainFrame->BlurayMouse(GetWnd().m_hWnd, point, WM_LBUTTONUP)) {
+        return;
+    }
 #if TRACE_LEFTCLICKS
     TRACE(L"InternalOnLButtonUp\n");
 #endif
@@ -649,6 +655,11 @@ BOOL CMouse::InternalOnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 
 void CMouse::InternalOnMouseMove(UINT nFlags, const CPoint& point)
 {
+    if (m_pMainFrame->BlurayMouse(GetWnd().m_hWnd, point, WM_MOUSEMOVE)) {
+        // Disc navigation still needs the player controls at the screen edge.
+        m_pMainFrame->UpdateControlState(CMainFrame::UPDATE_CONTROLS_VISIBILITY);
+        return;
+    }
     CPoint screenPoint(point);
     GetWnd().ClientToScreen(&screenPoint);
 

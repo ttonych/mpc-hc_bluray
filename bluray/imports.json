@@ -1,0 +1,509 @@
+{
+  "donor_commit": "270cfdd4369224dd4108d0b1d1b8a4ab7b8fc56d",
+  "files": [
+    {
+      "path": "bluray/patches/libbluray-1.5.0-mouse-page.patch",
+      "donor_sha256": "fce7b4cabbf4cbc41fdea78ca65b58bf8c8f5424f97f7b259ed88859ad79e2d5",
+      "adapted": false
+    },
+    {
+      "path": "bluray/patches/libbluray-1.5.0-mouse-page.json",
+      "donor_sha256": "a6154968aa628f0d3ff2edb11ad3b0559434fcb6a274affc190a56322290702a",
+      "adapted": false
+    },
+    {
+      "path": "bluray/patches/libbluray-1.5.0-playmark-seek.patch",
+      "donor_sha256": "344d535a224ff57e7fafeb0469beab054ab318dd532e5007e5d049ecf5a8b865",
+      "adapted": false
+    },
+    {
+      "path": "bluray/patches/libbluray-1.5.0-playmark-seek.json",
+      "donor_sha256": "bfa48e8048078d8495bed9b774cd9fdc5487f9292c7f39277f8af0171ef44e2a",
+      "adapted": false
+    },
+    {
+      "path": "bluray/patches/libbluray-1.5.0-bdj-toggle.patch",
+      "donor_sha256": "0ce3017bdfe183a701c9a765b8fe35061e507ee48deb11349293f063b0aeae43",
+      "adapted": false
+    },
+    {
+      "path": "bluray/patches/libbluray-1.5.0-bdj-toggle.json",
+      "donor_sha256": "76edd62e86aa035ac6469f35113af7fba73aca10fec52caac1c8c4c303bff857",
+      "adapted": false
+    },
+    {
+      "path": "bluray/tools/libbluray-local-patch.py",
+      "donor_sha256": "7ec41ff2644325429f9e073d938241105d48cd22be1d6474b06c89034c92f594",
+      "adapted": false
+    },
+    {
+      "path": "bluray/tools/test-libbluray-local-patch.py",
+      "donor_sha256": "9d097e2b59633feb189f102441c21d1a9745aadd74887c4a91dc57d102f30e73",
+      "adapted": false
+    },
+    {
+      "path": "bluray/tools/test-playmark-seek.py",
+      "donor_sha256": "f3d4869602cf90fa12b42f8f174e913cac337e1efc87e553fb77ed4ef8fb2628",
+      "adapted": true
+    },
+    {
+      "path": "bluray/tools/test-process-query-hook.py",
+      "donor_sha256": "83609e8495de7d05cf0bf5c016919175d1c7f7293860e8c6efaa9ec6ee09722b",
+      "adapted": true
+    },
+    {
+      "path": "bluray/vcpkg.json",
+      "donor_sha256": "1c39dd7c95c4378e3e99ca139bf3a8268f19d754ad2d5f496a4d07d717b48f7c",
+      "adapted": true
+    },
+    {
+      "path": "bluray/tools/requirements-build.txt",
+      "donor_sha256": "56f7519e72f7666fa30c232b8e424463a76b5eb30ecbeb3b479d1a330623e838",
+      "adapted": false
+    },
+    {
+      "path": "bluray/tools/build-libbluray.ps1",
+      "donor_sha256": "94755119ee24c55cb1afe49d7194be701de30968197faf8d2534a02761de2a7b",
+      "adapted": true
+    },
+    {
+      "path": "bluray/tools/build-bdj.ps1",
+      "donor_sha256": "5a01e5f7bc949332ec1aa4f25676786b5f89b5c129a06880b246c8d5e92689d6",
+      "adapted": true
+    },
+    {
+      "path": "bluray/tools/test-bdj-toggle.ps1",
+      "donor_sha256": "08dbb0353a618f14d61d3567f43bf679284fc384326bdca6a83a8bb17244582d",
+      "adapted": false
+    },
+    {
+      "path": "bluray/tools/extract-source.py",
+      "donor_sha256": "a89ca816e1c7fadc14cd6465ebf632b86d1b1cd7aed36e61423228081ae0c032",
+      "adapted": false
+    },
+    {
+      "path": "bluray/ports/LICENSE.txt",
+      "donor_sha256": "1ee376fc340e0aa6ad6a3581c94126e741468705096ac92263048a21daa86460",
+      "adapted": false
+    },
+    {
+      "path": "bluray/ports/libudfread/msvc.diff",
+      "donor_sha256": "e0579b9d4e5accf5c096c276449572c425ddafe2ed3e2bd9d6b678965ca95a77",
+      "adapted": false
+    },
+    {
+      "path": "bluray/ports/libudfread/portfile.cmake",
+      "donor_sha256": "ef8928f3386cb837d958c8de3ba923149d06923c95f3a9f9a49dae5b3f340ac9",
+      "adapted": false
+    },
+    {
+      "path": "bluray/ports/libudfread/vcpkg.json",
+      "donor_sha256": "0d34b5144fa8c13bf55433d2958b1940f84e46183498805f4bc5766c7499e9b0",
+      "adapted": false
+    },
+    {
+      "path": "bluray/probe/bdj-toggle-test/ToggleTest.java",
+      "donor_sha256": "43a08970eff515a7253a22d6199e7e5105fd7eaa0c2c312b36fefa566addaf27",
+      "adapted": false
+    },
+    {
+      "path": "bluray/probe/bdj-toggle-test/support/org/videolan/BDJXletContext.java",
+      "donor_sha256": "70d90751461f4ff27aad503199530e1e1da3c3a29d3cb869f2bf9751e23a1d94",
+      "adapted": false
+    },
+    {
+      "path": "bluray/probe/bdj-toggle-test/support/org/videolan/Logger.java",
+      "donor_sha256": "370a6621253d5792139840ec79d6bcec80fa2f73c0e403296f4087e16c040c42",
+      "adapted": false
+    },
+    {
+      "path": "bluray/probe/meson.build",
+      "donor_sha256": "4ea265fe2d10a7ce8997c3411b2a38d49d98b7fa02d856b0cbcdbad1c2dce0cd",
+      "adapted": false
+    },
+    {
+      "path": "bluray/probe/bluray-menu-probe.c",
+      "donor_sha256": "f644a33887de0e9391e7ff4caed2f16fd537483b4a3ccb92dd0027a876019fcd",
+      "adapted": false
+    },
+    {
+      "path": "bluray/probe/bluray-mouse-probe.c",
+      "donor_sha256": "1b30059825b05d3848cfed71a2c168b3978462e33b6491eea79c7dc803a34fb0",
+      "adapted": false
+    },
+    {
+      "path": "bluray/probe/bluray-bdj-probe.c",
+      "donor_sha256": "1b2acff5b30275a610e7c08f44c4e3ff25236b40cd9041f2934c88d10a0e045c",
+      "adapted": false
+    },
+    {
+      "path": "bluray/probe/bluray-rle-probe.c",
+      "donor_sha256": "7b28c20759e10809fc089fda693e7e24abdab0f8eb542b508482dcac541f8e3d",
+      "adapted": false
+    },
+    {
+      "path": "src/mpc-hc/BlurayMenu.h",
+      "donor_path": "src/apps/mplayerc/BlurayMenu.h",
+      "donor_sha256": "e426bc2d3e20fcef5391778ddd678596b6e2570507df6d4ec2239f0822d5250f",
+      "adapted": true
+    },
+    {
+      "path": "src/mpc-hc/BlurayMenu.cpp",
+      "donor_path": "src/apps/mplayerc/BlurayMenu.cpp",
+      "donor_sha256": "e8d9ee42345a0802d6b80f1629e2341549ff3615a618642af78053dbd4455093",
+      "adapted": true
+    },
+    {
+      "path": "src/mpc-hc/BlurayAdvancedSettings.h",
+      "donor_path": "src/apps/mplayerc/BlurayAdvancedSettings.h",
+      "donor_sha256": "ed8aa4100cfced6aa5b51ea104475b70128a049e95d15116aea78fa669de59a2",
+      "adapted": false
+    },
+    {
+      "path": "src/mpc-hc/BlurayArgbBuffer.h",
+      "donor_path": "src/apps/mplayerc/BlurayArgbBuffer.h",
+      "donor_sha256": "594856b6122a3d0f2b27cd872ec259e096d2ead769dfc27344870783ce3fd813",
+      "adapted": false
+    },
+    {
+      "path": "src/mpc-hc/BlurayCatalog.h",
+      "donor_path": "src/apps/mplayerc/BlurayCatalog.h",
+      "donor_sha256": "58283529bf13837eab34e4962292d4617defe0e3348b862d8f7963fd1f074bb2",
+      "adapted": false
+    },
+    {
+      "path": "src/mpc-hc/BlurayDiscStorage.h",
+      "donor_path": "src/apps/mplayerc/BlurayDiscStorage.h",
+      "donor_sha256": "c2275a76689c4e28ae0e8eadc9b9bc181ae7c47b9cbf36733ba88c31bb524000",
+      "adapted": false
+    },
+    {
+      "path": "src/mpc-hc/BlurayMediaMonitor.h",
+      "donor_path": "src/apps/mplayerc/BlurayMediaMonitor.h",
+      "donor_sha256": "db8ec12d924b9069282c7fcc49a1c77a9682e65acdb80993d8383286a4dd1ca7",
+      "adapted": false
+    },
+    {
+      "path": "src/mpc-hc/BlurayMenuAudio.h",
+      "donor_path": "src/apps/mplayerc/BlurayMenuAudio.h",
+      "donor_sha256": "a96e2f1f270e2868de6e381a95e3c2427f111a90ef9109ed46f26e4202c7439d",
+      "adapted": false
+    },
+    {
+      "path": "src/mpc-hc/BlurayMenuAudioPlayer.h",
+      "donor_path": "src/apps/mplayerc/BlurayMenuAudioPlayer.h",
+      "donor_sha256": "f1550e22ed457027bfe887162206f88a93fae75c32a33e518b1a56f6e8d318c6",
+      "adapted": true
+    },
+    {
+      "path": "src/mpc-hc/BlurayMenuBackground.h",
+      "donor_path": "src/apps/mplayerc/BlurayMenuBackground.h",
+      "donor_sha256": "605aab459b5d91d3cf60039f5c24569f6920fddf588419b26dd525b9bf0dbe01",
+      "adapted": false
+    },
+    {
+      "path": "src/mpc-hc/BlurayMenuColor.h",
+      "donor_path": "src/apps/mplayerc/BlurayMenuColor.h",
+      "donor_sha256": "d1ff6044137b8dbc63389f86d869bcb6dc0a6415559d36656665a15899d3e255",
+      "adapted": false
+    },
+    {
+      "path": "src/mpc-hc/BlurayMenuCoordinates.h",
+      "donor_path": "src/apps/mplayerc/BlurayMenuCoordinates.h",
+      "donor_sha256": "52eda1b1d22174b7d12c15d894d991ca970d8ac26ecc06be4c63fc0e28043ecf",
+      "adapted": false
+    },
+    {
+      "path": "src/mpc-hc/BlurayMenuRle.h",
+      "donor_path": "src/apps/mplayerc/BlurayMenuRle.h",
+      "donor_sha256": "d78e1cdd3e80be814ca50e79f1304d1737ebfdea5d27a3edeb18595cc8235637",
+      "adapted": false
+    },
+    {
+      "path": "src/mpc-hc/BlurayPlaybackClock.h",
+      "donor_path": "src/apps/mplayerc/BlurayPlaybackClock.h",
+      "donor_sha256": "4b4e11076da815aab2a45938e3c477ccdafc6b68f7d0343583b31b90d416b412",
+      "adapted": false
+    },
+    {
+      "path": "src/mpc-hc/BluraySettings.h",
+      "donor_path": "src/apps/mplayerc/BluraySettings.h",
+      "donor_sha256": "071d171c4f4d6a43c622a1301a6063c976d352e470db35d127f69c998966ff6e",
+      "adapted": true,
+      "scope": "HC profile mapping; added absolute-path and JVM-file validation for the native settings page"
+    },
+    {
+      "path": "include/IBlurayStreamSelect.h",
+      "donor_sha256": "aed0822770df49159f8020f45c372778523143ffe23d2019dcb40632e59eaeba",
+      "adapted": false
+    },
+    {
+      "path": "bluray/assets/bdj-canvas.mkv",
+      "donor_sha256": "25e52166d32c2d1b72e0876937bbb0765a491e6396ffcb255aff6f6e35d9f1f0",
+      "adapted": false
+    },
+    {
+      "path": "bluray/tools/test-bdj-argb.ps1",
+      "donor_sha256": "1a595c8e57e989c10411217041ce76e7bbe73d5103001582f157ba0f0bad520e",
+      "adapted": true
+    },
+    {
+      "path": "bluray/tools/test-menu-coordinates.ps1",
+      "donor_sha256": "84af845ba41065662e90c7fb1fdae9e6d4f93c505586becfea6239d72ae0a759",
+      "adapted": true
+    },
+    {
+      "path": "bluray/tools/test-menu-rle.ps1",
+      "donor_sha256": "9680c307f8d75ac20115803484b34f1118b7291242da30ff56e0dd85aacee3ec",
+      "adapted": true
+    },
+    {
+      "path": "bluray/tools/test-playback-clock.ps1",
+      "donor_sha256": "7de854cc917422bb1869880b6d7cd6266e7e9ac03aa8ad900f50799cf2c31439",
+      "adapted": true
+    },
+    {
+      "path": "bluray/probe/bluray-argb-test.cpp",
+      "donor_sha256": "20679a28222b4f55eb8d5cac0f58064ae9cb2c0a1122dde44cccd03d261f9367",
+      "adapted": true
+    },
+    {
+      "path": "bluray/probe/bluray-menu-audio-test.cpp",
+      "donor_sha256": "a0a4ad0a5879a2755b150fbed131f7bb5627299dfc39970913be22f769f5af77",
+      "adapted": true
+    },
+    {
+      "path": "bluray/probe/bluray-menu-background-test.cpp",
+      "donor_sha256": "a84dc8a4c1debcae199c18cdfa7610f1ccb1b5f33c10a94f03c8b982166a8d41",
+      "adapted": true
+    },
+    {
+      "path": "bluray/probe/bluray-menu-coordinates-test.cpp",
+      "donor_sha256": "e991f32956dabf26a6e11d9d9f0342ffd44664e1384f0646d11ac292213070af",
+      "adapted": true
+    },
+    {
+      "path": "bluray/probe/bluray-menu-rle-test.cpp",
+      "donor_sha256": "b21a483c2182c8ba4348cba37c9fe83145edec13aa5017cccbc9b07a95e63ca3",
+      "adapted": true
+    },
+    {
+      "path": "bluray/probe/bluray-playback-clock-test.cpp",
+      "donor_sha256": "8a393798c64fac1e6147b16916b3d6b18a720b271a9452bbafdc8363bd47901c",
+      "adapted": true
+    },
+    {
+      "path": "src/mpc-hc/MainFrmBluray.cpp",
+      "donor_path": "src/apps/mplayerc/MainFrm.cpp",
+      "donor_sha256": "75d34e1a578462501e9e53b79f0868551678bd38568d5e0e885bc7f36aef02ae",
+      "adapted": true,
+      "scope": "Graph bridge methods and fresh disc title resolution adapted to HC; common explicit/preference-driven menu opening with disc-root validation"
+    },
+    {
+      "path": "src/mpc-hc/mpc-hc.rc",
+      "donor_path": "src/apps/mplayerc/mplayerc.rc",
+      "donor_sha256": "8f0e04edef1acaae167a580e4a16ee62c93beea56f4aaab21ca989a109e11aaf",
+      "adapted": true,
+      "scope": "Blu-ray strings only"
+    },
+    {
+      "path": "src/mpc-hc/mpcresources/PO/mpc-hc.ru.strings.po",
+      "donor_path": "src/apps/mpcresources/mplayerc.ru.rc",
+      "donor_sha256": "e5c35d240b1ca0c9e48e882e23b40f9c5f9dead7c486c927215b55df5adc6d83",
+      "adapted": true,
+      "scope": "Russian Blu-ray strings only"
+    },
+    {
+      "path": "src/mpc-hc/MainFrm.cpp",
+      "donor_path": "src/apps/mplayerc/MainFrm.cpp",
+      "donor_sha256": "75d34e1a578462501e9e53b79f0868551678bd38568d5e0e885bc7f36aef02ae",
+      "adapted": true,
+      "scope": "Blu-ray branches of OnNavigateMenu/OnUpdateNavigateMenu and OnNavigateMenuItem/OnUpdateNavigateMenuItem; HC load-state guards; original DVD/file paths retained; menu chapter-marker suppression and disc caption priority adapted to HC; normal disc opening by BluRayMenus preference with internal-navigation guard"
+    },
+    {
+      "path": "bluray/tools/check-public-tree.py",
+      "donor_sha256": "58fbc93772329064e728b7711e6718ee9e5237e95a7d84fd80d14c5e83a52003",
+      "adapted": true
+    },
+    {
+      "path": "bluray/tools/test-public-check.py",
+      "donor_sha256": "22ac4b99142dbb0cf83fbe625e37dbf21d79ca4315996405f5c007b14a90f350",
+      "adapted": true
+    },
+    {
+      "path": "bluray/tools/check-docs-and-resources.py",
+      "donor_sha256": "3b7f6ac8dcc55d8f7a075b11d5df2d78cf82366cdd24e9b085ba4fcf4980f77d",
+      "adapted": true
+    },
+    {
+      "path": "bluray/tools/package-player.py",
+      "donor_sha256": "e5be7cd73336491c5439e8d497cd72f733841d2f3abc68e4e4455f184da750e7",
+      "adapted": true
+    },
+    {
+      "path": ".github/workflows/bluray-checks.yml",
+      "donor_sha256": "611e9ab70cd10008ad34d05426cb7236199c0772c9a40c02cde8fc4a2509d530",
+      "adapted": true
+    },
+    {
+      "path": ".github/workflows/bluray-build.yml",
+      "donor_sha256": "f4703f8f4ccebc175d5af3ac6e44de4987f233e6cfceb6cdaddc53d52079c71c",
+      "adapted": true
+    }
+  ],
+  "adapted_mpeg2_stills": {
+    "repository": "https://github.com/ttonych/mpc-be_bluray.git",
+    "commit": "270cfdd4369224dd4108d0b1d1b8a4ab7b8fc56d",
+    "introduced_by": "457b869a2b4ba49180ee3d6f5afba3d919a041b7",
+    "path": "src/filters/transform/MPCVideoDec/MPCVideoDec.cpp",
+    "sha256": "dd58df1bf82348fff658fd8cdea9fd1e268d5de72a1cb60de74dd0d3af64ac46",
+    "license": "GPL-3.0-or-later",
+    "adaptation": "Isolated I-picture repetition and sequence-end release in LAV avcodec; bounded size/count/time, input flush cancellation, cache lifecycle; LAV applies playback rate downstream."
+  },
+  "opening_settings_provenance": {
+    "repository": "https://github.com/ttonych/mpc-be_bluray.git",
+    "commit": "270cfdd4369224dd4108d0b1d1b8a4ab7b8fc56d",
+    "license": "GPL-3.0-or-later",
+    "destination": [
+      "src/mpc-hc/PPageBluray.cpp",
+      "src/mpc-hc/PPageBluray.h"
+    ],
+    "sources": [
+      {
+        "path": "src/apps/mplayerc/PPageBluray.cpp",
+        "sha256": "b9a67f0fe349e5c3fed06d12249c285c7fff983832e953125f8e9ae88a0476f5",
+        "scope": "Country/language enumeration and ISO-code choices"
+      },
+      {
+        "path": "src/apps/mplayerc/PPageBluray.h",
+        "sha256": "486bf4e300c61ca736cc695e4740f47ba2021984991796a8c8a369a7876d82cb",
+        "scope": "Property-page structure adapted to HC"
+      },
+      {
+        "path": "src/apps/mplayerc/BlurayDialogs.cpp",
+        "sha256": "862987a5c368b4847530766be3bdf5678ab466cea3a85a7d5ae59748167c5215",
+        "scope": "Java folder and BD-J storage controls/validation, partial adaptation"
+      }
+    ],
+    "adaptation": "One native HC property page for opening mode, region/country/languages, Java and BD-J roots; atomic validation and existing advanced values retained.",
+    "deferred": "Full advanced compatibility and disc-data catalogue UI; uncommitted donor Java experiments excluded.",
+    "hc_specific": [
+      "src/mpc-hc/BlurayOpen.h",
+      "bluray/tools/test-bluray-opening-settings.py"
+    ]
+  },
+  "compatibility_ui_provenance": {
+    "repository": "https://github.com/ttonych/mpc-be_bluray.git",
+    "commit": "270cfdd4369224dd4108d0b1d1b8a4ab7b8fc56d",
+    "destination": [
+      "src/mpc-hc/BlurayCompatibilityDlg.cpp",
+      "src/mpc-hc/BlurayCompatibilityDlg.h"
+    ],
+    "license": "GPL-3.0-or-later",
+    "sources": [
+      {
+        "path": "src/apps/mplayerc/BlurayDialogs.cpp",
+        "sha256": "862987a5c368b4847530766be3bdf5678ab466cea3a85a7d5ae59748167c5215",
+        "scope": "Value choices, descriptions and defaults; partial adaptation"
+      },
+      {
+        "path": "src/apps/mplayerc/mplayerc.rc",
+        "sha256": "8f0e04edef1acaae167a580e4a16ee62c93beea56f4aaab21ca989a109e11aaf",
+        "scope": "Value choices, descriptions and defaults; partial adaptation"
+      },
+      {
+        "path": "src/apps/mpcresources/mplayerc.ru.rc",
+        "sha256": "e5c35d240b1ca0c9e48e882e23b40f9c5f9dead7c486c927215b55df5adc6d83",
+        "scope": "Value choices, descriptions and defaults; partial adaptation"
+      }
+    ],
+    "adaptation": "Native HC modal draft editor; all 14 fields; parent Apply owns persistence; preset selection uses index/value to disambiguate equal translations.",
+    "tests": [
+      "bluray/tools/test-bluray-compatibility.py",
+      "bluray/tools/test-bluray-opening-settings.py"
+    ],
+    "deferred": "Disc-data catalogue UI.",
+    "hc_adaptation_notes": [
+      "Preset selection uses value/index identity, independent of translated label collisions.",
+      "Profile loading distinguishes absent keys from explicit UINT_MAX masks; existing profile format retained."
+    ],
+    "validation": {
+      "production_tests": "PASS: EN/RU choices, validation, nested Apply/Cancel, uint32 Save/Load boundary round trips",
+      "build": "x64 core and RU resource DLL PASS",
+      "live_gui": "EN/RU inspected; Cancel/Apply/restart/reset checks PASS; 150 compiled strings verified",
+      "scope": "Agent observations; no new disc playback qualification in this step"
+    }
+  },
+  "disc_data_ui_provenance": {
+    "repository": "https://github.com/ttonych/mpc-be_bluray.git",
+    "commit": "270cfdd4369224dd4108d0b1d1b8a4ab7b8fc56d",
+    "sources": [
+      {
+        "path": "src/apps/mplayerc/BlurayDialogs.cpp",
+        "sha256": "862987a5c368b4847530766be3bdf5678ab466cea3a85a7d5ae59748167c5215"
+      },
+      {
+        "path": "src/apps/mplayerc/BlurayDialogs.h",
+        "sha256": "634f0d54ef7dfd4bdae640962705192130edcc5e8b2d5ca8cf1f94b87fb99fac"
+      },
+      {
+        "path": "bluray/probe/bluray-disc-storage-test.cpp",
+        "sha256": "8a1e7a85622a55f06f857f65e6944574370cf86b0ab17137832c1b4b5677600f"
+      }
+    ],
+    "destination": [
+      "src/mpc-hc/BlurayDiscsDlg.cpp",
+      "src/mpc-hc/BlurayDiscsDlg.h",
+      "bluray/probe/bluray-disc-storage-test.cpp"
+    ],
+    "adaptation": "HC themed modal UI, cache-folder access, applied paths and immediate operation/retention notes; common algorithms and format unchanged.",
+    "validation": "Synthetic storage tests and EN/RU live GUI checks; no real saves reset. One BD-J reset/reopen resolves a new generation on copied catalogue data and retains a synthetic old-root marker; authored saved progress not tested."
+  },
+  "java_diagnostics": {
+    "origin": "HC addition; pinned donor only checked JVM file presence",
+    "files": [
+      "src/mpc-hc/BlurayJava.h",
+      "bluray/probe/bluray-java-test.cpp",
+      "bluray/probe/bluray-java-helper.cpp",
+      "bluray/tools/test-disc-java.ps1"
+    ],
+    "scope": "PE architecture and bounded external launcher check, not BD-J compatibility proof",
+    "validation": "Synthetic PE/process tests, Apply regression, real Java output and x86 rejection in GUI"
+  },
+  "hc_fullscreen_controls": {
+    "origin": "HC input adapter fix; not a donor import",
+    "file": "src/mpc-hc/MouseTouch.cpp",
+    "validation": "Before/after native fullscreen toolbar GUI; menu/film/return markers; command/display regressions; x64/RU builds; ordinary MPEG-2 smoke",
+    "scope": "Native toolbar only; renderer exclusive OSD and BD-J mouse activation remain unqualified"
+  },
+  "iso_opening_provenance": {
+    "repository": "https://github.com/ttonych/mpc-be_bluray.git",
+    "commit": "270cfdd4369224dd4108d0b1d1b8a4ab7b8fc56d",
+    "sources": [
+      {
+        "path": "src/apps/mplayerc/DiskImage.cpp",
+        "sha256": "63ad172f0709ce84d4578abaa2e8390758087f58e1fcee5ebb3a200f27efa564"
+      },
+      {
+        "path": "src/apps/mplayerc/DiskImage.h",
+        "sha256": "b327d701acafee5b0e69a546257d92da934fbc7e9e2e50a175e4c7653100e7c8"
+      },
+      {
+        "path": "src/apps/mplayerc/MainFrm.cpp",
+        "sha256": "75d34e1a578462501e9e53b79f0868551678bd38568d5e0e885bc7f36aef02ae"
+      }
+    ],
+    "destination": [
+      "src/mpc-hc/BlurayIso.h",
+      "src/mpc-hc/MainFrmBluray.cpp",
+      "src/mpc-hc/MainFrm.cpp"
+    ],
+    "adaptation": "Windows native ISO only; HC entry routing, RAII graph lifetime, existing-mount preservation, bounded drive-letter discovery and explicit errors. No third-party mounters.",
+    "validation": "Native mount ownership and production routing tests; x64/RU builds; agent menu/film/return/close/reopen observations; user confirmed ISO drag-and-drop opens menu. DVD ISO playback remains unqualified."
+  },
+  "publication_adaptation": {
+    "donor_commit": "270cfdd4369224dd4108d0b1d1b8a4ab7b8fc56d",
+    "scope": "History/content scanner, metadata review, docs/resource checks, manual CI and clean allowlist packaging adapted to HC/LAV. Dedicated package/metadata regressions added.",
+    "verification": "Local source checks and component/built-JAR checks pass; cloud build and exact-ZIP runtime qualification are separate."
+  }
+}

@@ -5346,3 +5346,549 @@ msgstr ""
 msgctxt "IDS_PPAGEADVANCED_SECONDARY_SUB_VERT_POS"
 msgid "Vertical position for secondary subtitle. Percentage offset from top."
 msgstr ""
+
+msgctxt "IDS_BD_ADVANCED_SETTING_REJECTED"
+msgid "libbluray rejected an advanced player setting."
+msgstr "libbluray не приняла один из дополнительных параметров плеера."
+
+msgctxt "IDS_BD_AUDIO_SELECTION_FAILED"
+msgid "Could not select the disc's audio track."
+msgstr "Не удалось выбрать звуковую дорожку диска."
+
+msgctxt "IDS_BD_CANVAS_MISSING"
+msgid "The local BD-J graphics canvas is missing."
+msgstr "В папке плеера отсутствует файл bdj-canvas.mkv для отображения графики BD-J."
+
+msgctxt "IDS_BD_DISC_CHANGED"
+msgid "Disc removed or changed. Open Blu-ray again."
+msgstr "Диск извлечён или заменён. Откройте Blu-ray заново."
+
+msgctxt "IDS_BD_DISC_READ_ERROR"
+msgid "Cannot read the Blu-ray disc. Open it again."
+msgstr "Не удалось прочитать диск Blu-ray. Откройте его заново."
+
+msgctxt "IDS_BD_DISC_UNAVAILABLE"
+msgid "The Blu-ray disc is no longer available. Open the disc again."
+msgstr "Диск Blu-ray больше недоступен. Откройте диск заново."
+
+msgctxt "IDS_BD_FIRST_PLAY_FAILED"
+msgid "Blu-ray First Play failed."
+msgstr "Не удалось запустить начальный сценарий Blu-ray (First Play)."
+
+msgctxt "IDS_BD_FIRST_PLAY_UNSUPPORTED"
+msgid "The disc has no supported Blu-ray First Play."
+msgstr "Начальный сценарий Blu-ray (First Play) отсутствует или не поддерживается."
+
+msgctxt "IDS_BD_INVALID_BDJ_GRAPHICS"
+msgid "Invalid BD-J graphics update."
+msgstr "Некорректное обновление графики BD-J."
+
+msgctxt "IDS_BD_INVALID_OVERLAY_REGION"
+msgid "Invalid Blu-ray overlay region."
+msgstr "Некорректная область графического слоя Blu-ray."
+
+msgctxt "IDS_BD_INVALID_OVERLAY_RLE"
+msgid "Invalid Blu-ray overlay RLE."
+msgstr "Некорректные данные RLE графического слоя Blu-ray."
+
+msgctxt "IDS_BD_JAVA_UNAVAILABLE"
+msgid "BD-J requires the local libbluray 1.5.0 JARs and a compatible x64 Java runtime."
+msgstr "Для BD-J нужны JAR-файлы libbluray 1.5.0 в папке плеера и совместимая 64-разрядная Java."
+
+msgctxt "IDS_BD_LIBRARY_INCOMPLETE"
+msgid "Incomplete libbluray DLL."
+msgstr "В DLL libbluray отсутствуют необходимые функции."
+
+msgctxt "IDS_BD_LIBRARY_MISSING"
+msgid "The local libbluray 1.5.0 DLL or one of its dependencies is missing."
+msgstr "Не удалось загрузить DLL libbluray 1.5.0 из папки плеера или одну из её зависимостей."
+
+msgctxt "IDS_BD_LIBRARY_VERSION_REQUIRED"
+msgid "This prototype requires libbluray 1.5.0."
+msgstr "Для этой сборки нужна libbluray 1.5.0."
+
+msgctxt "IDS_BD_MENU_BITMAP_ALLOC_FAILED"
+msgid "Cannot allocate Blu-ray menu bitmap."
+msgstr "Не удалось выделить память для изображения меню Blu-ray."
+
+msgctxt "IDS_BD_MENU_BITMAP_REJECTED"
+msgid "madVR rejected the Blu-ray menu bitmap."
+msgstr "madVR не принял изображение меню Blu-ray."
+
+msgctxt "IDS_BD_NAVIGATION_FAILED"
+msgid "Blu-ray navigation failed (event %u, parameter %u)."
+msgstr "Ошибка навигации Blu-ray (событие %u, параметр %u)."
+
+msgctxt "IDS_BD_OPEN_FAILED"
+msgid "Cannot open the Blu-ray disc."
+msgstr "Не удалось открыть диск Blu-ray."
+
+msgctxt "IDS_BD_PLAYLIST_SEGMENT_FAILED"
+msgid "Could not configure the Blu-ray playlist segment (0x%08X)."
+msgstr "Не удалось подготовить фрагмент плейлиста Blu-ray (0x%08X)."
+
+msgctxt "IDS_BD_POPUP_UNAVAILABLE"
+msgid "Pop-up menu is unavailable at this point. Use the Blu-ray top menu."
+msgstr "Всплывающее меню сейчас недоступно. Откройте главное меню Blu-ray."
+
+msgctxt "IDS_BD_RENDERER_UNSUPPORTED"
+msgid "The selected video renderer does not support Blu-ray menus in this build."
+msgstr "Выбранный видеорендерер не поддерживает меню Blu-ray в этой сборке."
+
+msgctxt "IDS_BD_SKIP_FORBIDDEN"
+msgid "The disc does not allow skipping at this point."
+msgstr "Диск не разрешает пропуск в этом месте."
+
+msgctxt "IDS_BD_STORAGE_CONFIG_ERROR"
+msgid "Cannot read the Blu-ray disc storage configuration."
+msgstr "Не удалось прочитать настройки хранилища данных диска Blu-ray."
+
+msgctxt "IDS_BD_SUBTITLE_SELECTION_FAILED"
+msgid "Could not select the disc's subtitle track."
+msgstr "Не удалось выбрать дорожку субтитров диска."
+
+msgctxt "IDS_BD_TOP_MENU_FORBIDDEN"
+msgid "The disc does not allow the top menu at this point."
+msgstr "Диск не разрешает вызов главного меню в этом месте."
+
+msgctxt "IDS_BD_UNSUPPORTED_OVERLAY_SIZE"
+msgid "Unsupported Blu-ray overlay dimensions."
+msgstr "Неподдерживаемые размеры графического слоя Blu-ray."
+
+
+
+msgctxt "IDS_BD_MAIN_MOVIE"
+msgid "Main movie"
+msgstr "Основной фильм"
+
+msgctxt "IDS_BD_DISC_MENUS"
+msgid "Disc menu"
+msgstr "Меню диска"
+
+msgctxt "IDS_BD_NO_PREFERENCE"
+msgid "No preference"
+msgstr "Без предпочтения"
+
+msgctxt "IDS_BD_AUTO_SEARCH"
+msgid "Automatic search"
+msgstr "Автоматический поиск"
+
+msgctxt "IDS_BD_PLAYER_FOLDER"
+msgid "In the player folder"
+msgstr "В папке плеера"
+
+msgctxt "IDS_BD_JAVA_AUTO"
+msgid "Automatic search for Java on the next disc open."
+msgstr "Автопоиск Java при следующем открытии диска."
+
+msgctxt "IDS_BD_JAVA_FOUND"
+msgid "JVM architecture matches the player. Use Check Java to test startup."
+msgstr "Разрядность JVM подходит. Кнопка «Проверить Java» проверит запуск."
+
+msgctxt "IDS_BD_JAVA_NOT_FOUND"
+msgid "JVM library not found in this folder."
+msgstr "Библиотека JVM в этой папке не найдена."
+
+msgctxt "IDS_BD_BAD_COUNTRY"
+msgid "Choose a country or enter a two-letter country code."
+msgstr "Выберите страну или введите её двухбуквенный код."
+
+msgctxt "IDS_BD_BAD_LANGUAGE"
+msgid "Choose a language or enter a three-letter language code."
+msgstr "Выберите язык или введите его трёхбуквенный код."
+
+msgctxt "IDS_BD_BAD_PATH"
+msgid "Enter an absolute folder path without quotes or line breaks."
+msgstr "Укажите полный путь к папке без кавычек и переносов строк."
+
+msgctxt "IDS_BD_BAD_JAVA"
+msgid "Select a Java installation with a valid JVM matching the player architecture."
+msgstr "Выберите Java с корректной JVM той же разрядности, что и плеер."
+
+msgctxt "IDS_BD_NOT_A_DISC"
+msgid "Select a Blu-ray disc root or its BDMV folder."
+msgstr "Выберите корень диска Blu-ray или его папку BDMV."
+
+msgctxt "IDD_PPAGEBLURAY"
+msgid "Playback::Blu-ray"
+msgstr "Воспроизведение::Blu-ray"
+
+msgctxt "IDS_BD_ADV_NAME"
+msgid "Parental age"
+msgstr "Возраст зрителя"
+
+msgctxt "IDS_BD_ADV_NAME_1"
+msgid "Player profile"
+msgstr "Профиль плеера"
+
+msgctxt "IDS_BD_ADV_NAME_2"
+msgid "Skipping and menu restrictions"
+msgstr "Ограничения переходов и меню"
+
+msgctxt "IDS_BD_ADV_NAME_3"
+msgid "2D / 3D preference"
+msgstr "Предпочтение 2D / 3D"
+
+msgctxt "IDS_BD_ADV_NAME_4"
+msgid "Audio capabilities"
+msgstr "Возможности аудио"
+
+msgctxt "IDS_BD_ADV_NAME_5"
+msgid "Video capabilities"
+msgstr "Возможности видео"
+
+msgctxt "IDS_BD_ADV_NAME_6"
+msgid "Display capabilities / size"
+msgstr "Возможности экрана"
+
+msgctxt "IDS_BD_ADV_NAME_7"
+msgid "3D capabilities"
+msgstr "Возможности 3D"
+
+msgctxt "IDS_BD_ADV_NAME_8"
+msgid "UHD capabilities"
+msgstr "Возможности UHD"
+
+msgctxt "IDS_BD_ADV_NAME_9"
+msgid "UHD display capabilities"
+msgstr "Возможности UHD-экрана"
+
+msgctxt "IDS_BD_ADV_NAME_10"
+msgid "HDR preference"
+msgstr "Предпочтение HDR"
+
+msgctxt "IDS_BD_ADV_NAME_11"
+msgid "SDR preference for disc menus"
+msgstr "Предпочтение SDR для меню"
+
+msgctxt "IDS_BD_ADV_NAME_12"
+msgid "Text subtitle capabilities"
+msgstr "Текстовые субтитры"
+
+msgctxt "IDS_BD_ADV_NAME_13"
+msgid "libbluray subtitle decoder"
+msgstr "Декодер субтитров libbluray"
+
+msgctxt "IDS_BD_ADV_DESC"
+msgid "PSR13: 0–255; 255 means no age limit. MPC-HC defaults to 255."
+msgstr "PSR13: 0–255; 255 означает отсутствие ограничения. Значение MPC-HC по умолчанию: 255."
+
+msgctxt "IDS_BD_ADV_DESC_1"
+msgid "PSR31: MPC-HC starts with profile 1.0. libbluray raises it to 5 (2.4) for 3D or 6 (3.1) for UHD. An explicit selection is applied after disc detection."
+msgstr "PSR31: перед открытием MPC-HC задаёт профиль 1.0. libbluray повышает его до 5 (2.4) для 3D или 6 (3.1) для UHD. Явный выбор применяется после определения диска."
+
+msgctxt "IDS_BD_ADV_DESC_2"
+msgid "libbluray levels: 0 — unchecked; 5 — relaxed; 10 — exceptions; 20 — compliant. The default uses library level 5 plus MPC-HC checks on skipping and menu calls."
+msgstr "Уровни libbluray: 0 — без проверок; 5 — ослабленные; 10 — с исключениями; 20 — полные. В режиме по умолчанию библиотека использует 5, а MPC-HC дополнительно проверяет запреты переходов и меню."
+
+msgctxt "IDS_BD_ADV_DESC_3"
+msgid "PSR21: 0 — 2D; 1 — 3D. Initial value is 0; 3D initialization sets 1. This does not enable stereoscopic output."
+msgstr "PSR21: 0 — 2D; 1 — 3D. Начальное значение 0, инициализация 3D устанавливает 1. Этот выбор не включает стереоскопический вывод."
+
+msgctxt "IDS_BD_ADV_DESC_4"
+msgid "PSR15 defaults to 0xAAAA; 0x5555 means stereo. The mask describes LPCM, Dolby Digital/Plus/TrueHD and DTS-HD. Custom masks can be entered."
+msgstr "PSR15: по умолчанию 0xAAAA. 0x5555 — стерео. Маска описывает LPCM, Dolby Digital/Plus/TrueHD и DTS-HD. Вручную можно ввести другую маску."
+
+msgctxt "IDS_BD_ADV_DESC_5"
+msgid "PSR29 defaults to 0x03. Bit 0x01: secondary HD video; bit 0x02: 25/50 Hz video."
+msgstr "PSR29: по умолчанию 0x03. Бит 0x01 — дополнительное HD-видео, 0x02 — видео 25/50 Гц."
+
+msgctxt "IDS_BD_ADV_DESC_6"
+msgid "PSR23 defaults to 0, or 0x0F for 3D. Bits 0–3 describe 3D modes; bits 8–19 hold screen width in cm (0 — unspecified)."
+msgstr "PSR23: по умолчанию 0; для 3D — 0x0F. Биты 0–3 описывают 3D-режимы, биты 8–19 — ширину экрана в см (0 — не указана)."
+
+msgctxt "IDS_BD_ADV_DESC_7"
+msgid "PSR24 defaults to 0; 3D initialization sets 0xFFFFFFFF. Public API 1.5.0 does not define individual bits."
+msgstr "PSR24: по умолчанию 0; при инициализации 3D — 0xFFFFFFFF. Публичный API 1.5.0 не расшифровывает отдельные биты."
+
+msgctxt "IDS_BD_ADV_DESC_8"
+msgid "PSR25 defaults to 0; UHD initialization sets 0xFFFFFFFF. Public API 1.5.0 does not define individual bits."
+msgstr "PSR25: по умолчанию 0; при инициализации UHD — 0xFFFFFFFF. Публичный API 1.5.0 не расшифровывает отдельные биты."
+
+msgctxt "IDS_BD_ADV_DESC_9"
+msgid "PSR26 defaults to 0; UHD initialization sets 0xFFFFFFFF. Public API 1.5.0 does not define individual bits."
+msgstr "PSR26: по умолчанию 0; при инициализации UHD — 0xFFFFFFFF. Публичный API 1.5.0 не расшифровывает отдельные биты."
+
+msgctxt "IDS_BD_ADV_DESC_10"
+msgid "PSR27 defaults to 0; UHD initialization sets 0xFFFFFFFF. This is information for menus, not a renderer HDR setting."
+msgstr "PSR27: по умолчанию 0; при инициализации UHD — 0xFFFFFFFF. Это значение для меню, а не настройка HDR видеорендерера."
+
+msgctxt "IDS_BD_ADV_DESC_11"
+msgid "PSR28 defaults to 0 in libbluray 1.5.0, including UHD initialization. The public API provides no named choices."
+msgstr "PSR28: стандартное значение libbluray 1.5.0 — 0, в том числе при инициализации UHD. Публичный API не определяет именованные варианты."
+
+msgctxt "IDS_BD_ADV_DESC_12"
+msgid "PSR30 defaults to 0x1FFFF in libbluray 1.5.0. Custom masks can be entered if needed."
+msgstr "PSR30: стандартная маска libbluray 1.5.0 — 0x1FFFF. При необходимости можно ввести другую маску."
+
+msgctxt "IDS_BD_ADV_DESC_13"
+msgid "BLURAY_PLAYER_SETTING_DECODE_PG: 0 — disable PG/TextST decoders; 1 — enable. Default is 0."
+msgstr "BLURAY_PLAYER_SETTING_DECODE_PG: 0 — выключить декодеры PG/TextST, 1 — включить. По умолчанию 0."
+
+msgctxt "IDS_BD_PROFILE_CHOICE"
+msgid "1.0 — Initial Standard"
+msgstr "1.0 — базовый"
+
+msgctxt "IDS_BD_PROFILE_CHOICE_1"
+msgid "1.1 — BonusView / PiP"
+msgstr "1.1 — BonusView / PiP"
+
+msgctxt "IDS_BD_PROFILE_CHOICE_2"
+msgid "2.0 — BD-Live"
+msgstr "2.0 — BD-Live"
+
+msgctxt "IDS_BD_PROFILE_CHOICE_3"
+msgid "3 — Audio only"
+msgstr "3 — только аудио"
+
+msgctxt "IDS_BD_PROFILE_CHOICE_4"
+msgid "5 — 3D (2.4)"
+msgstr "5 — 3D (2.4)"
+
+msgctxt "IDS_BD_PROFILE_CHOICE_5"
+msgid "6 — UHD (3.0)"
+msgstr "6 — UHD (3.0)"
+
+msgctxt "IDS_BD_PROFILE_CHOICE_6"
+msgid "6 — UHD (3.1)"
+msgstr "6 — UHD (3.1)"
+
+msgctxt "IDS_BD_UO_CHOICE"
+msgid "Ignore all restrictions"
+msgstr "Игнорировать все ограничения"
+
+msgctxt "IDS_BD_UO_CHOICE_1"
+msgid "Relaxed checks"
+msgstr "Ослабленные проверки"
+
+msgctxt "IDS_BD_UO_CHOICE_2"
+msgid "Mostly follow disc restrictions"
+msgstr "Соблюдать с исключениями"
+
+msgctxt "IDS_BD_UO_CHOICE_3"
+msgid "Follow all disc restrictions"
+msgstr "Соблюдать все ограничения"
+
+msgctxt "IDS_BD_DEFAULT_VALUE"
+msgid "No age restriction (default)"
+msgstr "Без ограничений (по умолчанию)"
+
+msgctxt "IDS_BD_DEFAULT_VALUE_1"
+msgid "Automatic, by disc type"
+msgstr "Автоматически по диску"
+
+msgctxt "IDS_BD_DEFAULT_VALUE_2"
+msgid "MPC-HC rules (default)"
+msgstr "Правила MPC-HC (по умолчанию)"
+
+msgctxt "IDS_BD_DEFAULT_VALUE_3"
+msgid "By disc type"
+msgstr "По типу диска"
+
+msgctxt "IDS_BD_DEFAULT_VALUE_4"
+msgid "Multichannel (default)"
+msgstr "Многоканальный (стандарт)"
+
+msgctxt "IDS_BD_DEFAULT_VALUE_5"
+msgid "Secondary HD + 25/50 Hz"
+msgstr "Доп. HD + 25/50 Гц"
+
+msgctxt "IDS_BD_DEFAULT_VALUE_6"
+msgid "Automatic, by disc type"
+msgstr "Автоматически по диску"
+
+msgctxt "IDS_BD_DEFAULT_VALUE_7"
+msgid "Automatic, by disc type"
+msgstr "Автоматически по диску"
+
+msgctxt "IDS_BD_DEFAULT_VALUE_8"
+msgid "Automatic, by disc type"
+msgstr "Автоматически по диску"
+
+msgctxt "IDS_BD_DEFAULT_VALUE_9"
+msgid "Automatic, by disc type"
+msgstr "Автоматически по диску"
+
+msgctxt "IDS_BD_DEFAULT_VALUE_10"
+msgid "Automatic, by disc type"
+msgstr "Автоматически по диску"
+
+msgctxt "IDS_BD_DEFAULT_VALUE_11"
+msgid "Default value: 0"
+msgstr "Стандарт: 0"
+
+msgctxt "IDS_BD_DEFAULT_VALUE_12"
+msgid "Default value: 0x1FFFF"
+msgstr "Стандарт: 0x1FFFF"
+
+msgctxt "IDS_BD_DEFAULT_VALUE_13"
+msgid "Disabled (default)"
+msgstr "Отключён (стандарт)"
+
+msgctxt "IDS_BD_SHORT_DESC"
+msgid "Age reported to disc menus. No limit is set by default. You may enter an age from 0 to 254."
+msgstr "Возраст, сообщаемый меню диска. По умолчанию ограничение не задаётся. Можно ввести возраст от 0 до 254."
+
+msgctxt "IDS_BD_SHORT_DESC_1"
+msgid "Defaults: Blu-ray uses profile 1.0; 3D uses profile 5; UHD uses profile 6 (3.1). This does not add playback features."
+msgstr "По умолчанию: Blu-ray — профиль 1.0; 3D — профиль 5; UHD — профиль 6 (3.1). Возможности воспроизведения от этого не добавляются."
+
+msgctxt "IDS_BD_SHORT_DESC_2"
+msgid "By default MPC-HC checks disc restrictions on skipping and menu calls. Relaxing checks may disrupt the disc sequence."
+msgstr "По умолчанию MPC-HC проверяет запреты переходов и вызова меню. Ослабление проверок может нарушить сценарий диска."
+
+msgctxt "IDS_BD_SHORT_DESC_3"
+msgid "Defaults: 2D is reported for ordinary discs, 3D for 3D discs. Display output is configured separately."
+msgstr "По умолчанию меню обычного диска получает предпочтение 2D, меню 3D-диска — 3D. Вывод на экран настраивается отдельно."
+
+msgctxt "IDS_BD_SHORT_DESC_4"
+msgid "Disc menus are told that multichannel audio is supported. Configure speakers and bitstream output under Audio."
+msgstr "Меню диска получает сведения о многоканальном звуке. Настройки колонок и передачи звука находятся в разделе «Аудио»."
+
+msgctxt "IDS_BD_SHORT_DESC_5"
+msgid "Disc menus are told that secondary HD video and 25/50 Hz are supported. This does not enable picture-in-picture playback."
+msgstr "Меню получает сведения о поддержке дополнительного HD-видео и частот 25/50 Гц. Это не включает воспроизведение «картинка в картинке»."
+
+msgctxt "IDS_BD_SHORT_DESC_6"
+msgid "Information for disc menus. Defaults advertise 3D for 3D discs; physical screen size is unspecified."
+msgstr "Сведения для меню диска. По умолчанию возможности 3D заявляются для 3D-дисков, размер экрана не указан."
+
+msgctxt "IDS_BD_SHORT_DESC_7"
+msgid "3D capabilities reported to menus are enabled when a 3D disc is detected. This does not change video output."
+msgstr "Возможности 3D для меню: включены при определении 3D-диска. Режим видеовывода этим параметром не меняется."
+
+msgctxt "IDS_BD_SHORT_DESC_8"
+msgid "UHD capabilities reported to menus are enabled when a UHD disc is detected. Usually no change is needed."
+msgstr "Возможности UHD для меню: включены при определении UHD-диска. Обычно менять этот параметр не требуется."
+
+msgctxt "IDS_BD_SHORT_DESC_9"
+msgid "UHD display information for menus is enabled when a UHD disc is detected. This does not configure the display."
+msgstr "Сведения об UHD-экране для меню: включены при определении UHD-диска. Настройки экрана не меняются."
+
+msgctxt "IDS_BD_SHORT_DESC_10"
+msgid "HDR information for menus is set when a UHD disc is detected. Configure actual HDR output and tone mapping in the video renderer."
+msgstr "Сведения о HDR для меню: задаются при определении UHD-диска. Вывод HDR и преобразование яркости настраиваются в видеорендерере."
+
+msgctxt "IDS_BD_SHORT_DESC_11"
+msgid "Menus receive the default value 0. This technical preference does not enable HDR-to-SDR conversion in the video renderer."
+msgstr "Меню получает стандартное значение 0. Это техническое предпочтение; оно не включает преобразование HDR в SDR в видеорендерере."
+
+msgctxt "IDS_BD_SHORT_DESC_12"
+msgid "Menus receive the default text capability mask 0x1FFFF. MPC-HC subtitle appearance is configured separately."
+msgstr "Меню получает стандартную маску поддержки текста 0x1FFFF. Оформление субтитров MPC-HC настраивается отдельно."
+
+msgctxt "IDS_BD_SHORT_DESC_13"
+msgid "Disabled by default: MPC-HC handles subtitles. Enabling a second decoder may produce duplicate subtitles."
+msgstr "По умолчанию выключен: субтитры обрабатывает MPC-HC. Включение второго декодера может привести к дублированию субтитров."
+
+msgctxt "IDS_BD_PARAMETER"
+msgid "Parameter"
+msgstr "Параметр"
+
+msgctxt "IDS_BD_VALUE"
+msgid "Value"
+msgstr "Значение"
+
+msgctxt "IDS_BD_UNLIMITED"
+msgid "No age limit"
+msgstr "Без ограничения"
+
+msgctxt "IDS_BD_OFF"
+msgid "Disabled"
+msgstr "Выключен"
+
+msgctxt "IDS_BD_ON"
+msgid "Enabled"
+msgstr "Включён"
+
+msgctxt "IDS_BD_AUDIO_STEREO"
+msgid "Stereo"
+msgstr "Стерео"
+
+msgctxt "IDS_BD_AUDIO_SURROUND"
+msgid "Multichannel"
+msgstr "Многоканальный звук"
+
+msgctxt "IDS_BD_BAD_NUMBER"
+msgid "Choose a listed option or enter a number within the allowed range."
+msgstr "Выберите вариант из списка или введите число в допустимом диапазоне."
+
+msgctxt "IDS_BD_STORAGE_ERROR"
+msgid "Could not open or prepare Blu-ray storage. Check access to the data folders."
+msgstr "Не удалось открыть или подготовить данные Blu-ray. Проверьте доступ к папкам."
+
+msgctxt "IDS_BD_DISC_TITLE"
+msgid "Disc name"
+msgstr "Название диска"
+
+msgctxt "IDS_BD_DISC_LAST"
+msgid "Last opened"
+msgstr "Последнее открытие"
+
+msgctxt "IDS_BD_LEGACY"
+msgid "Shared legacy data"
+msgstr "Прежние общие данные"
+
+msgctxt "IDS_BD_LEGACY_NOTE"
+msgid "This shared folder may contain several discs. Its name is a filename hint or your label. A per-disc reset is unavailable. Changes here take effect immediately."
+msgstr "Общая папка может содержать несколько дисков. Название взято из имени файла или задано вами. Сброс отдельного диска недоступен. Изменения выполняются сразу."
+
+msgctxt "IDS_BD_DISC_COUNT"
+msgid "Discs: %d"
+msgstr "Дисков: %d"
+
+msgctxt "IDS_BD_DISC_FILTER_COUNT"
+msgid "Discs: %d of %d"
+msgstr "Дисков: %d из %d"
+
+msgctxt "IDS_BD_SHARED_FOLDER"
+msgid "Shared folder used by multiple discs"
+msgstr "Общая папка нескольких дисков"
+
+msgctxt "IDS_BD_RESET_DATA_CONFIRM"
+msgid "Reset settings and progress for \"%s\"?\n\nThe disc will use empty saved data and cache the next time it opens. Previous files are retained; other discs are unaffected."
+msgstr "Сбросить настройки и прогресс для «%s»?\n\nПри следующем открытии диск получит пустые сохранения и кеш. Прежние файлы останутся; данные других дисков не изменятся."
+
+msgctxt "IDS_BD_RESET_DATA_DONE"
+msgid "Reset prepared. Reopen the disc to use empty saved data and cache. Previous files have been retained."
+msgstr "Сброс подготовлен. Откройте диск заново для использования пустых сохранений и кеша. Прежние файлы сохранены."
+
+msgctxt "IDS_BD_DISC_NOTE"
+msgid "Rename and reset take effect immediately, using the applied folder settings. Reset starts this disc with empty saved data and cache on its next open; previous files are retained. The current cache folder may be shared."
+msgstr "Переименование и сброс выполняются сразу для применённых настроек папок. Сброс начнёт диск с пустыми сохранениями и кешем при следующем открытии; прежние файлы сохранятся. Текущая папка кеша может быть общей."
+
+msgctxt "IDS_BD_JAVA_WRONG_ARCH"
+msgid "Java architecture does not match this player."
+msgstr "Разрядность Java не соответствует этому плееру."
+
+msgctxt "IDS_BD_JAVA_INVALID"
+msgid "The JVM library is not a valid Windows DLL."
+msgstr "Библиотека JVM не является корректной Windows DLL."
+
+msgctxt "IDS_BD_JAVA_LAUNCHER"
+msgid "A matching bin\\java.exe is required for this check."
+msgstr "Для проверки требуется подходящий bin\\java.exe."
+
+msgctxt "IDS_BD_JAVA_CHECKING"
+msgid "Checking Java startup..."
+msgstr "Проверяется запуск Java..."
+
+msgctxt "IDS_BD_JAVA_PASSED"
+msgid "Java starts successfully. Disc compatibility is checked during playback."
+msgstr "Java запускается. Совместимость с диском проверяется при воспроизведении."
+
+msgctxt "IDS_BD_JAVA_FAILED"
+msgid "Java startup check failed. Check the selected installation."
+msgstr "Проверка запуска Java не пройдена. Проверьте выбранную установку."
+
+msgctxt "IDS_BD_JAVA_TIMEOUT"
+msgid "Java did not finish the check within 10 seconds."
+msgstr "Java не завершила проверку за 10 секунд."
+
+msgctxt "IDS_BD_ISO_MOUNT_FAILED"
+msgid "Could not open the ISO image as a disc (Windows error %lu)."
+msgstr "Не удалось открыть ISO-образ как диск (ошибка Windows %lu)."
+
+msgctxt "IDS_BD_ISO_NOT_VIDEO"
+msgid "The ISO image contains no supported Blu-ray or DVD video structure."
+msgstr "В ISO-образе не найдена поддерживаемая структура Blu-ray или DVD-Video."

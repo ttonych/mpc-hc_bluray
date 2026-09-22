@@ -32,6 +32,7 @@
 #include "PPageLogo.h"
 #include "PPagePlayback.h"
 #include "PPageDVD.h"
+#include "PPageBluray.h"
 #include "PPageOutput.h"
 #include "PPageFullscreen.h"
 #include "PPageWebServer.h"
@@ -102,6 +103,7 @@ private:
     CPPageWebServer m_webserver;
     CPPagePlayback m_playback;
     CPPageDVD m_dvd;
+    CPPageBluray m_bluray;
     CPPageOutput m_output;
     CPPageShaders m_shaders;
     CPPageFullscreen m_fullscreen;

@@ -1584,17 +1584,19 @@ NTSTATUS WINAPI Mine_NtQueryInformationProcess(HANDLE ProcessHandle, PROCESSINFO
 
     nRet = Real_NtQueryInformationProcess(ProcessHandle, ProcessInformationClass, ProcessInformation, ProcessInformationLength, ReturnLength);
 
-    if (ProcessInformationClass == ProcessBasicInformation) {
-        PROCESS_BASIC_INFORMATION* pbi = (PROCESS_BASIC_INFORMATION*)ProcessInformation;
-        PEB_NT* pPEB = (PEB_NT*)pbi->PebBaseAddress;
-        PEB_NT PEB;
-
-        ReadProcessMemory(ProcessHandle, pPEB, &PEB, sizeof(PEB), nullptr);
-        PEB.BeingDebugged = FALSE;
-        WriteProcessMemory(ProcessHandle, pPEB, &PEB, sizeof(PEB), nullptr);
-    } else if (ProcessInformationClass == 7) { // ProcessDebugPort
-        BOOL* pDebugPort = (BOOL*)ProcessInformation;
-        *pDebugPort = FALSE;
+    if (nRet >= 0 && ProcessInformation) {
+        if (ProcessInformationClass == ProcessBasicInformation && ProcessInformationLength >= sizeof(PROCESS_BASIC_INFORMATION)) {
+            const auto pbi = static_cast<const PROCESS_BASIC_INFORMATION*>(ProcessInformation);
+            if (pbi->PebBaseAddress) {
+                // Other threads can change the PEB while this query runs (including
+                // JVM TLS allocation). Never write back a snapshot of the entire PEB.
+                const BYTE beingDebugged = 0;
+                WriteProcessMemory(ProcessHandle, &pbi->PebBaseAddress->BeingDebugged,
+                    &beingDebugged, sizeof(beingDebugged), nullptr);
+            }
+        } else if (ProcessInformationClass == 7 && ProcessInformationLength >= sizeof(ULONG_PTR)) { // ProcessDebugPort
+            *static_cast<ULONG_PTR*>(ProcessInformation) = 0;
+        }
     }
 
     return nRet;

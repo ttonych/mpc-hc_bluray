@@ -255,6 +255,76 @@ BEGIN
     CONTROL         "Remember last Pan && Scan Zoom",IDC_CHECK11,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,155,263,192,8
 END
 
+IDD_BD_DISCS DIALOGEX 0, 0, 462, 304
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Blu-ray saved data"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT "&Filter:",IDC_STATIC,7,10,37,10
+    EDITTEXT IDC_BD_FILTER,47,7,408,14,ES_AUTOHSCROLL
+    LTEXT "",IDC_BD_DISC_NOTE,7,28,448,29
+    CONTROL "",IDC_BD_DISC_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_EDITLABELS | WS_BORDER | WS_TABSTOP,7,61,448,178
+    PUSHBUTTON "Rename",IDC_BD_DISC_RENAME,7,247,80,16
+    PUSHBUTTON "Saved data folder",IDC_BD_DISC_OPEN,93,247,92,16
+    PUSHBUTTON "Cache folder",IDC_BD_DISC_CACHE,191,247,81,16
+    PUSHBUTTON "Reset data...",IDC_BD_RESET_DISC,278,247,95,16
+    PUSHBUTTON "Refresh",IDC_BD_DISC_REFRESH,379,247,76,16
+    LTEXT "",IDC_BD_DISC_COUNT,7,283,330,10
+    DEFPUSHBUTTON "Close",IDOK,383,281,72,16
+END
+
+IDD_BD_COMPATIBILITY DIALOGEX 0, 0, 380, 312
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Blu-ray compatibility"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT "Changes take effect when the disc is reopened.",IDC_STATIC,7,7,366,12
+    CONTROL "",IDC_BD_ADV_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,7,23,366,134
+    LTEXT "Selected value:",IDC_STATIC,7,166,88,12
+    COMBOBOX IDC_BD_ADV_VALUE,100,162,273,115,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT "",IDC_BD_ADV_DESCRIPTION,7,187,366,35
+    CONTROL "Technical details",IDC_BD_ADV_DETAILS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,227,366,12
+    LTEXT "",IDC_BD_ADV_TECHNICAL,7,245,366,38
+    PUSHBUTTON "Default",IDC_BD_ADV_DEFAULT,7,291,85,14
+    PUSHBUTTON "All defaults",IDC_BD_ADV_DEFAULTS,98,291,100,14
+    DEFPUSHBUTTON "OK",IDOK,265,291,50,14
+    PUSHBUTTON "Cancel",IDCANCEL,323,291,50,14
+END
+
+IDD_PPAGEBLURAY DIALOGEX 0, 0, 355, 289
+STYLE DS_SETFONT | WS_CHILD
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "When opening Blu-ray:",IDC_STATIC,6,9,102,10
+    COMBOBOX        IDC_BD_OPENING,112,6,237,90,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Menu playback requires madVR. Changes take effect when the disc is reopened.",IDC_STATIC,6,26,343,24
+    LTEXT           "Region:",IDC_STATIC,6,57,60,10
+    COMBOBOX        IDC_BD_REGION,70,53,52,70,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Country:",IDC_STATIC,145,57,61,10
+    COMBOBOX        IDC_BD_COUNTRY,210,53,139,130,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Menu language:",IDC_STATIC,6,80,102,10
+    COMBOBOX        IDC_BD_MENU_LANG,112,77,237,130,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Audio language:",IDC_STATIC,6,103,102,10
+    COMBOBOX        IDC_BD_AUDIO_LANG,112,100,237,130,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Subtitle language:",IDC_STATIC,6,126,102,10
+    COMBOBOX        IDC_BD_SUB_LANG,112,123,237,130,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Java (BD-J):",IDC_STATIC,6,149,102,10
+    COMBOBOX        IDC_BD_JAVA_HOME,112,146,211,90,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "...",IDC_BD_BROWSE_JAVA,328,146,21,14
+    PUSHBUTTON      "Check Java",IDC_BD_CHECK_JAVA,6,164,99,16
+    LTEXT           "",IDC_BD_JAVA_STATUS,112,164,237,20
+    CONTROL         "Keep BD-J saved data",IDC_BD_PERSISTENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,186,343,10
+    LTEXT           "Saved data folder:",IDC_STATIC,6,209,102,10
+    COMBOBOX        IDC_BD_PERSIST_ROOT,112,206,211,80,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "...",IDC_BD_BROWSE_PERSIST,328,206,21,14
+    LTEXT           "Cache folder:",IDC_STATIC,6,232,102,10
+    COMBOBOX        IDC_BD_CACHE_ROOT,112,229,211,80,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "...",IDC_BD_BROWSE_CACHE,328,229,21,14
+    LTEXT           "Changing folders does not move or delete existing saved data or cache.",IDC_STATIC,6,249,343,18
+    PUSHBUTTON      "Disc data...",IDC_BD_DISCS,6,271,110,16
+    PUSHBUTTON      "Compatibility...",IDC_BD_COMPATIBILITY,239,271,110,16
+END
+
 IDD_PPAGEDVD DIALOGEX 0, 0, 355, 289
 STYLE DS_SETFONT | WS_CHILD
 FONT 9, "Segoe UI", 400, 0, 0x1
@@ -2788,6 +2858,7 @@ BEGIN
     IDD_PPAGEPLAYBACK       "Playback::General"
     IDD_PPAGEPLAYER         "Player::General"
     IDD_PPAGEDVD            "Playback::DVD"
+    IDD_PPAGEBLURAY         "Playback::Blu-ray"
     IDD_PPAGESUBTITLES      "Subtitles::General"
     IDD_PPAGEFORMATS        "Player::Formats"
     IDD_PPAGETWEAKS         "Tweaks"
@@ -4347,6 +4418,154 @@ BEGIN
     IDS_PPAGEADVANCED_SECONDARY_SUB_VERT_POS "Vertical position for secondary subtitle. Percentage offset from top."
 END
 
+
+STRINGTABLE
+BEGIN
+    IDS_BD_ADVANCED_SETTING_REJECTED "libbluray rejected an advanced player setting."
+    IDS_BD_AUDIO_SELECTION_FAILED "Could not select the disc's audio track."
+    IDS_BD_CANVAS_MISSING "The local BD-J graphics canvas is missing."
+    IDS_BD_DISC_CHANGED "Disc removed or changed. Open Blu-ray again."
+    IDS_BD_DISC_READ_ERROR "Cannot read the Blu-ray disc. Open it again."
+    IDS_BD_DISC_UNAVAILABLE "The Blu-ray disc is no longer available. Open the disc again."
+    IDS_BD_FIRST_PLAY_FAILED "Blu-ray First Play failed."
+    IDS_BD_FIRST_PLAY_UNSUPPORTED "The disc has no supported Blu-ray First Play."
+    IDS_BD_INVALID_BDJ_GRAPHICS "Invalid BD-J graphics update."
+    IDS_BD_INVALID_OVERLAY_REGION "Invalid Blu-ray overlay region."
+    IDS_BD_INVALID_OVERLAY_RLE "Invalid Blu-ray overlay RLE."
+    IDS_BD_JAVA_UNAVAILABLE "BD-J requires the local libbluray 1.5.0 JARs and a compatible x64 Java runtime."
+    IDS_BD_LIBRARY_INCOMPLETE "Incomplete libbluray DLL."
+    IDS_BD_LIBRARY_MISSING "The local libbluray 1.5.0 DLL or one of its dependencies is missing."
+    IDS_BD_LIBRARY_VERSION_REQUIRED "This prototype requires libbluray 1.5.0."
+    IDS_BD_MENU_BITMAP_ALLOC_FAILED "Cannot allocate Blu-ray menu bitmap."
+    IDS_BD_MENU_BITMAP_REJECTED "madVR rejected the Blu-ray menu bitmap."
+    IDS_BD_NAVIGATION_FAILED "Blu-ray navigation failed (event %u, parameter %u)."
+    IDS_BD_MAIN_MOVIE "Main movie"
+    IDS_BD_DISC_MENUS "Disc menu"
+    IDS_BD_NO_PREFERENCE "No preference"
+    IDS_BD_AUTO_SEARCH "Automatic search"
+    IDS_BD_PLAYER_FOLDER "In the player folder"
+    IDS_BD_JAVA_AUTO "Automatic search for Java on the next disc open."
+    IDS_BD_JAVA_FOUND "JVM architecture matches the player. Use Check Java to test startup."
+    IDS_BD_JAVA_NOT_FOUND "JVM library not found in this folder."
+    IDS_BD_BAD_COUNTRY "Choose a country or enter a two-letter country code."
+    IDS_BD_BAD_LANGUAGE "Choose a language or enter a three-letter language code."
+    IDS_BD_BAD_PATH "Enter an absolute folder path without quotes or line breaks."
+    IDS_BD_BAD_JAVA "Select a Java installation with a valid JVM matching the player architecture."
+    IDS_BD_NOT_A_DISC "Select a Blu-ray disc root or its BDMV folder."
+    IDS_BD_OPEN_FAILED "Cannot open the Blu-ray disc."
+    IDS_BD_PLAYLIST_SEGMENT_FAILED "Could not configure the Blu-ray playlist segment (0x%08X)."
+    IDS_BD_POPUP_UNAVAILABLE "Pop-up menu is unavailable at this point. Use the Blu-ray top menu."
+    IDS_BD_RENDERER_UNSUPPORTED "The selected video renderer does not support Blu-ray menus in this build."
+    IDS_BD_SKIP_FORBIDDEN "The disc does not allow skipping at this point."
+    IDS_BD_STORAGE_CONFIG_ERROR "Cannot read the Blu-ray disc storage configuration."
+    IDS_BD_SUBTITLE_SELECTION_FAILED "Could not select the disc's subtitle track."
+    IDS_BD_TOP_MENU_FORBIDDEN "The disc does not allow the top menu at this point."
+    IDS_BD_UNSUPPORTED_OVERLAY_SIZE "Unsupported Blu-ray overlay dimensions."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_BD_ADV_NAME "Parental age"
+    IDS_BD_ADV_NAME_1 "Player profile"
+    IDS_BD_ADV_NAME_2 "Skipping and menu restrictions"
+    IDS_BD_ADV_NAME_3 "2D / 3D preference"
+    IDS_BD_ADV_NAME_4 "Audio capabilities"
+    IDS_BD_ADV_NAME_5 "Video capabilities"
+    IDS_BD_ADV_NAME_6 "Display capabilities / size"
+    IDS_BD_ADV_NAME_7 "3D capabilities"
+    IDS_BD_ADV_NAME_8 "UHD capabilities"
+    IDS_BD_ADV_NAME_9 "UHD display capabilities"
+    IDS_BD_ADV_NAME_10 "HDR preference"
+    IDS_BD_ADV_NAME_11 "SDR preference for disc menus"
+    IDS_BD_ADV_NAME_12 "Text subtitle capabilities"
+    IDS_BD_ADV_NAME_13 "libbluray subtitle decoder"
+    IDS_BD_ADV_DESC "PSR13: 0–255; 255 means no age limit. MPC-HC defaults to 255."
+    IDS_BD_ADV_DESC_1 "PSR31: MPC-HC starts with profile 1.0. libbluray raises it to 5 (2.4) for 3D or 6 (3.1) for UHD. An explicit selection is applied after disc detection."
+    IDS_BD_ADV_DESC_2 "libbluray levels: 0 — unchecked; 5 — relaxed; 10 — exceptions; 20 — compliant. The default uses library level 5 plus MPC-HC checks on skipping and menu calls."
+    IDS_BD_ADV_DESC_3 "PSR21: 0 — 2D; 1 — 3D. Initial value is 0; 3D initialization sets 1. This does not enable stereoscopic output."
+    IDS_BD_ADV_DESC_4 "PSR15 defaults to 0xAAAA; 0x5555 means stereo. The mask describes LPCM, Dolby Digital/Plus/TrueHD and DTS-HD. Custom masks can be entered."
+    IDS_BD_ADV_DESC_5 "PSR29 defaults to 0x03. Bit 0x01: secondary HD video; bit 0x02: 25/50 Hz video."
+    IDS_BD_ADV_DESC_6 "PSR23 defaults to 0, or 0x0F for 3D. Bits 0–3 describe 3D modes; bits 8–19 hold screen width in cm (0 — unspecified)."
+    IDS_BD_ADV_DESC_7 "PSR24 defaults to 0; 3D initialization sets 0xFFFFFFFF. Public API 1.5.0 does not define individual bits."
+    IDS_BD_ADV_DESC_8 "PSR25 defaults to 0; UHD initialization sets 0xFFFFFFFF. Public API 1.5.0 does not define individual bits."
+    IDS_BD_ADV_DESC_9 "PSR26 defaults to 0; UHD initialization sets 0xFFFFFFFF. Public API 1.5.0 does not define individual bits."
+    IDS_BD_ADV_DESC_10 "PSR27 defaults to 0; UHD initialization sets 0xFFFFFFFF. This is information for menus, not a renderer HDR setting."
+    IDS_BD_ADV_DESC_11 "PSR28 defaults to 0 in libbluray 1.5.0, including UHD initialization. The public API provides no named choices."
+    IDS_BD_ADV_DESC_12 "PSR30 defaults to 0x1FFFF in libbluray 1.5.0. Custom masks can be entered if needed."
+    IDS_BD_ADV_DESC_13 "BLURAY_PLAYER_SETTING_DECODE_PG: 0 — disable PG/TextST decoders; 1 — enable. Default is 0."
+    IDS_BD_PROFILE_CHOICE "1.0 — Initial Standard"
+    IDS_BD_PROFILE_CHOICE_1 "1.1 — BonusView / PiP"
+    IDS_BD_PROFILE_CHOICE_2 "2.0 — BD-Live"
+    IDS_BD_PROFILE_CHOICE_3 "3 — Audio only"
+    IDS_BD_PROFILE_CHOICE_4 "5 — 3D (2.4)"
+    IDS_BD_PROFILE_CHOICE_5 "6 — UHD (3.0)"
+    IDS_BD_PROFILE_CHOICE_6 "6 — UHD (3.1)"
+    IDS_BD_UO_CHOICE "Ignore all restrictions"
+    IDS_BD_UO_CHOICE_1 "Relaxed checks"
+    IDS_BD_UO_CHOICE_2 "Mostly follow disc restrictions"
+    IDS_BD_UO_CHOICE_3 "Follow all disc restrictions"
+    IDS_BD_DEFAULT_VALUE "No age restriction (default)"
+    IDS_BD_DEFAULT_VALUE_1 "Automatic, by disc type"
+    IDS_BD_DEFAULT_VALUE_2 "MPC-HC rules (default)"
+    IDS_BD_DEFAULT_VALUE_3 "By disc type"
+    IDS_BD_DEFAULT_VALUE_4 "Multichannel (default)"
+    IDS_BD_DEFAULT_VALUE_5 "Secondary HD + 25/50 Hz"
+    IDS_BD_DEFAULT_VALUE_6 "Automatic, by disc type"
+    IDS_BD_DEFAULT_VALUE_7 "Automatic, by disc type"
+    IDS_BD_DEFAULT_VALUE_8 "Automatic, by disc type"
+    IDS_BD_DEFAULT_VALUE_9 "Automatic, by disc type"
+    IDS_BD_DEFAULT_VALUE_10 "Automatic, by disc type"
+    IDS_BD_DEFAULT_VALUE_11 "Default value: 0"
+    IDS_BD_DEFAULT_VALUE_12 "Default value: 0x1FFFF"
+    IDS_BD_DEFAULT_VALUE_13 "Disabled (default)"
+    IDS_BD_SHORT_DESC "Age reported to disc menus. No limit is set by default. You may enter an age from 0 to 254."
+    IDS_BD_SHORT_DESC_1 "Defaults: Blu-ray uses profile 1.0; 3D uses profile 5; UHD uses profile 6 (3.1). This does not add playback features."
+    IDS_BD_SHORT_DESC_2 "By default MPC-HC checks disc restrictions on skipping and menu calls. Relaxing checks may disrupt the disc sequence."
+    IDS_BD_SHORT_DESC_3 "Defaults: 2D is reported for ordinary discs, 3D for 3D discs. Display output is configured separately."
+    IDS_BD_SHORT_DESC_4 "Disc menus are told that multichannel audio is supported. Configure speakers and bitstream output under Audio."
+    IDS_BD_SHORT_DESC_5 "Disc menus are told that secondary HD video and 25/50 Hz are supported. This does not enable picture-in-picture playback."
+    IDS_BD_SHORT_DESC_6 "Information for disc menus. Defaults advertise 3D for 3D discs; physical screen size is unspecified."
+    IDS_BD_SHORT_DESC_7 "3D capabilities reported to menus are enabled when a 3D disc is detected. This does not change video output."
+    IDS_BD_SHORT_DESC_8 "UHD capabilities reported to menus are enabled when a UHD disc is detected. Usually no change is needed."
+    IDS_BD_SHORT_DESC_9 "UHD display information for menus is enabled when a UHD disc is detected. This does not configure the display."
+    IDS_BD_SHORT_DESC_10 "HDR information for menus is set when a UHD disc is detected. Configure actual HDR output and tone mapping in the video renderer."
+    IDS_BD_SHORT_DESC_11 "Menus receive the default value 0. This technical preference does not enable HDR-to-SDR conversion in the video renderer."
+    IDS_BD_SHORT_DESC_12 "Menus receive the default text capability mask 0x1FFFF. MPC-HC subtitle appearance is configured separately."
+    IDS_BD_SHORT_DESC_13 "Disabled by default: MPC-HC handles subtitles. Enabling a second decoder may produce duplicate subtitles."
+    IDS_BD_PARAMETER "Parameter"
+    IDS_BD_VALUE "Value"
+    IDS_BD_UNLIMITED "No age limit"
+    IDS_BD_OFF "Disabled"
+    IDS_BD_ON "Enabled"
+    IDS_BD_AUDIO_STEREO "Stereo"
+    IDS_BD_AUDIO_SURROUND "Multichannel"
+    IDS_BD_BAD_NUMBER "Choose a listed option or enter a number within the allowed range."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_BD_STORAGE_ERROR "Could not open or prepare Blu-ray storage. Check access to the data folders."
+    IDS_BD_DISC_TITLE "Disc name"
+    IDS_BD_DISC_LAST "Last opened"
+    IDS_BD_LEGACY "Shared legacy data"
+    IDS_BD_LEGACY_NOTE "This shared folder may contain several discs. Its name is a filename hint or your label. A per-disc reset is unavailable. Changes here take effect immediately."
+    IDS_BD_DISC_COUNT "Discs: %d"
+    IDS_BD_DISC_FILTER_COUNT "Discs: %d of %d"
+    IDS_BD_SHARED_FOLDER "Shared folder used by multiple discs"
+    IDS_BD_RESET_DATA_CONFIRM "Reset settings and progress for ""%s""?\n\nThe disc will use empty saved data and cache the next time it opens. Previous files are retained; other discs are unaffected."
+    IDS_BD_RESET_DATA_DONE "Reset prepared. Reopen the disc to use empty saved data and cache. Previous files have been retained."
+    IDS_BD_DISC_NOTE "Rename and reset take effect immediately, using the applied folder settings. Reset starts this disc with empty saved data and cache on its next open; previous files are retained. The current cache folder may be shared."
+    IDS_BD_JAVA_WRONG_ARCH "Java architecture does not match this player."
+    IDS_BD_JAVA_INVALID "The JVM library is not a valid Windows DLL."
+    IDS_BD_JAVA_LAUNCHER "A matching bin\\java.exe is required for this check."
+    IDS_BD_JAVA_CHECKING "Checking Java startup..."
+    IDS_BD_JAVA_PASSED "Java starts successfully. Disc compatibility is checked during playback."
+    IDS_BD_JAVA_FAILED "Java startup check failed. Check the selected installation."
+    IDS_BD_JAVA_TIMEOUT "Java did not finish the check within 10 seconds."
+    IDS_BD_ISO_MOUNT_FAILED "Could not open the ISO image as a disc (Windows error %lu)."
+    IDS_BD_ISO_NOT_VIDEO "The ISO image contains no supported Blu-ray or DVD video structure."
+END
+
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
@@ -4372,4 +4591,3 @@ LANGUAGE 9, 1
 #endif
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
-
