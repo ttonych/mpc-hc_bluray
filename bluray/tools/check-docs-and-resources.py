@@ -15,6 +15,7 @@ PAIRS = [('README.md', 'README.ru.md'), ('AGENTS.md', 'AGENTS.ru.md')]
 PAIRS += [(f'bluray/docs/{n}.md', f'bluray/docs/{n}.ru.md')
           for n in ('DEVELOPMENT', 'PORTING', 'ROADMAP', 'USAGE', 'VALIDATION')]
 PAIRS += [('bluray/CHANGELOG.md', 'bluray/CHANGELOG.ru.md')]
+PAIRS += [('bluray/README.md', 'bluray/README.ru.md')]
 FORMAT = re.compile(r'%[-+ #0]*\d*(?:\.\d+)?(?:I64|I32|hh|ll|h|l|z|t|j)?[diuoxXfFeEgGaAcCsSpn]')
 
 
