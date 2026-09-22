@@ -26,6 +26,7 @@ code = r'''
 #include <initializer_list>
 #define VERIFY(value) (void)(value)
 #include "resource.h"
+#include "../../../include/BlurayVersion.h"
 struct Bag { int count = 3; int ChapGetCount() { return count; } };
 struct Bar {
     Bag* bag = nullptr;
@@ -131,9 +132,9 @@ int main() {
     f.UpdateBlurayTitle(L"C:/fixtures/Folder title/");
     assert(f.m_blurayTitle == L"Folder title");
     settings.iTitleBarTextStyle = 2; f.OpenSetupWindowTitle();
-    assert(f.caption == L"MPC-HC");
+    assert(f.caption == MPCHC_BLURAY_NAME L" " MPCHC_BLURAY_VERSION_STR);
     settings.iTitleBarTextStyle = 1; f.OpenSetupWindowTitle(true);
-    assert(f.caption == L"MPC-HC");
+    assert(f.caption == MPCHC_BLURAY_NAME L" " MPCHC_BLURAY_VERSION_STR);
     f.m_blurayMenu = nullptr;
     f.OpenSetupWindowTitle(); assert(f.caption == L"File metadata");
     assert(settings.MRU.writes == 1);

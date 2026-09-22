@@ -21,6 +21,7 @@
 #include "stdafx.h"
 #include "VersionInfo.h"
 #include "version.h"
+#include "BlurayVersion.h"
 
 bool VersionInfo::IsNightly()
 {
@@ -51,12 +52,12 @@ bool VersionInfo::Is64Bit()
 
 CString VersionInfo::GetVersionString()
 {
-    return MPC_VERSION_STR;
+    return MPCHC_BLURAY_VERSION_STR;
 }
 
 CString VersionInfo::GetFullVersionString()
 {
-    return MPC_VERSION_STR_FULL;
+    return MPCHC_BLURAY_VERSION_STR _T(" (") MPCHC_HASH _T(")");
 }
 
 CString VersionInfo::GetBuildDateString()

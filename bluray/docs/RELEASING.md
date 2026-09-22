@@ -28,25 +28,27 @@ GitHub prereleases. Promoting the same tested release does not require new bytes
 changed published payloads require a new fork release number. Never move an
 already published tag or silently replace an asset under an existing release.
 
-## Implementation status before the first release
+## Version implementation and release gate
 
-This document defines the numbering policy. The packager already uses
-`2.8.2-bluray.1`, but EXE/About branding and the inherited updater still use
-upstream behavior. The current candidate is **not** a qualified public Release.
+[BlurayVersion.h](../../include/BlurayVersion.h) is the single maintained fork
+release number, combined with the official base from `include/version.h`.
+EXE ProductVersion, About, empty caption and the packager use that value. About
+also shows the source hash. Numeric Windows versions retain the upstream layout
+for resource compatibility. `update_version.bat` counts commits from the exact
+official base tag, ignoring nearer fork or unrelated version tags.
 
-Before the first publication, implement and verify:
+The checker selects numeric fork versions from this repository's published
+GitHub releases, including prereleases, and opens the selected release page.
+It does not fall back to official MPC-HC or install files. Old upstream ignored
+versions and last-check timestamps are not reused for fork decisions.
 
-- A single maintained source of the fork version used by packaging and player
-  branding, retaining valid numeric Windows resource versions.
-- Consistent full fork version in About/product text, release title/tag and
-  diagnostic output, alongside the upstream base and source revision.
-- Upstream revision calculation that distinguishes official base tags from
-  `-bluray.` tags; the inherited `git describe` path needs review.
-- Fork-specific update behavior that does not offer official MPC-HC as an
-  update to this fork. Until then, use the repository to obtain candidates.
+Local x64/RU builds, resource/version checks, tag/feed regressions and EN/RU
+About/empty-release dialogs pass. The build scripts and packager reject a stale
+EXE version. Change the release define, rebuild and validate before a new release.
 
-These are open tasks in the [roadmap](ROADMAP.md), not completed by documenting
-the scheme. Do not add a release tag merely to make a candidate appear finished.
+The existing cloud candidate predates these changes and remains unqualified.
+A new candidate still needs the exact-ZIP matrix in [Validation](VALIDATION.md).
+Do not create a release tag merely to make a candidate appear finished.
 
 ## Changelog policy
 

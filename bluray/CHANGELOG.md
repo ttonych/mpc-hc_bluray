@@ -32,8 +32,15 @@ are recorded separately in [Validation](docs/VALIDATION.md).
 - JVM architecture validation and bounded, cancellable Java startup diagnostics
   in a separate process.
 
+- Fork version in About, EXE ProductVersion and the empty window caption, from
+  one header shared with packaging. About also identifies the source revision.
+- Update checks for this fork's published GitHub releases, including prereleases,
+  with numeric comparison, a normal empty-release result and release-page links.
+
 ### Fixed
 
+- Upstream revision calculation ignores fork and unrelated tags; package checks
+  reject stale EXE/ProductVersion and mismatched Russian resource versions.
 - Standard Blu-ray menu command availability and routing, respecting disc restrictions.
 - LAV navigation timestamps preserve authored sparse-frame gaps; isolated MPEG-2
   still repetition and sequence-end handling fix the observed black startup warning.
@@ -66,8 +73,7 @@ are recorded separately in [Validation](docs/VALIDATION.md).
   Java/saves and mouse-capable-menu coverage are incomplete.
 - The MSVC LAV configuration differs from the standard GCC build; full codec/audio
   parity, HDR accuracy, MVC/stereo and DVD ISO support are unqualified.
-- Fork version branding and fork-specific update checking are pending; the
-  inherited updater still queries official MPC-HC. Profile import and mandatory
-  portable behavior from MPC-BE Blu-ray are not yet ported.
+- Profile import, mandatory portable behavior and offline HTML guides from
+  MPC-BE Blu-ray are not yet ported. The old cloud ZIP predates fork branding/updating.
 - See [Validation](docs/VALIDATION.md) for the distinction between component
   tests, local playback, user reports and checks of the exact cloud ZIP.

@@ -367,6 +367,9 @@ if not exist "$(OutDir)LAVFilters" if exist "$(SolutionDir)bin\mpc-hc_x86\LAVFil
     <ClInclude Include="BlurayMenuCoordinates.h" />
     <ClInclude Include="BlurayMenuRle.h" />
     <ClInclude Include="BlurayPlaybackClock.h" />
+    <ClInclude Include="BlurayReleaseVersion.h" />
+    <ClInclude Include="BlurayUpdateFeed.h" />
+    <ClInclude Include="..\..\include\BlurayVersion.h" />
     <ClInclude Include="BluraySettings.h" />
     <ClInclude Include="AppSettings.h" />
     <ClInclude Include="AuthDlg.h" />

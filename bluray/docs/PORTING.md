@@ -271,3 +271,20 @@ offline HTML generator are explicitly deferred, not documented as HC features.
 The original HC contribution guide is preserved separately. This documentation
 change fixes UTF-8 navigation and strengthens paired-document checks; it does
 not alter the player, donor checkout or existing cloud ZIP.
+
+## Fork branding and release checks, 2026-09-23
+
+Continued the preceding deferred branding work from the same donor `270cfdd`.
+`BlurayReleaseVersion.h` is byte-identical to the donor; the release-version probe
+is adapted to HC tags and extended to exercise the actual GitHub feed parser.
+Hashes and source paths are recorded in `imports.json`. HC retains its MFC/WinINet
+transport, native dialogs and profile storage. Selection accepts published fork
+prereleases and opens only validated release URLs from the HC repository.
+
+The HC-specific version header drives About/ProductVersion/caption and packaging;
+numeric PE/resource versions retain upstream semantics. The real revision batch
+is tested with nearer fork and unrelated tags. Local x64/RU builds, version/feed/
+caption/package checks pass. Native EN/RU About and live empty-release dialogs
+were inspected; no published-release download or disc playback is claimed by
+this change. The earlier cloud ZIP is unchanged. Portable import and offline HTML
+remain open; [Parity](PARITY.md) records the committed feature comparison.

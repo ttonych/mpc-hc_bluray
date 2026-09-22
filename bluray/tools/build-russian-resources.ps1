@@ -17,6 +17,7 @@ try {
     # Generation was completed above. Do not invoke the all-language sync target.
     & MSBuild.exe 'src/mpc-hc/mpcresources/mpcresources.vcxproj' /nologo /m:2 /t:Build '/p:Configuration=Release Russian' /p:Platform=x64 /p:BuildProjectReferences=false "/p:SolutionDir=$root/" "/p:MPCHC_WINSDK_VER=$WindowsSdk" "/p:WindowsTargetPlatformVersion=$WindowsSdk" "/p:UCRTContentRoot=$env:UniversalCRTSdkDir" "/p:UCRTVersion=$WindowsSdk" /clp:ErrorsOnly "/flp:logfile=$log;verbosity=normal"
     if ($LASTEXITCODE -ne 0) { throw "Russian resource build failed. Log: $log" }
+    & (Join-Path $PSScriptRoot 'check-player-version.ps1') -IncludeRussian
     Write-Host "Built Russian resources. Log: $log"
 } finally {
     Pop-Location

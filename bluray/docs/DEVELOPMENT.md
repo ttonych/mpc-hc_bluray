@@ -274,3 +274,31 @@ even in the English README. Preserve resource encodings/BOMs and existing line
 endings, especially `.rc`, rather than applying a bulk conversion. The fast
 documentation checker requires valid UTF-8 and exact EN/RU navigation labels;
 review the displayed text as well as its automatic checks.
+
+## Maintaining the fork version and updater
+
+Change `MPCHC_BLURAY_RELEASE` in `include/BlurayVersion.h` for the next fork
+release. The base remains in `include/version.h` and must match `sources.json`.
+`fork_version.py` supplies packaging and manifests; player/resource builds and
+packaging call `check-player-version.ps1` to reject stale binaries. Keep numeric
+Windows resource versions compatible with the official player.
+
+Run in the MSVC environment after changing the version, updater or revision logic:
+
+```powershell
+python ./bluray/tools/test-fork-release.py
+./bluray/tools/check-player-version.ps1 -IncludeRussian
+```
+
+The test compiles production C++ tag/feed parsers, checks the single version
+source and runs the actual revision batch file in a temporary Git repository.
+Fast Linux CI runs the parser/version tests with g++; the Windows batch test is
+skipped there and must pass locally. The component runner includes this test.
+
+The updater queries at most 100 published releases in one GitHub response,
+accepts prereleases and selects the highest strict numeric fork tag. Drafts,
+foreign release URLs, malformed/oversized responses and API errors are handled
+explicitly. The response is limited to 4 MiB; transport has timeouts and a read
+deadline. Ignore-version and last-check settings use fork-specific keys.
+Verify native EN/RU dialogs separately from parser tests; an empty live feed
+does not verify downloading a future release. There is no installer in this path.

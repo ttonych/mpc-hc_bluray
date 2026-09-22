@@ -57,10 +57,11 @@ IF %ERRORLEVEL% NEQ 0 (
   GOTO NoRepo
 )
 
-REM The abbreviated hash of the current changeset and the number of changesets
-REM since the last (annotated) tag, which is what "git describe --long" reports
+REM Count from the exact numeric upstream base, never from a fork release tag.
+REM A newer -bluray tag must not reset the Windows numeric build revision.
+SET "TAG="
 FOR /F "usebackq delims=" %%A IN (`git rev-parse --short HEAD`) DO SET "HASH=%%A"
-FOR /F "usebackq delims=" %%A IN (`git describe --abbrev^=0 2^>NUL`) DO SET "TAG=%%A"
+FOR /F "usebackq delims=" %%A IN (`git describe --abbrev^=0 --match^=%VER_FIXED% 2^>NUL`) DO SET "TAG=%%A"
 IF DEFINED TAG FOR /F "usebackq delims=" %%A IN (`git rev-list --count %TAG%..HEAD`) DO SET "VER=%%A"
 IF NOT DEFINED HASH SET "HASH=0000000"
 IF NOT DEFINED VER SET "VER=0"

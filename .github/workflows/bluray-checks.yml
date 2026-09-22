@@ -23,3 +23,5 @@ jobs:
       - run: python bluray/tools/check-public-tree.py
       - run: python bluray/tools/check-docs-and-resources.py
       - run: python bluray/tools/test-package.py
+      - run: git submodule update --init --depth 1 -- src/thirdparty/rapidjson
+      - run: python bluray/tools/test-fork-release.py

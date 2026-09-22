@@ -12,6 +12,7 @@ import re
 import subprocess
 import zipfile
 from urllib.parse import quote, urlsplit, unquote
+from fork_version import read_version
 
 ROOT = Path(__file__).resolve().parents[2]
 NATIVE = ('bluray-4.dll', 'udfread-3.dll', 'freetype.dll', 'libxml2.dll',
@@ -94,6 +95,8 @@ def main():
     if git('status', '--porcelain', '--untracked-files=normal', '--ignore-submodules=dirty'):
         raise SystemExit('Uncommitted source changes; package a reviewed commit')
     subprocess.run(['python', str(ROOT / 'bluray/tools/apply-lav-patch.py')], check=True)
+    version = read_version()
+    subprocess.run(['powershell.exe', '-NoProfile', '-File', str(ROOT / 'bluray/tools/check-player-version.ps1'), '-IncludeRussian'], check=True)
     runtime = ROOT / 'bluray/out/libbluray-1.5.0-x64'
     lav = ROOT / 'src/thirdparty/LAVFilters/src'
     mapping = {
@@ -150,12 +153,13 @@ def main():
                 raise ValueError('Build manifest mismatch: ' + name)
     data['mpc-hc64.ini'] = PROFILE
     run = 'https://github.com/' + os.environ['GITHUB_REPOSITORY'] + '/actions/runs/' + os.environ['GITHUB_RUN_ID']
-    build = {'source_commit': head, 'source_url': 'https://github.com/' + os.environ['GITHUB_REPOSITORY'] + '/tree/' + head,
+    build = {'fork_version': version['version'], 'upstream_base': version['base'],
+             'source_commit': head, 'source_url': 'https://github.com/' + os.environ['GITHUB_REPOSITORY'] + '/tree/' + head,
              'workflow_run': run, 'kind': 'unqualified test candidate', 'runtime_verified': False}
     data['build-manifest.json'] = json.dumps(build, indent=2).encode()
     manifest = {**build, 'files': {n: digest(v) for n, v in sorted(data.items())}}
     data['package-manifest.json'] = json.dumps(manifest, indent=2).encode()
-    name = 'mpc-hc_bluray-2.8.2-bluray.1-' + head[:12] + '-x64'
+    name = 'mpc-hc_bluray-' + version['version'] + '-' + head[:12] + '-x64'
     folder = ROOT / 'bluray/out/packages'
     folder.mkdir(parents=True, exist_ok=True)
     target = folder / (name + '.zip')

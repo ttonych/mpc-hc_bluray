@@ -11,8 +11,8 @@ its own interface, playback graph and LAV filters, with a maintained LAV adapter
 
 The target for the first fork release is **2.8.2-bluray.1**. The prefix identifies
 the MPC-HC base; the final number counts fork releases on that base. See
-[versioning and releases](bluray/docs/RELEASING.md). The EXE still uses upstream
-version presentation; unified fork branding and update checks are pending.
+[versioning and releases](bluray/docs/RELEASING.md). Current sources show the
+fork version in the EXE/About and check this fork's published GitHub releases.
 
 ## Test build and quick start
 
@@ -60,10 +60,10 @@ INI. MPC-BE Blu-ray's profile-import wizard and mandatory portable-profile
 behavior are not yet implemented here. madVR and other external filters may
 still share system settings between players.
 
-The inherited update checker still points to official MPC-HC, not this fork.
-Decline automatic update checks for this test build and get fork candidates from
-this repository. See [profiles and updates](bluray/docs/USAGE.md#profiles-and-updates)
-before replacing files or copying settings.
+Current sources check published releases of **ttonych/mpc-hc_bluray**, including
+prereleases, and offer their GitHub page without installing anything. The older
+cloud candidate linked above predates this change: decline its automatic update
+checks. See [profiles and updates](bluray/docs/USAGE.md#profiles-and-updates).
 
 ## Current limits
 
@@ -90,6 +90,7 @@ For symptoms and useful report details, see
 | [Contributing](CONTRIBUTING.md) | Branches, PRs, resources and publication checks |
 | [Versioning and releases](bluray/docs/RELEASING.md) | Version numbers, manual Actions, candidate verification and publication |
 | [Validation](bluray/docs/VALIDATION.md) / [Roadmap](bluray/docs/ROADMAP.md) | Evidence, limits and unfinished work |
+| [Feature comparison](bluray/docs/PARITY.md) | Committed MPC-BE/HC additions, gaps and validation differences |
 | [Porting log](bluray/docs/PORTING.md) / [Fork changes](bluray/CHANGELOG.md) | Donor adaptation and visible changes |
 
 The original [MPC-HC](https://github.com/clsid2/mpc-hc) history,

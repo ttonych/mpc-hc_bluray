@@ -349,6 +349,18 @@
       "path": ".github/workflows/bluray-build.yml",
       "donor_sha256": "f4703f8f4ccebc175d5af3ac6e44de4987f233e6cfceb6cdaddc53d52079c71c",
       "adapted": true
+    },
+    {
+      "path": "src/mpc-hc/BlurayReleaseVersion.h",
+      "donor_path": "src/apps/mplayerc/BlurayReleaseVersion.h",
+      "donor_sha256": "54541598924922cb3e610d267797ef656c70b455644f3e566cb88bf022c58e45",
+      "adapted": false
+    },
+    {
+      "path": "bluray/probe/release-version-test.cpp",
+      "donor_path": "bluray/probe/release-version-test.cpp",
+      "donor_sha256": "308b2220d21a897f0f4b08feff1fa584c9ff7229493c7ea695f38d5935d10d96",
+      "adapted": true
     }
   ],
   "adapted_mpeg2_stills": {

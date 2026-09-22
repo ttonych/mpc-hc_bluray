@@ -29,12 +29,15 @@
 #include "AppSettings.h"
 
 #include <afxinet.h>
+#include "BlurayVersion.h"
+#include "BlurayUpdateFeed.h"
+#include <memory>
 
 const Version UpdateChecker::MPC_HC_VERSION = {
     VersionInfo::GetMajorNumber(),
     VersionInfo::GetMinorNumber(),
     VersionInfo::GetPatchNumber(),
-    VersionInfo::GetRevisionNumber()
+    MPCHC_BLURAY_RELEASE
 };
 const LPCTSTR UpdateChecker::MPC_HC_UPDATE_URL = UPDATE_URL;
 
@@ -53,107 +56,64 @@ UpdateChecker::~UpdateChecker()
 
 Update_Status UpdateChecker::IsUpdateAvailable(const Version& currentVersion)
 {
-    Update_Status update_status = IsUpdateAvailable(currentVersion, false);
-    if (update_status == UPDATER_ERROR) update_status = IsUpdateAvailable(currentVersion, true);
-    return update_status;
-}
-
-Update_Status UpdateChecker::IsUpdateAvailable(const Version& currentVersion, bool useBackupURL)
-{
-    Update_Status updateAvailable = UPDATER_LATEST_STABLE;
-
+    latestVersion = {};
+    latestURL.Empty();
     try {
-        CInternetSession internet;
+        CInternetSession internet(MPCHC_BLURAY_NAME);
         internet.SetOption(INTERNET_OPTION_CONNECT_TIMEOUT, 5000);
         internet.SetOption(INTERNET_OPTION_RECEIVE_TIMEOUT, 5000);
         internet.SetOption(INTERNET_OPTION_SEND_TIMEOUT, 5000);
-
-#pragma warning(push)
-#pragma warning(disable: 4996)
-        OSVERSIONINFOEX osVersion = { sizeof(OSVERSIONINFOEX) };
-        GetVersionEx(reinterpret_cast<LPOSVERSIONINFO>(&osVersion));
-#pragma warning(pop)
-        CString osVersionStr;
-        osVersionStr.Format(_T("Windows %1u.%1u"), osVersion.dwMajorVersion, osVersion.dwMinorVersion);
-
-#if !defined(_WIN64)
-        // 32-bit programs run on both 32-bit and 64-bit Windows
-        // so must sniff
-        BOOL f64 = FALSE;
-        if (IsWow64Process(GetCurrentProcess(), &f64) && f64)
-#endif
-        {
-            osVersionStr += _T(" x64");
-        }
-
-        CString headersFmt = _T("User-Agent: MPC-HC");
-        if (VersionInfo::Is64Bit()) {
-            headersFmt += _T(" (64-bit)");
-        }
-#ifdef MPCHC_LITE
-        headersFmt += _T(" Lite");
-#endif
-        headersFmt += _T(" (%s)/");
-        headersFmt += VersionInfo::GetFullVersionString();
-        headersFmt += _T("\r\n");
-
-        CString headers;
-        headers.Format(headersFmt, osVersionStr.GetString());
-
-        CString fileURL;
-        if (useBackupURL) fileURL = BACKUP_UPDATE_URL;
-        else fileURL = versionFileURL;
-
-        CHttpFile* versionFile = (CHttpFile*) internet.OpenURL(fileURL,
-                                                               1,
-                                                               INTERNET_FLAG_TRANSFER_ASCII | INTERNET_FLAG_DONT_CACHE | INTERNET_FLAG_RELOAD,
-                                                               headers,
-                                                               DWORD(-1));
-
-        if (versionFile) {
-            CString latestVersionStr;
-            char buffer[101];
-            UINT br = 0;
-
-            while ((br = versionFile->Read(buffer, 50)) > 0) {
-                buffer[br] = '\0';
-                latestVersionStr += buffer;
+        const CString headers = _T("Accept: application/vnd.github+json\r\nX-GitHub-Api-Version: 2026-03-10\r\n");
+        const auto close = [](CStdioFile* file) {
+            if (file) {
+                try { file->Close(); } catch (CException* error) { error->Delete(); }
+                delete file;
             }
-
-            if (!ParseVersion(latestVersionStr, latestVersion)) {
-                updateAvailable = UPDATER_ERROR;
-            } else {
-                time_t lastCheck = time(nullptr);
-                AfxGetApp()->WriteProfileBinary(IDS_R_SETTINGS, IDS_RS_UPDATER_LAST_CHECK, (LPBYTE)&lastCheck, sizeof(time_t));
-
-                int comp = CompareVersion(currentVersion, latestVersion);
-
-                if (comp < 0) {
-                    CString ignoredVersionStr = AfxGetApp()->GetProfileString(IDS_R_SETTINGS, IDS_RS_UPDATER_IGNORE_VERSION, _T("0.0.0.0"));
-                    Version ignoredVersion;
-                    bool ignored = false;
-
-                    if (ParseVersion(ignoredVersionStr, ignoredVersion)) {
-                        ignored = (CompareVersion(ignoredVersion, latestVersion) >= 0);
-                    }
-
-                    updateAvailable = ignored ? UPDATER_UPDATE_AVAILABLE_IGNORED : UPDATER_UPDATE_AVAILABLE;
-                } else if (comp > 0) {
-                    updateAvailable = UPDATER_NEWER_VERSION;
-                }
-            }
-
-            versionFile->Close(); // Close() isn't called by the destructor
-            delete versionFile;
-        } else {
-            updateAvailable = UPDATER_ERROR;
+        };
+        const ULONGLONG started = GetTickCount64();
+        std::unique_ptr<CStdioFile, decltype(close)> file(internet.OpenURL(versionFileURL, 1,
+            INTERNET_FLAG_TRANSFER_BINARY | INTERNET_FLAG_DONT_CACHE | INTERNET_FLAG_RELOAD,
+            headers, DWORD(-1)), close);
+        if (!file || !file->IsKindOf(RUNTIME_CLASS(CHttpFile))) {
+            return UPDATER_ERROR;
         }
-    } catch (CInternetException* pEx) {
-        updateAvailable = UPDATER_ERROR;
-        pEx->Delete();
+        DWORD status = 0;
+        if (!static_cast<CHttpFile*>(file.get())->QueryInfoStatusCode(status) || status != HTTP_STATUS_OK) {
+            return UPDATER_ERROR;
+        }
+        std::string body;
+        char buffer[16384];
+        UINT count;
+        while ((count = file->Read(buffer, sizeof(buffer))) != 0) {
+            if (body.size() + count > 4 * 1024 * 1024 || GetTickCount64() - started > 15000) {
+                return UPDATER_ERROR;
+            }
+            body.append(buffer, count);
+        }
+        BlurayRelease::Release latest;
+        if (!BlurayRelease::ReadFeed(body, latest)) {
+            return UPDATER_ERROR;
+        }
+        time_t lastCheck = time(nullptr);
+        AfxGetApp()->WriteProfileBinary(IDS_R_SETTINGS, IDS_RS_BLURAY_UPDATER_LAST_CHECK,
+                                       (LPBYTE)&lastCheck, sizeof(lastCheck));
+        if (latest.url.empty()) {
+            return UPDATER_NO_RELEASES;
+        }
+        latestVersion = { latest.version[0], latest.version[1], latest.version[2], latest.version[3] };
+        latestURL = CString(latest.url.c_str()); // Validated ASCII repository/tag URL.
+        const int comparison = CompareVersion(currentVersion, latestVersion);
+        if (comparison < 0) {
+            const CString ignoredText = AfxGetApp()->GetProfileString(IDS_R_SETTINGS, IDS_RS_BLURAY_UPDATER_IGNORE_VERSION);
+            Version ignored;
+            const bool ignore = ParseVersion(ignoredText, ignored) && CompareVersion(ignored, latestVersion) >= 0;
+            return ignore ? UPDATER_UPDATE_AVAILABLE_IGNORED : UPDATER_UPDATE_AVAILABLE;
+        }
+        return comparison > 0 ? UPDATER_NEWER_VERSION : UPDATER_LATEST_STABLE;
+    } catch (CInternetException* error) {
+        error->Delete();
+        return UPDATER_ERROR;
     }
-
-    return updateAvailable;
 }
 
 Update_Status UpdateChecker::IsUpdateAvailable()
@@ -163,44 +123,19 @@ Update_Status UpdateChecker::IsUpdateAvailable()
 
 void UpdateChecker::IgnoreLatestVersion()
 {
-    CString ignoredVersionStr;
-    ignoredVersionStr.Format(_T("%u.%u.%u.%u"), latestVersion.major, latestVersion.minor, latestVersion.patch, latestVersion.revision);
-
-    AfxGetApp()->WriteProfileString(IDS_R_SETTINGS, IDS_RS_UPDATER_IGNORE_VERSION, ignoredVersionStr);
+    if (!latestURL.IsEmpty()) {
+        AfxGetApp()->WriteProfileString(IDS_R_SETTINGS, IDS_RS_BLURAY_UPDATER_IGNORE_VERSION, latestVersion.ToString());
+    }
 }
 
-bool UpdateChecker::ParseVersion(const CString& versionStr, Version& version)
+bool UpdateChecker::ParseVersion(const CString& text, Version& version)
 {
-    bool success = false;
-
-    if (!versionStr.IsEmpty()) {
-        UINT v[4];
-        int curPos = 0;
-        UINT i = 0;
-        CString resToken = versionStr.Tokenize(_T("."), curPos);
-
-        success = !resToken.IsEmpty();
-
-        while (!resToken.IsEmpty() && i < _countof(v) && success) {
-            if (1 != _stscanf_s(resToken, _T("%u"), v + i)) {
-                success = false;
-            }
-
-            resToken = versionStr.Tokenize(_T("."), curPos);
-            i++;
-        }
-
-        success = success && (i == _countof(v));
-
-        if (success) {
-            version.major = v[0];
-            version.minor = v[1];
-            version.patch = v[2];
-            version.revision = v[3];
-        }
+    BlurayRelease::Version parsed;
+    if (!BlurayRelease::Parse(std::wstring_view(text.GetString(), text.GetLength()), parsed)) {
+        return false;
     }
-
-    return success;
+    version = { parsed[0], parsed[1], parsed[2], parsed[3] };
+    return true;
 }
 
 int UpdateChecker::CompareVersion(const Version& v1, const Version& v2)
@@ -231,7 +166,7 @@ bool UpdateChecker::IsAutoUpdateEnabled()
     int& status = AfxGetAppSettings().nUpdaterAutoCheck;
 
     if (status == AUTOUPDATE_UNKNOWN) { // First run
-        status = (AfxMessageBox(IDS_UPDATE_CONFIG_AUTO_CHECK, MB_ICONQUESTION | MB_YESNO, 0) == IDYES) ? AUTOUPDATE_ENABLE : AUTOUPDATE_DISABLE;
+        status = (AfxMessageBox(IDS_BD_UPDATE_AUTO_CHECK, MB_ICONQUESTION | MB_YESNO, 0) == IDYES) ? AUTOUPDATE_ENABLE : AUTOUPDATE_DISABLE;
     }
 
     return (status == AUTOUPDATE_ENABLE);
@@ -242,7 +177,7 @@ bool UpdateChecker::IsTimeToAutoUpdate()
     time_t* lastCheck = nullptr;
     UINT nRead;
 
-    if (!AfxGetApp()->GetProfileBinary(IDS_R_SETTINGS, IDS_RS_UPDATER_LAST_CHECK, (LPBYTE*)&lastCheck, &nRead) || nRead != sizeof(time_t)) {
+    if (!AfxGetApp()->GetProfileBinary(IDS_R_SETTINGS, IDS_RS_BLURAY_UPDATER_LAST_CHECK, (LPBYTE*)&lastCheck, &nRead) || nRead != sizeof(time_t)) {
         if (lastCheck) {
             delete [] lastCheck;
         }
@@ -267,7 +202,7 @@ static UINT RunCheckForUpdateThread(LPVOID pParam)
         Update_Status status = updateChecker.IsUpdateAvailable();
 
         if (!autoCheck || status == UPDATER_UPDATE_AVAILABLE) {
-            UpdateCheckerDlg dlg(status, updateChecker.GetLatestVersion());
+            UpdateCheckerDlg dlg(status, updateChecker.GetLatestVersion(), updateChecker.GetLatestURL());
 
             try {
                 if (dlg.DoModal() == IDC_UPDATE_IGNORE_BUTTON) {
@@ -279,6 +214,7 @@ static UINT RunCheckForUpdateThread(LPVOID pParam)
         }
     }
 
+    CAutoLock lock(&UpdateChecker::csIsCheckingForUpdate);
     UpdateChecker::bIsCheckingForUpdate = false;
 
     return 0;
@@ -290,6 +226,8 @@ void UpdateChecker::CheckForUpdate(bool autoCheck /*= false*/)
 
     if (!bIsCheckingForUpdate) {
         bIsCheckingForUpdate = true;
-        AfxBeginThread(RunCheckForUpdateThread, (LPVOID)autoCheck);
+        if (!AfxBeginThread(RunCheckForUpdateThread, (LPVOID)autoCheck)) {
+            bIsCheckingForUpdate = false;
+        }
     }
 }
