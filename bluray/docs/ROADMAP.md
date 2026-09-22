@@ -2,7 +2,7 @@
 
 [Русский](ROADMAP.ru.md)
 
-## Completed locally
+## Completed work
 
 - MPC-HC 2.8.2 history and dependency pins; x64 player, EN/RU resources,
   libbluray 1.5.0 DLL/JAR and the LAV adapter are built.
@@ -45,13 +45,20 @@
   to EOS through custom LAV. Component and actual-JAR checks pass.
 - Publication scanner, author metadata review, paired docs/resources checks,
   manual cloud workflow and allowlist packaging are prepared and tested locally.
+- The initial port is merged through [PR #1](https://github.com/ttonych/mpc-hc_bluray/pull/1).
+  `main` requires a PR and the successful GitHub Actions `source-check`, including
+  administrators; force pushes and deletion are disabled. Fast CI passes.
+- The first manual cloud build passed and its exact ZIP passed integrity checks
+  and bounded HDMV, ordinary-file, fullscreen windowed and EN/RU checks. BD-J
+  runtime remains unverified for that ZIP because its current test ISO could not
+  be mounted by Windows; this is recorded in [Validation](VALIDATION.md).
 
 ## Next open work
 
 1. Broader BD-J matrix: a mouse-capable menu, Java/saves lifecycle, other discs,
    menu audio/stills, language combinations and additional decoder paths.
-2. Execute the protected PR/CI flow and prepare a cloud ZIP candidate. Test that
-   exact ZIP with a clean profile before a Release; local results do not qualify it.
+2. Qualify the exact cloud ZIP with the remaining clean-profile release matrix;
+   local results do not qualify a cloud package. See [Validation](VALIDATION.md).
 
 This remains experimental. Full compatibility, HDR accuracy, DVD ISO and MVC
 stereo output are unqualified. New upstream versions do not replace pins automatically.

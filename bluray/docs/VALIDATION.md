@@ -2,8 +2,8 @@
 
 [Русский](VALIDATION.ru.md) · [Roadmap](ROADMAP.md)
 
-These are local development results from 2026-09-22, not qualification of a cloud
-ZIP. The base and dependency revisions are in [sources.json](../sources.json).
+The first section records local development results from 2026-09-22. The cloud
+candidate is covered separately below. Dependency revisions are in [sources.json](../sources.json).
 Compilation, automated checks, agent observations and user reports are distinct.
 
 | Scope | Evidence | Result |
@@ -36,3 +36,37 @@ Before release, repeat HDMV/BD-J, clean portable profile, EN/RU, menu/film/retur
 tracks, chapters, warnings/stills and ordinary files using the exact cloud ZIP.
 Record its source commit and SHA-256. Broader BD-J mouse/lifecycle coverage,
 DVD ISO playback, HDR accuracy and MVC/stereo output remain unqualified.
+
+## First cloud candidate
+
+[Manual build 35781918063](https://github.com/ttonych/mpc-hc_bluray/actions/runs/35781918063)
+passed on 2026-09-22 UTC, from commit
+`8183fe6579c113bebe1ab4b2818807c41400de16`. Player, custom LAV, RU resources,
+component checks and actual-JAR HAVi checks passed on the cloud runner.
+
+Artifact: `mpc-hc-bluray-candidate-x64`.
+ZIP: `mpc-hc_bluray-2.8.2-bluray.1-8183fe6579c1-x64.zip`.
+SHA-256: `dee5f9188d227b4dacfe2b20ae09a2f7ccf5ef29e211fe67b1c6f8ca5ee7eefc`.
+The downloaded ZIP passed CRC, exact membership, all 76 payload hashes and clean
+profile checks. The ZIP and original extraction were preserved; runtime used a
+separate copy, a fresh portable profile and external madVR/Java.
+
+| Cloud ZIP check | Agent result |
+| --- | --- |
+| Loaded components | LAV and navigation DLLs came from the cloud package; loaded madVR matched the beta 210 hash above. |
+| HDMV | Baby Boom menu, Enter to film and Alt+T return were visible. |
+| Fullscreen | madVR OSD confirmed D3D11 fullscreen windowed. Exclusive remained disabled. |
+| Main-movie preference | Baby Boom opened directly into the 1:50:18 film; video and chapter markers were visible in the English player. |
+| ISO replacement and close | Caption changed on replacement; owned mounts were released on replacement/close. |
+| Startup still | Casino Royale's initial player-update notice was visible. This observation is limited to that notice. |
+| Ordinary files | H.264 video was visible with madVR; H.264, HEVC Main10, AV1 and MPEG-2 decoded to EOS through the packaged LAV and Null Renderer. |
+| EN/RU | Both Blu-ray settings pages were visually checked. |
+| BD-J | Not completed: the current A Knight's Tale ISO was readable, but both the player and Windows Mount-DiskImage failed to attach it with Windows error 2. No BD-J runtime pass is claimed for this ZIP. |
+
+A local test helper initially introduced malformed line endings while changing
+the test INI. That caused a startup exception in the subtitle-dialog settings
+parser. Correcting the helper/profile and repeating startup/main-movie playback
+passed; the cloud archive was unchanged.
+
+This is a test candidate, not a qualified Release. Complete the cloud BD-J and
+remaining tracks/chapters/stills/lifecycle matrix before publication as a Release.

@@ -16,7 +16,7 @@ madVR 210 x64 and Java are external installations. BD-J was tested with Temurin
 21.0.12.1+1 x64. D3D11 fullscreen windowed is the primary fullscreen configuration;
 the fork does not enable exclusive mode or change global madVR settings.
 
-This is development software. Local observations and remaining gaps are recorded
+This is development software. Local/cloud observations and remaining gaps are recorded
 in [Validation](bluray/docs/VALIDATION.md). HDR accuracy, MVC stereo output and
 compatibility with all discs are not established. The MSVC LAV build uses built-in
 decoders; GCC-only external codec dependencies are absent.
