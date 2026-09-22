@@ -11,9 +11,10 @@ from urllib.parse import unquote, urlsplit
 import polib
 
 ROOT = Path(__file__).resolve().parents[2]
-PAIRS = [('README.md', 'README.ru.md'), ('AGENTS.md', 'AGENTS.ru.md')]
+PAIRS = [('README.md', 'README.ru.md'), ('AGENTS.md', 'AGENTS.ru.md'),
+         ('CONTRIBUTING.md', 'CONTRIBUTING.ru.md')]
 PAIRS += [(f'bluray/docs/{n}.md', f'bluray/docs/{n}.ru.md')
-          for n in ('DEVELOPMENT', 'PORTING', 'ROADMAP', 'USAGE', 'VALIDATION')]
+          for n in ('DEVELOPMENT', 'PORTING', 'ROADMAP', 'USAGE', 'VALIDATION', 'RELEASING')]
 PAIRS += [('bluray/CHANGELOG.md', 'bluray/CHANGELOG.ru.md')]
 PAIRS += [('bluray/README.md', 'bluray/README.ru.md')]
 FORMAT = re.compile(r'%[-+ #0]*\d*(?:\.\d+)?(?:I64|I32|hh|ll|h|l|z|t|j)?[diuoxXfFeEgGaAcCsSpn]')
@@ -27,12 +28,22 @@ def read(path):
 def main():
     errors = []
     for pair in PAIRS:
-        for name in pair:
+        for language, name in enumerate(pair):
             p = ROOT / name
             if not p.is_file():
                 errors.append(f'Missing paired document: {name}')
                 continue
-            text = read(p)
+            try:
+                text = p.read_text(encoding='utf-8-sig')
+            except UnicodeDecodeError:
+                errors.append(f'Document is not UTF-8: {name}')
+                continue
+            label = ('Русский', 'English')[language]
+            counterpart = Path(pair[1 - language]).name
+            if f'[{label}]({counterpart})' not in text:
+                errors.append(f'Missing or corrupted language link: {name}')
+            if '\ufffd' in text:
+                errors.append(f'Unicode replacement character in document: {name}')
             if len(re.findall(r'^```', text, re.M)) % 2:
                 errors.append(f'Unclosed code fence: {name}')
             for target in re.findall(r'\[[^\]]*\]\(([^\s)]+)\)', text):

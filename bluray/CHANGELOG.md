@@ -1,52 +1,73 @@
 # Fork changes
 
-[Русский](CHANGELOG.ru.md)
+[Русский](CHANGELOG.ru.md) · [Versioning and releases](docs/RELEASING.md)
 
-## Unreleased — local development
+This is the history of MPC-HC Blu-ray additions to the official player.
+For changes in the base player, see the [official MPC-HC 2.8.2 notes](https://github.com/clsid2/mpc-hc/releases/tag/2.8.2).
+Entries become dated version sections when a release is published.
 
-- Start from official MPC-HC 2.8.2 with original history and LAV pins preserved.
-- Port the donor process-query safety fix: update only the PEB debug byte,
-  validate query results and buffers, and handle the full debug-port value.
-- Import libbluray 1.5.0 native/Java patch manifests and component regressions;
-  add x64 build/check scripts, source provenance and bilingual developer docs.
-- Add experimental Blu-ray navigation, keyboard/mouse input, madVR overlay
-  and a separate menu audio graph.
-- Add maintained LAV PID-selection and PlayItem read-boundary patches; keep
-  LAV's internal library separate from the libbluray 1.5.0 navigation runtime.
-- Build fresh DLL/JARs, pin Java 21.0.12.1+1 x64 and check HAVi, overlay,
-  coordinates, clock and LAV software decoding through a Null Renderer.
-- Observe an initial HDMV menu with madVR in the local Russian portable player.
-  One authored BD-J menu/film-start/return cycle also passes with pinned Java.
-  Broad disc coverage and BD-J mouse input remain open; exact madVR 210 is verified below.
-  The MSVC LAV configuration differs from the normal GCC build; no release yet.
-- Connect standard navigation commands and their menu availability to Blu-ray:
-  Alt+T/top menu, Alt+R/popup, directions, activation and leave; respect disc restrictions.
-- Added disc captions and hiding chapter markers on normal/OSD seek bars while menus are active.
-- In Blu-ray navigation, LAV preserves authored gaps between sparse frames;
-  ordinary playback retains its previous discontinuity repair.
-- Adapt MPC-BE isolated MPEG-2 still repetition and sequence-end release to LAV;
-  the previously black startup warning is visible with madVR in the local player.
-- Normal Blu-ray opening follows the menu/main-movie preference; main movie
-  remains the default.
-- Add a native EN/RU Blu-ray options page for region/languages, Java discovery/path
-  and separate BD-J save/cache folders, with validated Apply and safe Cancel.
-- Remove the temporary separate Open Blu-ray Menu command; normal Open DVD/BD
-  follows the opening preference. Add a compatibility dialog with 14 settings,
-  EN/RU descriptions, preset/numeric validation and draft-only defaults.
+## Unreleased
 
-- Preserve explicit 32-bit compatibility masks, including 0xFFFFFFFF, after
-  restarting the player; keep default and explicit choices distinct across translations.
+Planned first release: **2.8.2-bluray.1**, based on official MPC-HC **2.8.2**.
+No Release has been published. Candidate identities and verification results
+are recorded separately in [Validation](docs/VALIDATION.md).
 
-- Add the EN/RU disc-data catalogue: search, aliases, legacy groups, folder
-  access and per-disc reset retaining previous saved data and cache.
-- Check JVM architecture before applying Java paths; add bounded, cancellable
-  java -version diagnostics outside the player.
-- Keep native fullscreen controls available when Blu-ray menus handle mouse movement.
-- Open dropped ISO images through a read-only Windows virtual drive, following
-  the Blu-ray menu/movie preference. Keep it through graph changes and release
-  the owned attachment on close; preserve external mounts and report errors.
+### Added
 
-- Validate ISO replacement/unmount, exact madVR 210 identity and H.264/HEVC10/AV1/
-  MPEG-2 ordinary files. D3D11 fullscreen windowed is the primary mode.
-- Add publication/history/author checks, bilingual usage/validation records, fast
-  PR checks, manual cloud build and clean allowlist ZIP packaging.
+- Experimental HDMV/BD-J navigation, keyboard and authored mouse input, madVR
+  menu graphics and a separate menu audio graph.
+- Standard top/popup menu commands (Alt+T/Alt+R), disc captions and chapter
+  markers that hide in menus and return during film playback.
+- Normal disc/folder opening with a main-movie/menu preference. Main movie
+  remains the default; the temporary separate menu-opening command was removed.
+- Read-only Windows ISO opening, including drag-and-drop. Player-owned mounts
+  survive graph changes and release on close; external mounts are preserved
+  and mounting errors are reported.
+- Native English/Russian Blu-ray settings for region/languages, Java and
+  separate BD-J save/cache paths, with validated Apply and safe Cancel.
+- Compatibility settings with 14 libbluray preferences, descriptions, presets
+  and draft-only defaults.
+- Disc-data catalogue with search, aliases, folder access and per-disc reset
+  that retains previous saves/cache.
+- JVM architecture validation and bounded, cancellable Java startup diagnostics
+  in a separate process.
+
+### Fixed
+
+- Standard Blu-ray menu command availability and routing, respecting disc restrictions.
+- LAV navigation timestamps preserve authored sparse-frame gaps; isolated MPEG-2
+  still repetition and sequence-end handling fix the observed black startup warning.
+  Ordinary playback retains its prior discontinuity policy.
+- Native fullscreen controls remain reachable when Blu-ray handles mouse movement.
+- Explicit 32-bit compatibility masks, including 0xFFFFFFFF, survive restart and
+  remain distinct from automatic values across translations.
+- Process-query handling updates only the PEB debug byte, validates results and
+  buffers, and handles the full debug-port value.
+- Corrupted Russian navigation text in the English README; fast checks now reject
+  invalid UTF-8 and missing/corrupted paired-language links.
+
+### Components, build and documentation
+
+- Preserve official MPC-HC 2.8.2 history and LAV pins.
+- Integrate libbluray 1.5.0 native/Java patches for menu mouse pages, seek marks
+  and HAVi toggle behavior; record source hashes, provenance and component tests.
+- Maintain the LAV PID/PlayItem/timestamp/still adapter separately from LAV's
+  internal libbluray. Pin Temurin 21.0.12.1+1 x64 for current build/runtime checks.
+- Add x64/EN/RU build scripts, actual-JAR and native regressions, publication/
+  history/author checks, fast PR checks and manual cloud candidate builds.
+- Package an explicit runtime/license/document file list with a clean portable INI.
+  Java and madVR stay external; D3D11 fullscreen windowed is the primary madVR mode.
+- Expand paired setup, Java, saves, troubleshooting, contribution and release
+  guides; document the upstream-base/fork-release numbering scheme.
+
+### Known limitations
+
+- This remains experimental. Cloud candidate BD-J qualification and wider disc,
+  Java/saves and mouse-capable-menu coverage are incomplete.
+- The MSVC LAV configuration differs from the standard GCC build; full codec/audio
+  parity, HDR accuracy, MVC/stereo and DVD ISO support are unqualified.
+- Fork version branding and fork-specific update checking are pending; the
+  inherited updater still queries official MPC-HC. Profile import and mandatory
+  portable behavior from MPC-BE Blu-ray are not yet ported.
+- See [Validation](docs/VALIDATION.md) for the distinction between component
+  tests, local playback, user reports and checks of the exact cloud ZIP.

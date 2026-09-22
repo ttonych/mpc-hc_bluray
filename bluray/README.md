@@ -16,9 +16,11 @@ Broader disc testing and qualification of the exact cloud ZIP remain open.
 - [Porting log](docs/PORTING.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Fork changes](CHANGELOG.md)
+- [Versioning and releases](docs/RELEASING.md) and [contributing](../CONTRIBUTING.md)
 - [Usage](docs/USAGE.md) and [validation scope](docs/VALIDATION.md)
 
 The target is Windows x64, libbluray 1.5.0 with maintained patches, external
 Java and external madVR 210 x64. LAV's internal libbluray is a separate pinned
 dependency; the new navigation runtime is not a drop-in replacement for it.
-Upstream documentation and attribution remain in their original locations.
+Upstream documentation and attribution are retained; the original contribution
+guide is preserved as [UPSTREAM-CONTRIBUTING.md](../docs/UPSTREAM-CONTRIBUTING.md).

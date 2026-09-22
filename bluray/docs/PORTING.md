@@ -4,7 +4,14 @@
 
 Donor snapshot: [270cfdd](https://github.com/ttonych/mpc-be_bluray/commit/270cfdd4369224dd4108d0b1d1b8a4ab7b8fc56d).
 HC baseline: [2.8.2 / a84d0cf](https://github.com/clsid2/mpc-hc/commit/a84d0cf38a1866f3518bb819c901300dacff5a9b).
-Destination: local `feature/bluray-port` worktree; no destination commit or release yet.
+Destination: initial port commit `5004099` and follow-up fixes, accepted through
+[PR #1](https://github.com/ttonych/mpc-hc_bluray/pull/1). There is no published
+Release. Current candidate checks and outstanding limits are in [Validation](VALIDATION.md).
+
+## Initial port snapshot, 2026-09-22
+
+The initial table and checks below are historical. Later entries record completed
+follow-up work; an open item in this initial snapshot is not the current status.
 
 | Donor change | Purpose and HC adaptation | Status and HC checks, 2026-09-22 |
 | --- | --- | --- |
@@ -19,7 +26,7 @@ Test runner changes are limited to HC paths, MSVC support and unattended failure
 reporting. [imports.json](../imports.json) records donor file hashes. Shared
 patch manifests still carry the donor's file and patch checksums.
 
-## Validation and remaining work
+## Initial validation and remaining work
 
 - Visual Studio 2022 17.14, MSVC 14.44.35207, SDK 10.0.19041.0, NASM 2.16.03.
 - Player Release x64, embedded English resources and Russian language DLL build.
@@ -253,3 +260,14 @@ D3D11 fullscreen windowed is primary; no global renderer setting is bundled.
 
 The initial HC port is commit `5004099e31c7fb7833060b3d9b8c8d0fa4b1b9d5`, reviewed
 with publication follow-ups in [PR #1](https://github.com/ttonych/mpc-hc_bluray/pull/1).
+
+## Documentation and version policy review
+
+Compared committed donor README and user/developer guides at `270cfdd` above,
+then expanded the HC guides against HC implementation and validation records.
+The base-version/fork-release numbering convention is adopted in [Releasing](RELEASING.md).
+The donor's EXE branding/updater, mandatory portable policy, profile import and
+offline HTML generator are explicitly deferred, not documented as HC features.
+The original HC contribution guide is preserved separately. This documentation
+change fixes UTF-8 navigation and strengthens paired-document checks; it does
+not alter the player, donor checkout or existing cloud ZIP.
