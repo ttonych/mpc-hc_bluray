@@ -56,17 +56,28 @@ The EXE reports `2.8.2-bluray.1`, file version `2.8.2.20 (c4d242333) (main)`.
 | Actual packaged LAV, injected read failures | All six cases pass: baseline, one failure within a clip, one at the boundary, persistent failure at both positions, standalone M2TS. Transient retry and same-graph recovery match all 576 baseline samples. Persistent errors produce EC_ERRORABORT with bounded attempts. |
 | Ordinary decoding | Packaged LAV decodes synthetic H.264, HEVC Main10, AV1 and MPEG-2 to EOS through Null Renderer. |
 | Portable first start | Packaged seed, EN/RU wizard, cancellation, defaults and restart pass; installed HC registry unchanged. |
-| HC read error EN/RU | Locking the second synthetic clip closes the graph and shows the localized error; after unlocking, reopening advances the playback clock. Native controls and GDI screenshots confirm the message, not GPU video. |
-| Loaded binaries | LAV module hashes match the ZIP; external madVR matches the beta 210 hash recorded above. |
-| Remaining visual work | HDMV/BD-J, menu/film/return, tracks/chapters/stills and D3D11 fullscreen windowed require a local desktop session. Manual import through the file picker also remains unverified for this ZIP. |
+| HC read error EN/RU | Locking the second synthetic clip closes the graph and shows the localized error. After unlocking, reopening restores visible MPEG-2 video through madVR in both languages. Native control state, the earlier GDI message checks and local-desktop video captures were inspected. |
+| Loaded binaries | Loaded navigation and LAV DLLs match the ZIP. External madVR matches the beta 210 hash above; the external JVM is loaded for BD-J. |
+| Manual import and guards | The native file picker selects a synthetic INI; settings and a shader are copied, source bytes and the installed HC registry remain unchanged. Read-only profile and association-write guards pass. |
+| HDMV | Baby Boom: menu, Enter to film, Alt+T return, mouse selection of the scene menu and a chapter. Chapter marks are visible in film and absent in the menu. |
+| Casino Royale | The initial MPEG-2 player-update notice is visible throughout sampled frames. Menu, film, Alt+R popup and Alt+T return are visible. This checks that notice, not every authored still. |
+| BD-J | A Knight's Tale UHD: Sony intro, version selection, main menu, film, Alt+R popup and Alt+T return. Playback uses an externally mounted drive. |
+| BD-J tracks and chapters | TrueHD to DTS-HD selection changes the checked stream and native status; English subtitles are visible. Next/previous chapter commands move between about 06:19 and 14:26. Chapter marks follow film/menu state. |
+| BD-J restart | After closing/restarting the player in English, the authored Resume Playback prompt appears; Yes resumes visible film at about 06:50 using only newly created private disc data. |
+| Fullscreen | The madVR OSD shows D3D11 fullscreen windowed for both HDMV film and the UHD BD-J menu. Shared renderer settings were not changed. |
+| Ordinary video | The synthetic H.264 file renders through madVR after disc playback. Software decode of all four codecs is recorded above. |
 
-The user confirmed an RDP session. Foreground activation was unavailable and
-desktop capture failed, so GPU image/menu results were not inferred from the
-playback clock or black GDI captures. No disc images were mounted during this
-session. The ZIP, pristine extraction and tested payload remain unchanged;
-only the separate portable profile was configured. Test players are closed.
-The earlier candidate's HDMV/BD-J observations below do not qualify this ZIP.
-No Release has been published; the next step is the remaining local-desktop check.
+The initial RDP session deferred video checks. They were completed later on
+2026-09-23 in a confirmed local desktop session, using a separate portable copy
+of this same ZIP. The observations above belong to this candidate; the earlier
+candidate's results remain separate. ZIP, pristine extraction and packaged
+payload files are unchanged; only private profile/test data were added or updated.
+All test players are closed, native image mounts are gone and the test-owned
+external mount was released. The storage-specific ISO issue was not investigated.
+
+The deferred desktop checks are complete within the stated scope. Positive BD-J
+mouse coverage, broader Java/saves/disc coverage and long OS/network timeouts
+remain open. This is an experimental candidate; no Release has been published.
 
 ## Earlier portable cloud candidate
 
