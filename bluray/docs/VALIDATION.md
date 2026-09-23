@@ -67,8 +67,10 @@ pages**. The ZIP and all original extracted files were unchanged after testing.
 | ISO lifecycle | Captions changed on replacement; player-owned native mounts were released on replacement/file opening. The external BD-J mount was retained until explicitly released after testing. |
 | Ordinary files | H.264 video was visible through madVR; H.264, HEVC Main10, AV1 and MPEG-2 decoded to EOS through the packaged LAV and Null Renderer. |
 
-The current A Knight's Tale ISO still fails native Windows attachment with
-error **2**. Existing WinCDEmu attached it successfully; the BD-J checks above
+In this test, native Windows attachment of the A Knight's Tale ISO returned
+error **2**. On 2026-09-23 the user identified this as a property of the ISO's
+storage setup and asked to exclude it from player defect investigation. It is
+not an open MPC-HC defect or release blocker. Existing WinCDEmu attached it; the checks above
 opened the mounted drive's `BDMV/index.bdmv`. They validate BD-J playback from
 that drive, not direct native ISO attachment or automatic third-party mounting.
 See the [opening guide](USAGE.md#opening-a-disc-or-iso).

@@ -61,10 +61,9 @@ than silently starting the film. Unsupported images or mounting failures should
 produce an error. Other image formats and third-party mounters are not included.
 
 If an image is mounted by an external tool, open its drive or `BDMV/index.bdmv`
-in the player instead of reopening the ISO file. The current A Knight's Tale
-image returned Windows error 2 on native attachment, but its BD-J session passed
-from a WinCDEmu drive. This is a tested manual route, not automatic mounter
-fallback. See the exact candidate [checks](VALIDATION.md).
+in the player instead of reopening the ISO file. Playback from a WinCDEmu drive
+was verified. The player does not invoke a third-party mounter automatically.
+See the exact candidate [checks](VALIDATION.md).
 
 ## Controls
 

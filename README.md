@@ -76,8 +76,8 @@ See [profiles and updates](bluray/docs/USAGE.md#profiles-and-updates).
   not add decoders or prove support for every advertised feature.
 - Java, madVR and disc-decryption components are not included. Disc contents
   must already be readable. Direct ISO opening requires native Windows attachment.
-  A Knight's Tale needed external mounting in this check; open the mounted drive
-  or `BDMV/index.bdmv`. See [opening](bluray/docs/USAGE.md#opening-a-disc-or-iso).
+  For externally mounted images, open the drive or `BDMV/index.bdmv`.
+  See [opening](bluray/docs/USAGE.md#opening-a-disc-or-iso).
 - The MSVC LAV build uses built-in decoders and omits GCC-only external dependencies.
 
 For symptoms and useful report details, see
