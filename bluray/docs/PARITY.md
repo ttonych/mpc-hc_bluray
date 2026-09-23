@@ -41,7 +41,7 @@ with BE filters. A similar feature name alone is not evidence of identical code.
 
 ## Boundaries and remaining work
 
-1. Expand the HC disc matrix. The earlier `19dfdc8b307f` ZIP has HDMV/BD-J checks,
+1. Expand the HC disc matrix. The current `c4d242333bed` ZIP has HDMV/BD-J checks,
    including BD-J tracks, chapters and authored resume. The earlier cloud BD-J
    gap is closed for this candidate using an externally mounted drive. The user
    identified its native attachment issue as storage-specific; it is excluded
@@ -58,9 +58,9 @@ with BE filters. A similar feature name alone is not evidence of identical code.
    false successful EOS after a persistent failure in v3. Local v4 passes exact
    payload/timestamp comparison, clip-boundary retry, fatal error and restart
    of the same graph. Standalone M2TS and HC EN/RU error/reopen checks with
-   madVR 210 pass locally. The earlier ZIP contains v3; the new v4 ZIP passes
-   the read-failure checks but awaits local-desktop HDMV/BD-J and madVR visual
-   qualification. Long OS/network timeouts and damaged media remain outside
+   madVR 210 pass both locally and on the exact v4 cloud ZIP. That ZIP also
+   passes bounded HDMV/BD-J, native import and madVR visual checks on a local
+   desktop. Long OS/network timeouts and damaged media remain outside
    [these checks](VALIDATION.md).
 
 Seamless playlist transitions, BD-Live/PiP, authored button sounds and full

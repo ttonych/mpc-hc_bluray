@@ -59,7 +59,7 @@
 
 - Mandatory portable settings, EN/RU import setup and offline HTML guides are
   implemented. Importer and native wizard checks cover cancellation, restart,
-  write failure and source preservation. The exact cloud ZIP at `19dfdc8b307f`
+  write failure and source preservation. The exact cloud ZIP at `c4d242333bed`
   passed integrity/HTML checks, clean EN/RU setup, manual import and write guards.
   HDMV/BD-J menu/film/return, BD-J tracks/chapters/resume, Casino Royale
   startup still and ordinary-file checks passed. See [Validation](VALIDATION.md).
@@ -78,9 +78,9 @@
   uncommitted experiments are not a transfer baseline.
 - HC/LAV v4 is built in cloud candidate `c4d242333bed`. Its exact ZIP passes
   read-failure/recovery, ordinary decode and EN/RU native-control checks.
-  Complete HDMV/BD-J and madVR visual qualification on a local desktop; the RDP
-  session did not permit that check. Long OS/network timeouts remain outside
-  these tests. See [Validation](VALIDATION.md).
+  Local-desktop HDMV/BD-J, madVR video recovery and portable import also pass
+  within the recorded scope. Long OS/network timeouts remain outside these
+  tests. See [Validation](VALIDATION.md).
 
 These are explicit gaps, not claims of implemented parity or automatic approval
 to port every future donor feature. Use fixed commits and record the selection.
