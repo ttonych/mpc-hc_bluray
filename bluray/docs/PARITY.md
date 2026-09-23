@@ -7,8 +7,9 @@ not every feature of upstream MPC-BE and MPC-HC.
 
 - Donor: [MPC-BE Blu-ray at 270cfdd](https://github.com/ttonych/mpc-be_bluray/tree/270cfdd4369224dd4108d0b1d1b8a4ab7b8fc56d),
   based on MPC-BE 1.9.1. Only committed code is a transfer baseline.
-- HC: this source revision, based on MPC-HC 2.8.2, including fork branding and
-  release checks. The older cloud candidate at `8183fe6` lacks those last changes.
+- HC: cloud candidate `19dfdc8b307f`, based on MPC-HC 2.8.2, including fork
+  branding, release checks, mandatory portable import and offline HTML guides.
+  Exact package and runtime results are in [Validation](VALIDATION.md).
 - Donor release `1.9.1-bluray.1` was built at `c671077`; the compared donor commit
   also includes later ISO lifetime and BD-J return fixes. Source and released ZIP
   capabilities must therefore be distinguished in both projects.
@@ -29,7 +30,7 @@ with every disc or qualification of a downloadable package.
 | Region/country/languages, compatibility preferences and BD-J storage | Present | Present | Different native settings layouts; no identified missing preference |
 | Disc-data catalogue, aliases, per-disc reset retaining old data | Present | Present | Shared catalogue/storage algorithms, HC dialogs |
 | Explicit Java architecture check and cancellable startup diagnostic | Limited file checks in this donor revision | Implemented | HC has additional diagnostics; later donor Java work is outside this baseline |
-| Fork version and own published-release checker | Present | Implemented in current sources | HC uses its own releases, including prereleases; previous cloud ZIP predates this |
+| Fork version and own published-release checker | Present | Present in current candidate | HC uses its own releases, including prereleases |
 | First-run settings import and mandatory writable portable profile | Present | Adapted | HC registry/INI formats, source preservation, native EN/RU checks |
 | Offline HTML guides inside the ZIP | Present | Adapted | Local pages/anchors verified; source links pin exact commit |
 
@@ -40,10 +41,11 @@ with BE filters. A similar feature name alone is not evidence of identical code.
 
 ## Boundaries and remaining work
 
-1. Expand the HC disc matrix and qualify a new exact cloud ZIP. The donor has a
-   published prerelease with HDMV/BD-J checks; HC has local BD-J evidence but its
-   existing cloud ZIP has no completed BD-J runtime check. This is a validation
-   gap, not proof that a navigation algorithm is absent.
+1. Expand the HC disc matrix. The current cloud ZIP has bounded HDMV/BD-J checks,
+   including BD-J tracks, chapters and authored resume. The earlier cloud BD-J
+   gap is closed for this candidate, using an externally mounted drive; native
+   attachment of that ISO still fails with Windows error 2. HC has no published
+   Release yet. Positive BD-J mouse and broader Java/saves coverage remain open.
 2. The donor's bounded reopen/read-error fix is in BE's `CMultiFiles`. HC uses
    LAV rather than that reader, so copying the patch would not close the problem.
    Equivalent read-failure recovery needs its own HC/LAV fault-injection check.
