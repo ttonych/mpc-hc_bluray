@@ -47,18 +47,19 @@ with BE filters. A similar feature name alone is not evidence of identical code.
    identified its native attachment issue as storage-specific; it is excluded
    from player defects. HC has no published Release yet. Positive BD-J mouse
    and broader Java/saves coverage remain open.
-2. Read-error behavior needs a separate HC/LAV test; no equivalent HC crash or
-   unbounded retry has been reproduced. The donor's
+2. Read-error behavior was checked on actual HC/LAV. The donor's
    [e857bdc fix](https://github.com/ttonych/mpc-be_bluray/commit/e857bdcef19a4a8975cc2fb2fb4709b32ee7b1de)
    limits `CMultiFiles` to one reopen/retry at the same byte position, reports
    persistent failure and avoids indexing a missing timestamp-offset table for
    standalone M2TS files. Its injected-failure tests check successful retry,
    exactly two read attempts for persistent failure and playlist time offsets.
-   HC's disc graph uses LAV/libbluray, not BE's `CMultiFiles`; the HC menu engine
-   already records `BD_EVENT_READ_ERROR`. Remaining checks concern transient
-   and persistent failures, error reporting, responsiveness and position/time
-   preservation if reading resumes. This is a validation gap, not evidence of
-   a missing decoder feature or a promise to recover damaged disc data.
+   HC retains LAV/libbluray and adapts bounded retry/error reporting in
+   `hc-menu-bridge-v4`. Tests exposed packet loss after a transient failure and
+   false successful EOS after a persistent failure in v3. Local v4 passes exact
+   payload/timestamp comparison, clip-boundary retry, fatal error and restart
+   of the same graph. Standalone M2TS and HC EN/RU error/reopen checks with
+   madVR 210 pass. The existing cloud ZIP still contains v3. Long OS/network
+   timeouts and damaged media remain outside [these checks](VALIDATION.md).
 
 Seamless playlist transitions, BD-Live/PiP, authored button sounds and full
 Java-controlled video layout/pause synchronization are not established parity

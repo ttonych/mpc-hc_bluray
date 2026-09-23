@@ -3245,6 +3245,13 @@ LRESULT CMainFrame::OnGraphNotify(WPARAM wParam, LPARAM lParam)
                 break;
             case EC_ERRORABORT:
                 UpdateCachedMediaState();
+                if ((HRESULT)evParam1 == HRESULT_FROM_WIN32(ERROR_READ_FAULT) &&
+                    (m_blurayMenu || m_bIsBDPlay ||
+                     m_wndPlaylistBar.GetCurFileName().Right(5).CompareNoCase(L".mpls") == 0)) {
+                    // Defer teardown until the graph event parameters are released.
+                    PostMessage(WM_COMMAND, ID_FILE_CLOSEMEDIA);
+                    SetClosingError(IDS_BD_DISC_READ_ERROR);
+                }
                 TRACE(_T("\thr = %08x\n"), (HRESULT)evParam1);
                 break;
             case EC_BUFFERING_DATA:

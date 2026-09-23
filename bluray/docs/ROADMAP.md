@@ -76,10 +76,11 @@
 
 - Later Java-selection improvements require a reviewed fixed donor commit;
   uncommitted experiments are not a transfer baseline.
-- Check HC/LAV behavior under injected read failures: a transient failure, a
-  persistent failure and a playlist boundary. This is a coverage gap, not a
-  reproduced HC defect; the BE-specific `CMultiFiles` fix is not a direct port.
-  See [the donor comparison](PARITY.md).
+- HC/LAV read failures are locally checked in `hc-menu-bridge-v4`: bounded
+  retry, exact payload/timestamps, fatal error, restart and EN/RU UI. Include
+  it in a new manually built cloud candidate and qualify that ZIP; the existing
+  candidate still contains v3. Long OS/network timeouts are outside these checks.
+  See [Validation](VALIDATION.md).
 
 These are explicit gaps, not claims of implemented parity or automatic approval
 to port every future donor feature. Use fixed commits and record the selection.

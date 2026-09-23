@@ -39,6 +39,9 @@ DVD ISO playback, HDR accuracy and MVC/stereo output remain unqualified.
 
 ## Portable cloud candidate
 
+The read-error fix described in the final section is a later local change;
+this candidate still contains LAV adapter v3.
+
 [Manual build 35797167081](https://github.com/ttonych/mpc-hc_bluray/actions/runs/35797167081)
 passed on 2026-09-22 UTC from commit
 `19dfdc8b307fbc04768ce60d14e1b13b3afee9e8` after
@@ -115,3 +118,33 @@ passed; the cloud archive was unchanged.
 
 That candidate was not published as a Release. Its BD-J check remained incomplete;
 subsequent checks above apply to the newer ZIP, not retrospectively to this one.
+
+## Local read-failure checks, 2026-09-23
+
+LAV adapter **hc-menu-bridge-v4** and HC's graph-event handler pass locally.
+The cloud ZIP above is unchanged and still contains v3.
+
+- A generated 24-second MPLS has two distinct MPEG-2 clips with different source
+  timestamps. Actual LAV DLLs feed a memory sink. Process-local ReadFile injection
+  compares sizes, payload hashes and timestamps for all 576 compressed samples.
+- One CRC failure inside clip 1 or at the start of clip 2 retries at the same
+  position and matches every baseline sample. v3 negative controls lose/truncate
+  samples or shift time. The failure-free baseline is unchanged.
+- Persistent failure produces EC_ERRORABORT instead of EC_COMPLETE. Each logical
+  read retries once; two buffered calls produce four failed OS reads here. Stop
+  returns promptly. Removing the fault and seeking to zero in the same graph
+  restores all 576 baseline samples. Standalone M2TS delivers 288 samples.
+- Separate actual-LAV software decode to Null Renderer completes for synthetic
+  H.264, HEVC Main10, AV1 and MPEG-2 MKV.
+- Native HC EN/RU checks lock the second synthetic clip with LockFileEx. HC
+  closes the graph and displays its localized error. Unlocking/reopening restores
+  visible playback with madVR 210, verified by its loaded module hash. These are
+  agent observations. x64/RU builds and existing LAV timing/still tests pass.
+- Tests cover the actual HC error-handler branch (including a failing old-code
+  control), clean patch application, v3 upgrade, idempotence and edited-input refusal.
+
+The compressed-sample probe does not itself decode video or qualify disc menus.
+Injected failures return immediately: bounded retry is not a timeout on a blocked
+Windows call. Network reconnection, invalid handles, damaged sectors and a new
+cloud ZIP are outside these checks. User discs, mounts, profiles and global
+renderer settings were unchanged. The storage-specific ISO issue stays excluded.

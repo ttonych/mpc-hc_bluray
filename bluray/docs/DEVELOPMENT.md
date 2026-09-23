@@ -322,3 +322,21 @@ unique temporary HKCU key: encodings, source preservation, filtering, atomic
 failure and HLSL copies. It is included in the Windows component suite. Test the
 real EN/RU wizard, Cancel, restart and write failure separately; importer tests
 do not establish its integration with `CProfile`.
+
+## Testing LAV read failures
+
+After building the core and patched LAV, generate disposable inputs with an
+external FFmpeg/ffprobe pair. Set FFMPEG to the full path of ffmpeg.exe; ffprobe.exe
+must be beside it. The generator records the FFmpeg/input hashes. The fixture
+directory must be new; the regression chooses a new timestamped output folder.
+
+```powershell
+python ./bluray/tools/make-read-error-fixture.py --ffmpeg $env:FFMPEG --output ./bluray/build/read-error-fixture
+./bluray/tools/test-lav-read-errors.ps1 -FixtureDirectory ./bluray/build/read-error-fixture
+python ./bluray/tools/test-lav-patch-application.py
+python ./bluray/tools/test-bluray-read-error-ui.py
+```
+
+Run the last two commands in the MSVC environment. The component suite includes
+patch/UI checks. Actual DLL fault injection is an explicit local test using only
+generated media; it does not interrupt shared storage or bundle disc content.
