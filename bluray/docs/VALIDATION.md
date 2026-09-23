@@ -37,9 +37,40 @@ tracks, chapters, warnings/stills and ordinary files using the exact cloud ZIP.
 Record its source commit and SHA-256. Broader BD-J mouse/lifecycle coverage,
 DVD ISO playback, HDR accuracy and MVC/stereo output remain unqualified.
 
-## Portable cloud candidate
+## Current cloud candidate: LAV v4
 
-The read-error fix described in the final section is a later local change;
+[Manual build 35828150183](https://github.com/ttonych/mpc-hc_bluray/actions/runs/35828150183)
+passed on 2026-09-23 from commit `c4d242333bed24cc48a23ab46650b597690f5637`
+after [PR #8](https://github.com/ttonych/mpc-hc_bluray/pull/8). The cloud runner
+built the player, LAV v4, native/Java runtime and RU resources; component and
+built-JAR checks, including patch application and the HC error handler, passed.
+
+ZIP: `mpc-hc_bluray-2.8.2-bluray.1-c4d242333bed-x64.zip`.
+SHA-256: `7706ad819ed43e8d73b15b8b7efb6a5539d642b4acd48d48399c00f7b677cf95`.
+All **101 payload hashes**, CRC, exact membership, the clean profile seed,
+**20 HTML pages**, local links and the LAV v4 build/patch manifest passed.
+The EXE reports `2.8.2-bluray.1`, file version `2.8.2.20 (c4d242333) (main)`.
+
+| Exact-ZIP check | Result |
+| --- | --- |
+| Actual packaged LAV, injected read failures | All six cases pass: baseline, one failure within a clip, one at the boundary, persistent failure at both positions, standalone M2TS. Transient retry and same-graph recovery match all 576 baseline samples. Persistent errors produce EC_ERRORABORT with bounded attempts. |
+| Ordinary decoding | Packaged LAV decodes synthetic H.264, HEVC Main10, AV1 and MPEG-2 to EOS through Null Renderer. |
+| Portable first start | Packaged seed, EN/RU wizard, cancellation, defaults and restart pass; installed HC registry unchanged. |
+| HC read error EN/RU | Locking the second synthetic clip closes the graph and shows the localized error; after unlocking, reopening advances the playback clock. Native controls and GDI screenshots confirm the message, not GPU video. |
+| Loaded binaries | LAV module hashes match the ZIP; external madVR matches the beta 210 hash recorded above. |
+| Remaining visual work | HDMV/BD-J, menu/film/return, tracks/chapters/stills and D3D11 fullscreen windowed require a local desktop session. Manual import through the file picker also remains unverified for this ZIP. |
+
+The user confirmed an RDP session. Foreground activation was unavailable and
+desktop capture failed, so GPU image/menu results were not inferred from the
+playback clock or black GDI captures. No disc images were mounted during this
+session. The ZIP, pristine extraction and tested payload remain unchanged;
+only the separate portable profile was configured. Test players are closed.
+The earlier candidate's HDMV/BD-J observations below do not qualify this ZIP.
+No Release has been published; the next step is the remaining local-desktop check.
+
+## Earlier portable cloud candidate
+
+The read-error fix described in the final section was added after this candidate;
 this candidate still contains LAV adapter v3.
 
 [Manual build 35797167081](https://github.com/ttonych/mpc-hc_bluray/actions/runs/35797167081)
@@ -122,7 +153,8 @@ subsequent checks above apply to the newer ZIP, not retrospectively to this one.
 ## Local read-failure checks, 2026-09-23
 
 LAV adapter **hc-menu-bridge-v4** and HC's graph-event handler pass locally.
-The cloud ZIP above is unchanged and still contains v3.
+The earlier `19dfdc8b307f` cloud ZIP remains unchanged and contains v3.
+The current v4 cloud candidate is recorded separately above.
 
 - A generated 24-second MPLS has two distinct MPEG-2 clips with different source
   timestamps. Actual LAV DLLs feed a memory sink. Process-local ReadFile injection
@@ -145,6 +177,7 @@ The cloud ZIP above is unchanged and still contains v3.
 
 The compressed-sample probe does not itself decode video or qualify disc menus.
 Injected failures return immediately: bounded retry is not a timeout on a blocked
-Windows call. Network reconnection, invalid handles, damaged sectors and a new
-cloud ZIP are outside these checks. User discs, mounts, profiles and global
+Windows call. Network reconnection, invalid handles and damaged sectors are
+outside these checks. These local results do not qualify the separate cloud ZIP.
+User discs, mounts, profiles and global
 renderer settings were unchanged. The storage-specific ISO issue stays excluded.

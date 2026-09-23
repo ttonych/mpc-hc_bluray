@@ -7,7 +7,7 @@ not every feature of upstream MPC-BE and MPC-HC.
 
 - Donor: [MPC-BE Blu-ray at 270cfdd](https://github.com/ttonych/mpc-be_bluray/tree/270cfdd4369224dd4108d0b1d1b8a4ab7b8fc56d),
   based on MPC-BE 1.9.1. Only committed code is a transfer baseline.
-- HC: cloud candidate `19dfdc8b307f`, based on MPC-HC 2.8.2, including fork
+- HC: cloud candidate `c4d242333bed`, based on MPC-HC 2.8.2, including fork
   branding, release checks, mandatory portable import and offline HTML guides.
   Exact package and runtime results are in [Validation](VALIDATION.md).
 - Donor release `1.9.1-bluray.1` was built at `c671077`; the compared donor commit
@@ -41,7 +41,7 @@ with BE filters. A similar feature name alone is not evidence of identical code.
 
 ## Boundaries and remaining work
 
-1. Expand the HC disc matrix. The current cloud ZIP has bounded HDMV/BD-J checks,
+1. Expand the HC disc matrix. The earlier `19dfdc8b307f` ZIP has HDMV/BD-J checks,
    including BD-J tracks, chapters and authored resume. The earlier cloud BD-J
    gap is closed for this candidate using an externally mounted drive. The user
    identified its native attachment issue as storage-specific; it is excluded
@@ -58,8 +58,10 @@ with BE filters. A similar feature name alone is not evidence of identical code.
    false successful EOS after a persistent failure in v3. Local v4 passes exact
    payload/timestamp comparison, clip-boundary retry, fatal error and restart
    of the same graph. Standalone M2TS and HC EN/RU error/reopen checks with
-   madVR 210 pass. The existing cloud ZIP still contains v3. Long OS/network
-   timeouts and damaged media remain outside [these checks](VALIDATION.md).
+   madVR 210 pass locally. The earlier ZIP contains v3; the new v4 ZIP passes
+   the read-failure checks but awaits local-desktop HDMV/BD-J and madVR visual
+   qualification. Long OS/network timeouts and damaged media remain outside
+   [these checks](VALIDATION.md).
 
 Seamless playlist transitions, BD-Live/PiP, authored button sounds and full
 Java-controlled video layout/pause synchronization are not established parity
