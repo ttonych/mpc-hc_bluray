@@ -17,10 +17,12 @@ fork version in the EXE/About and check this fork's published GitHub releases.
 ## Test build and quick start
 
 There is no qualified Release yet. The current cloud candidate is available from
-[Actions run 35797167081](https://github.com/ttonych/mpc-hc_bluray/actions/runs/35797167081),
+[Actions run 35828150183](https://github.com/ttonych/mpc-hc_bluray/actions/runs/35828150183),
 artifact `mpc-hc-bluray-candidate-x64`. GitHub sign-in may be required; artifacts
 are retained for 14 days. Its exact commit, ZIP SHA-256 and completed checks are
-recorded in [Validation](bluray/docs/VALIDATION.md).
+recorded in [Validation](bluray/docs/VALIDATION.md). LAV v4 read-error and
+decode checks pass on this ZIP; HDMV/BD-J and madVR visual qualification still
+require a local desktop session.
 
 1. Extract the inner player ZIP into a new writable folder. On first launch,
    choose settings import or defaults; the profile always stays beside the EXE.

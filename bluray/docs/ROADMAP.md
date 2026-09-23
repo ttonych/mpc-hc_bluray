@@ -76,11 +76,11 @@
 
 - Later Java-selection improvements require a reviewed fixed donor commit;
   uncommitted experiments are not a transfer baseline.
-- HC/LAV read failures are locally checked in `hc-menu-bridge-v4`: bounded
-  retry, exact payload/timestamps, fatal error, restart and EN/RU UI. Include
-  it in a new manually built cloud candidate and qualify that ZIP; the existing
-  candidate still contains v3. Long OS/network timeouts are outside these checks.
-  See [Validation](VALIDATION.md).
+- HC/LAV v4 is built in cloud candidate `c4d242333bed`. Its exact ZIP passes
+  read-failure/recovery, ordinary decode and EN/RU native-control checks.
+  Complete HDMV/BD-J and madVR visual qualification on a local desktop; the RDP
+  session did not permit that check. Long OS/network timeouts remain outside
+  these tests. See [Validation](VALIDATION.md).
 
 These are explicit gaps, not claims of implemented parity or automatic approval
 to port every future donor feature. Use fixed commits and record the selection.

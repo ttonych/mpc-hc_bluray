@@ -46,8 +46,8 @@ Local x64/RU builds, resource/version checks, tag/feed regressions and EN/RU
 About/empty-release dialogs pass. The build scripts and packager reject a stale
 EXE version. Change the release define, rebuild and validate before a new release.
 
-The existing cloud candidate predates these changes and remains unqualified.
-A new candidate still needs the exact-ZIP matrix in [Validation](VALIDATION.md).
+The candidate's exact commit, completed checks and remaining qualification
+are recorded in [Validation](VALIDATION.md). Always use its exact ZIP.
 Do not create a release tag merely to make a candidate appear finished.
 
 ## Changelog policy
