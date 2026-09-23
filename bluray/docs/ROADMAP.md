@@ -55,18 +55,23 @@
 
 - Fork version branding and fork-only release checking are implemented. Local
   x64/RU builds, version/tag/feed tests and actual EN/RU About/update dialogs pass.
-  The previous cloud ZIP does not contain these changes.
+  The current cloud candidate includes these changes.
 
 - Mandatory portable settings, EN/RU import setup and offline HTML guides are
   implemented. Importer and native wizard checks cover cancellation, restart,
-  write failure and source preservation; new cloud-ZIP checks remain separate.
+  write failure and source preservation. The exact cloud ZIP at `19dfdc8b307f`
+  passed integrity/HTML checks, clean EN/RU setup, manual import and write guards.
+  HDMV/BD-J menu/film/return, BD-J tracks/chapters/resume, Casino Royale
+  startup still and ordinary-file checks passed. See [Validation](VALIDATION.md).
 
 ## Next open work
 
 1. Broader BD-J matrix: a mouse-capable menu, Java/saves lifecycle, other discs,
    menu audio/stills, language combinations and additional decoder paths.
-2. Qualify the exact cloud ZIP with the remaining clean-profile release matrix;
-   local results do not qualify a cloud package. See [Validation](VALIDATION.md).
+2. Investigate native Windows error 2 for the current A Knight's Tale ISO;
+   playback from an externally mounted drive passes. Automatic third-party
+   mounting is not implemented. Continue the remaining release matrix against
+   the preserved exact ZIP; see [Validation](VALIDATION.md).
 
 ## Donor features still to assess
 

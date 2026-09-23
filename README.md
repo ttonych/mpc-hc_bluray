@@ -16,15 +16,14 @@ fork version in the EXE/About and check this fork's published GitHub releases.
 
 ## Test build and quick start
 
-There is no qualified Release yet. The first cloud candidate is available from
-[Actions run 35781918063](https://github.com/ttonych/mpc-hc_bluray/actions/runs/35781918063),
+There is no qualified Release yet. The current cloud candidate is available from
+[Actions run 35797167081](https://github.com/ttonych/mpc-hc_bluray/actions/runs/35797167081),
 artifact `mpc-hc-bluray-candidate-x64`. GitHub sign-in may be required; artifacts
 are retained for 14 days. Its exact commit, ZIP SHA-256 and completed checks are
 recorded in [Validation](bluray/docs/VALIDATION.md).
 
-1. Extract the inner player ZIP into a new writable folder. New builds offer
-   settings import or defaults; the profile always stays beside the EXE.
-   The older candidate linked above predates the setup wizard.
+1. Extract the inner player ZIP into a new writable folder. On first launch,
+   choose settings import or defaults; the profile always stays beside the EXE.
 2. Make sure the x64 Microsoft Visual C++ v14 runtime is installed; see
    [requirements](bluray/docs/USAGE.md#requirements-and-first-launch).
 3. Use an external **madVR 210 x64** installation and select **Options → Playback
@@ -62,22 +61,23 @@ and BD-J saves are not imported. A write failure reports an error. madVR and
 external filters may still share system settings. See the
 [profile guide](bluray/docs/USAGE.md#profiles-and-updates).
 
-Current sources check published releases of **ttonych/mpc-hc_bluray**, including
-prereleases, and offer their GitHub page without installing anything. The older
-cloud candidate linked above predates this change: decline its automatic update
-checks. See [profiles and updates](bluray/docs/USAGE.md#profiles-and-updates).
+The current candidate checks published releases of **ttonych/mpc-hc_bluray**,
+including prereleases, and offers their GitHub page without installing anything.
+See [profiles and updates](bluray/docs/USAGE.md#profiles-and-updates).
 
 ## Current limits
 
 - Menu graphics require madVR; other renderers are not validated for this path.
-- The first cloud ZIP has bounded HDMV, ISO, ordinary-file and EN/RU coverage.
-  Its BD-J runtime check is incomplete; local BD-J observations do not qualify it.
+- The current cloud ZIP has bounded HDMV/BD-J menu, film, return, track/chapter,
+  startup-still, ISO, ordinary-file and EN/RU setup coverage. This is a test candidate.
 - Broad disc/Java/saves coverage, positive BD-J mouse coverage, full codec/audio
   parity, DVD ISO, HDR accuracy and MVC/stereo output remain unqualified.
 - Compatibility preferences report capabilities to disc applications; they do
   not add decoders or prove support for every advertised feature.
 - Java, madVR and disc-decryption components are not included. Disc contents
-  must already be readable. Native Windows must be able to attach an ISO.
+  must already be readable. Direct ISO opening requires native Windows attachment.
+  A Knight's Tale needed external mounting in this check; open the mounted drive
+  or `BDMV/index.bdmv`. See [opening](bluray/docs/USAGE.md#opening-a-disc-or-iso).
 - The MSVC LAV build uses built-in decoders and omits GCC-only external dependencies.
 
 For symptoms and useful report details, see

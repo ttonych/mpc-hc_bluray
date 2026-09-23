@@ -51,13 +51,20 @@ different builds. Exact versions are in [sources.json](../sources.json).
 3. Open or drag a readable `.iso` file into the player. Native Windows mounting
    is required. The player attaches the image read-only and retains its own
    attachment across playlist changes, releasing it after closing playback.
-   An image mounted externally is reused without forcing it to detach on close.
+   An image already attached through the native Windows API is reused without
+   forcing it to detach on close.
 4. Opening an individual `.mpls` playlist or `.m2ts` clip plays that item through
    the usual file path; it is not a request for full disc navigation.
 
 There is no separate Open Blu-ray Menu command. A menu error is reported rather
 than silently starting the film. Unsupported images or mounting failures should
 produce an error. Other image formats and third-party mounters are not included.
+
+If an image is mounted by an external tool, open its drive or `BDMV/index.bdmv`
+in the player instead of reopening the ISO file. The current A Knight's Tale
+image returned Windows error 2 on native attachment, but its BD-J session passed
+from a WinCDEmu drive. This is a tested manual route, not automatic mounter
+fallback. See the exact candidate [checks](VALIDATION.md).
 
 ## Controls
 
@@ -144,8 +151,6 @@ or replace files. Automatic checks use the same source when enabled.
 
 No published fork releases is a normal result, distinct from a network/API error.
 Bare Git tags, draft releases and official MPC-HC releases are not fork updates.
-The old cloud ZIP from Actions run 35781918063 predates this implementation and
-still has the inherited updater; decline automatic checks in that candidate.
 
 For a new candidate, close the old player, extract into a separate folder and
 retain the old folder for rollback. Check the [changelog](../CHANGELOG.md).

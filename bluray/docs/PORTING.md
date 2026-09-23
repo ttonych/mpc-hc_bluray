@@ -304,3 +304,10 @@ setup, cancellation, manual import, restart, write rejection and unchanged
 source/installed profiles pass locally. HTML/package tests verify local links
 and anchors. This is local evidence; the new cloud ZIP and its BD-J session
 require separate qualification.
+
+Merged as HC commit `019c3dcfe0373378f9c0c8f93a1a8e1b1c0aedcd` through
+[PR #5](https://github.com/ttonych/mpc-hc_bluray/pull/5), merge commit
+`19dfdc8b307fbc04768ce60d14e1b13b3afee9e8`. The manual cloud candidate from that
+merge passed package/HTML, portable import and bounded HDMV/BD-J runtime checks;
+the exact SHA-256 and remaining limits are in [Validation](VALIDATION.md).
+Documentation follow-ups do not rebuild or replace that ZIP.

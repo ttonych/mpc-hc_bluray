@@ -37,7 +37,50 @@ tracks, chapters, warnings/stills and ordinary files using the exact cloud ZIP.
 Record its source commit and SHA-256. Broader BD-J mouse/lifecycle coverage,
 DVD ISO playback, HDR accuracy and MVC/stereo output remain unqualified.
 
-## First cloud candidate
+## Portable cloud candidate
+
+[Manual build 35797167081](https://github.com/ttonych/mpc-hc_bluray/actions/runs/35797167081)
+passed on 2026-09-22 UTC from commit
+`19dfdc8b307fbc04768ce60d14e1b13b3afee9e8` after
+[PR #5](https://github.com/ttonych/mpc-hc_bluray/pull/5). Player, custom LAV, RU
+resources, component and actual-JAR HAVi checks passed on the cloud runner.
+Runtime checks completed on 2026-09-23 UTC using a separate copy of this ZIP.
+
+Artifact: `mpc-hc-bluray-candidate-x64`.
+ZIP: `mpc-hc_bluray-2.8.2-bluray.1-19dfdc8b307f-x64.zip`.
+SHA-256: `9dc27852b30f95c4245b656b0d392b9036ca7395864853bd85762a49031adbef`.
+CRC, exact membership, all **100 payload hashes**, the clean profile seed and
+local Markdown/HTML links and anchors passed. The package contains **20 HTML
+pages**. The ZIP and all original extracted files were unchanged after testing.
+
+| Cloud ZIP check | Agent result |
+| --- | --- |
+| First launch EN/RU | Actual packaged seed, both wizard languages, cancellation, defaults and restart passed. Installed MPC-HC registry was unchanged. |
+| Manual import and guards | Synthetic INI was selected through the native file dialog; settings and a shader were imported, source bytes preserved. Read-only profile and association-write guards passed. |
+| Runtime identity | Loaded LAV/navigation DLLs matched the packaged files. External madVR matched beta 210 above; external Temurin 21.0.12.1+1 x64 loaded for BD-J. |
+| Fullscreen | madVR OSD showed D3D11 fullscreen windowed. The shared exclusive setting remained disabled. |
+| BD-J | A Knight's Tale UHD: version selection, main menu, film, Alt+R popup and Alt+T return were visible. |
+| BD-J tracks and chapters | TrueHD to DTS-HD selection changed native stream status; selected English subtitles were visible. Next/previous chapter commands changed position. Chapter marks appeared for film and were absent in the top menu. |
+| BD-J close/reopen | The authored Resume Playback prompt appeared and resumed the film from newly created private disc data. No original saves were used. |
+| HDMV | Baby Boom native ISO: menu, Enter to visible film and Alt+T return. Chapter marks followed film/menu state. |
+| Startup still | Casino Royale's initial player-update notice was visible, including while paused. This does not qualify every warning or still. |
+| ISO lifecycle | Captions changed on replacement; player-owned native mounts were released on replacement/file opening. The external BD-J mount was retained until explicitly released after testing. |
+| Ordinary files | H.264 video was visible through madVR; H.264, HEVC Main10, AV1 and MPEG-2 decoded to EOS through the packaged LAV and Null Renderer. |
+
+The current A Knight's Tale ISO still fails native Windows attachment with
+error **2**. Existing WinCDEmu attached it successfully; the BD-J checks above
+opened the mounted drive's `BDMV/index.bdmv`. They validate BD-J playback from
+that drive, not direct native ISO attachment or automatic third-party mounting.
+See the [opening guide](USAGE.md#opening-a-disc-or-iso).
+
+The earlier user-confirmed ISO drag gesture was not repeated for this exact ZIP.
+A mouse-capable BD-J menu, broader discs/Java/saves lifecycle, decoder/audio
+coverage, DVD ISO, HDR accuracy and MVC/stereo remain unqualified. This is an
+experimental candidate, with no Release published. Test players and owned mounts
+were closed; shared renderer settings and original profiles were not changed.
+Later documentation updates leave this candidate's source commit and bytes fixed.
+
+## First cloud candidate (historical)
 
 [Manual build 35781918063](https://github.com/ttonych/mpc-hc_bluray/actions/runs/35781918063)
 passed on 2026-09-22 UTC, from commit
@@ -68,5 +111,5 @@ the test INI. That caused a startup exception in the subtitle-dialog settings
 parser. Correcting the helper/profile and repeating startup/main-movie playback
 passed; the cloud archive was unchanged.
 
-This is a test candidate, not a qualified Release. Complete the cloud BD-J and
-remaining tracks/chapters/stills/lifecycle matrix before publication as a Release.
+That candidate was not published as a Release. Its BD-J check remained incomplete;
+subsequent checks above apply to the newer ZIP, not retrospectively to this one.
