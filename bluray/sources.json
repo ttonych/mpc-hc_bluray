@@ -14,7 +14,7 @@
     "commit": "f4e6552a4f769d41a95e3ce428b7a5755ee1ec9b",
     "ffmpeg_commit": "29e0b0813d855d55536cd11ae4a8b6de88ee6461",
     "internal_libbluray_commit": "f1312826d3de9e8804212734243f8692d6bc0b72",
-    "integration_status": "hc-menu-bridge-v3; isolated MPEG-2 stills adapted; MSVC build, parser regressions, software/DXVA2 decode and madVR Warning observation passed",
+    "integration_status": "hc-menu-bridge-v4; bounded read retry and fatal-error propagation; local fault injection, recovery, standalone M2TS, software decode and HC/madVR EN/RU checks passed; new cloud ZIP pending",
     "qsdecoder_commit": "72e6b6a944460d3cbeffe13e78b88dd773a85602",
     "libudfread_commit": "139a2194525f2745b98a98e4d8fa627d07440176"
   },

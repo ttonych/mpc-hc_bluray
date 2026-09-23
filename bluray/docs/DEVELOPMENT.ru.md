@@ -324,3 +324,21 @@ portable-значения. Существующие эксперименталь
 атомарный отказ и копирование HLSL. Он включён в Windows-набор компонентов.
 Отдельно проверяйте настоящий мастер EN/RU, отмену, повторный запуск и отказ
 записи; тест импортёра не заменяет проверку подключения к `CProfile`.
+
+## Проверка ошибок чтения LAV
+
+После сборки плеера и исправленного LAV создайте одноразовые тестовые файлы
+внешними FFmpeg/ffprobe. В FFMPEG задайте полный путь к ffmpeg.exe; рядом должен
+быть ffprobe.exe. Генератор записывает хеш FFmpeg и хеши входов. Папка тестовых
+файлов должна быть новой; регрессия выбирает новую папку результатов по времени.
+
+```powershell
+python ./bluray/tools/make-read-error-fixture.py --ffmpeg $env:FFMPEG --output ./bluray/build/read-error-fixture
+./bluray/tools/test-lav-read-errors.ps1 -FixtureDirectory ./bluray/build/read-error-fixture
+python ./bluray/tools/test-lav-patch-application.py
+python ./bluray/tools/test-bluray-read-error-ui.py
+```
+
+Последние две команды выполняйте в окружении MSVC. Компонентный набор включает
+проверки патча/обработчика. Искусственные отказы реальных DLL запускаются явно
+на созданных тестовых файлах; общее хранилище не отключается, диски не копируются.

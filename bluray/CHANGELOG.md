@@ -44,6 +44,10 @@ are recorded separately in [Validation](docs/VALIDATION.md).
 
 ### Fixed
 
+- Blu-ray read failures in LAV: retry a transient error once at the same byte
+  position; report persistent failure instead of successful movie completion.
+  MPC-HC closes the failed Blu-ray graph with an EN/RU message. Tests check
+  exact packet content/timestamps at a clip boundary and explicit restart.
 - Upstream revision calculation ignores fork and unrelated tags; package checks
   reject stale EXE/ProductVersion and mismatched Russian resource versions.
 - Standard Blu-ray menu command availability and routing, respecting disc restrictions.

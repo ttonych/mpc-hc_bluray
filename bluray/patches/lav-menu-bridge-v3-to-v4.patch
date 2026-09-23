@@ -1,0 +1,127 @@
+--- a/demuxer/Demuxers/BDDemuxer.cpp
++++ b/demuxer/Demuxers/BDDemuxer.cpp
+@@ -336,6 +336,10 @@
+             }
+             m_EndOfStreamPacketFlushProtection = FALSE;
+         }
++        else if (event.event == BD_EVENT_READ_ERROR)
++        {
++            m_readFailed = true;
++        }
+         else if (event.event == BD_EVENT_END_OF_TITLE)
+         {
+             m_EndOfStreamPacketFlushProtection = TRUE;
+@@ -553,6 +557,7 @@
+ 
+ STDMETHODIMP CBDDemuxer::SetTitle(int idx)
+ {
++    m_readFailed = false;
+     HRESULT hr = S_OK;
+     int ret; // return values
+     if (m_pTitle)
+@@ -916,8 +921,26 @@
+     }
+ }
+ 
++STDMETHODIMP CBDDemuxer::GetNextPacket(Packet **ppPacket)
++{
++    CheckPointer(ppPacket, E_POINTER);
++    *ppPacket = nullptr;
++    if (FAILED(GetReadError()))
++        return GetReadError();
++    HRESULT hr = m_lavfDemuxer->GetNextPacket(ppPacket);
++    // Also drain events when FFmpeg produced no packet after an I/O failure.
++    ProcessBDEvents();
++    if (FAILED(GetReadError()))
++    {
++        SAFE_DELETE(*ppPacket);
++        return GetReadError();
++    }
++    return hr;
++}
++
+ STDMETHODIMP CBDDemuxer::Seek(REFERENCE_TIME rTime)
+ {
++    m_readFailed = false;
+     int64_t prev = bd_tell(m_pBD);
+ 
+     int64_t target = bd_find_seek_point(m_pBD, ConvertDSTimeTo90Khz(rTime));
+--- a/demuxer/Demuxers/BDDemuxer.h
++++ b/demuxer/Demuxers/BDDemuxer.h
+@@ -57,7 +57,8 @@
+         return m_lavfDemuxer ? m_lavfDemuxer->GetTransportPID(stream) : -1;
+     }
+     HRESULT SetPlayItemStop(UINT endExclusive) override;
+-    STDMETHODIMP GetNextPacket(Packet **ppPacket) { return m_lavfDemuxer->GetNextPacket(ppPacket); }
++    STDMETHODIMP GetNextPacket(Packet **ppPacket);
++    HRESULT GetReadError() const override { return m_readFailed ? HRESULT_FROM_WIN32(ERROR_READ_FAULT) : S_OK; }
+     STDMETHODIMP Seek(REFERENCE_TIME rTime);
+     STDMETHODIMP Reset() { return E_NOTIMPL; }
+     const char *GetContainerFormat() const;
+@@ -179,4 +180,5 @@
+     int m_MVCStreamIndex = -1;
+ 
+     BOOL m_EndOfStreamPacketFlushProtection = FALSE;
++    bool m_readFailed = false; // Accessed by the demux thread, reset on explicit seek/title.
+ };
+--- a/demuxer/Demuxers/BaseDemuxer.h
++++ b/demuxer/Demuxers/BaseDemuxer.h
+@@ -97,6 +97,8 @@
+     virtual int GetTransportPID(DWORD stream) const { return -1; }
+     virtual HRESULT SetPlayItemStop(UINT endExclusive) { return E_NOTIMPL; }
+     virtual HRESULT GetPresentationStart(REFERENCE_TIME *start) { return E_NOTIMPL; }
++    // A fatal read failure is distinct from normal end-of-stream.
++    virtual HRESULT GetReadError() const { return S_OK; }
+ 
+     // Get Duration
+     virtual REFERENCE_TIME GetDuration() const = 0;
+--- a/demuxer/LAVSplitter/LAVSplitter.cpp
++++ b/demuxer/LAVSplitter/LAVSplitter.cpp
+@@ -845,12 +845,20 @@
+             hr = DemuxNextPacket();
+         }
+ 
+-        // If we didnt exit by request, deliver end-of-stream
++        // Do not turn a disc read failure into successful movie completion.
+         if (!CheckRequest(&cmd))
+         {
+-            for (pinIter = m_pActivePins.begin(); pinIter != m_pActivePins.end(); ++pinIter)
+-            {
+-                (*pinIter)->QueueEndOfStream();
++            const HRESULT readError = m_pDemuxer->GetReadError();
++            if (FAILED(readError))
++            {
++                NotifyEvent(EC_ERRORABORT, readError, 0);
++            }
++            else
++            {
++                for (pinIter = m_pActivePins.begin(); pinIter != m_pActivePins.end(); ++pinIter)
++                {
++                    (*pinIter)->QueueEndOfStream();
++                }
+             }
+         }
+     }
+--- a/libbluray/src/file/file_win32.c
++++ b/libbluray/src/file/file_win32.c
+@@ -78,7 +78,19 @@
+ static int64_t _file_read(BD_FILE_H *file, uint8_t *buf, int64_t size)
+ {
+     if (size > 0 && size < BD_MAX_SSIZE) {
+-        return (int64_t)fread(buf, 1, (size_t)size, (FILE *)file->internal);
++        FILE *fp = (FILE *)file->internal;
++        const int64_t position = _file_tell(file);
++        size_t got = fread(buf, 1, (size_t)size, fp);
++        /* A failed OS read must not silently skip a transport unit. Retry once
++         * from the same logical byte position, including a partial first read.
++         * Normal EOF is not an error and must not trigger a retry. */
++        if (got < (size_t)size && ferror(fp) && position >= 0) {
++            clearerr(fp);
++            if (_file_seek(file, position, SEEK_SET) == 0) {
++                got = fread(buf, 1, (size_t)size, fp);
++            }
++        }
++        return (int64_t)got;
+     }
+ 
+     BD_DEBUG(DBG_FILE | DBG_CRIT, "Ignoring invalid read of size %" PRId64 " (%p)\n", size, (void*)file);

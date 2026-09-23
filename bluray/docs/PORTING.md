@@ -311,3 +311,19 @@ Merged as HC commit `019c3dcfe0373378f9c0c8f93a1a8e1b1c0aedcd` through
 merge passed package/HTML, portable import and bounded HDMV/BD-J runtime checks;
 the exact SHA-256 and remaining limits are in [Validation](VALIDATION.md).
 Documentation follow-ups do not rebuild or replace that ZIP.
+
+## HC/LAV read failures, 2026-09-23
+
+Behavioral source: MPC-BE `e857bdcef19a4a8975cc2fb2fb4709b32ee7b1de`, within
+pinned donor `270cfdd4369224dd4108d0b1d1b8a4ab7b8fc56d`. BE reopens once at the
+original offset and guards an optional timestamp table. HC retains LAV: v4
+retries Windows stdio reads once at the original logical position in LAV's
+internal libbluray, propagates BD_EVENT_READ_ERROR through EC_ERRORABORT and
+clears it on explicit seek/title selection. HC displays its existing EN/RU
+read-error message. Menu libbluray 1.5.0 DLL/JAR and BE sources are unchanged.
+
+The manifest pins both LAV and its libbluray submodule, records before/after
+hashes and a separately hashed v3-to-v4 upgrade. Local patch/application, actual
+LAV fault injection, decoding, x64/RU builds and HC/madVR checks pass; see
+[Validation](VALIDATION.md). This entry describes the current change and does
+not change the earlier cloud candidate's provenance or bytes.
