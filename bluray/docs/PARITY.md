@@ -43,12 +43,22 @@ with BE filters. A similar feature name alone is not evidence of identical code.
 
 1. Expand the HC disc matrix. The current cloud ZIP has bounded HDMV/BD-J checks,
    including BD-J tracks, chapters and authored resume. The earlier cloud BD-J
-   gap is closed for this candidate, using an externally mounted drive; native
-   attachment of that ISO still fails with Windows error 2. HC has no published
-   Release yet. Positive BD-J mouse and broader Java/saves coverage remain open.
-2. The donor's bounded reopen/read-error fix is in BE's `CMultiFiles`. HC uses
-   LAV rather than that reader, so copying the patch would not close the problem.
-   Equivalent read-failure recovery needs its own HC/LAV fault-injection check.
+   gap is closed for this candidate using an externally mounted drive. The user
+   identified its native attachment issue as storage-specific; it is excluded
+   from player defects. HC has no published Release yet. Positive BD-J mouse
+   and broader Java/saves coverage remain open.
+2. Read-error behavior needs a separate HC/LAV test; no equivalent HC crash or
+   unbounded retry has been reproduced. The donor's
+   [e857bdc fix](https://github.com/ttonych/mpc-be_bluray/commit/e857bdcef19a4a8975cc2fb2fb4709b32ee7b1de)
+   limits `CMultiFiles` to one reopen/retry at the same byte position, reports
+   persistent failure and avoids indexing a missing timestamp-offset table for
+   standalone M2TS files. Its injected-failure tests check successful retry,
+   exactly two read attempts for persistent failure and playlist time offsets.
+   HC's disc graph uses LAV/libbluray, not BE's `CMultiFiles`; the HC menu engine
+   already records `BD_EVENT_READ_ERROR`. Remaining checks concern transient
+   and persistent failures, error reporting, responsiveness and position/time
+   preservation if reading resumes. This is a validation gap, not evidence of
+   a missing decoder feature or a promise to recover damaged disc data.
 
 Seamless playlist transitions, BD-Live/PiP, authored button sounds and full
 Java-controlled video layout/pause synchronization are not established parity

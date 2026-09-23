@@ -78,7 +78,5 @@ are recorded separately in [Validation](docs/VALIDATION.md).
   checks; wider disc, Java/saves and mouse-capable-menu coverage are incomplete.
 - The MSVC LAV configuration differs from the standard GCC build; full codec/audio
   parity, HDR accuracy, MVC/stereo and DVD ISO support are unqualified.
-- Native Windows attachment of the current A Knight's Tale ISO fails with error 2;
-  the verified BD-J route uses an externally mounted drive.
 - See [Validation](docs/VALIDATION.md) for the distinction between component
   tests, local playback, user reports and checks of the exact cloud ZIP.

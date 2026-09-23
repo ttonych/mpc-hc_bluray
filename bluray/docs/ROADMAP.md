@@ -68,17 +68,18 @@
 
 1. Broader BD-J matrix: a mouse-capable menu, Java/saves lifecycle, other discs,
    menu audio/stills, language combinations and additional decoder paths.
-2. Investigate native Windows error 2 for the current A Knight's Tale ISO;
-   playback from an externally mounted drive passes. Automatic third-party
-   mounting is not implemented. Continue the remaining release matrix against
-   the preserved exact ZIP; see [Validation](VALIDATION.md).
+2. Continue the remaining release matrix against the preserved exact ZIP;
+   see [Validation](VALIDATION.md). The storage-specific ISO attachment result
+   is excluded from player defects following the user's clarification.
 
 ## Donor features still to assess
 
 - Later Java-selection improvements require a reviewed fixed donor commit;
   uncommitted experiments are not a transfer baseline.
-- Read-failure recovery needs an HC/LAV fault-injection check; BE `CMultiFiles`
-  is not the reader used in HC.
+- Check HC/LAV behavior under injected read failures: a transient failure, a
+  persistent failure and a playlist boundary. This is a coverage gap, not a
+  reproduced HC defect; the BE-specific `CMultiFiles` fix is not a direct port.
+  See [the donor comparison](PARITY.md).
 
 These are explicit gaps, not claims of implemented parity or automatic approval
 to port every future donor feature. Use fixed commits and record the selection.
