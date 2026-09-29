@@ -2,12 +2,13 @@
 
 [Русский](PARITY.ru.md) · [Porting](PORTING.md) · [Validation](VALIDATION.md)
 
-Comparison date: **2026-09-23**. This compares additions to the official players,
+Source comparison baseline: **2026-09-23**; HC release status and selected HDR
+update: **2026-09-29**. This compares additions to the official players,
 not every feature of upstream MPC-BE and MPC-HC.
 
 - Donor: [MPC-BE Blu-ray at 270cfdd](https://github.com/ttonych/mpc-be_bluray/tree/270cfdd4369224dd4108d0b1d1b8a4ab7b8fc56d),
   based on MPC-BE 1.9.1. Only committed code is a transfer baseline.
-- HC: cloud candidate `c4d242333bed`, based on MPC-HC 2.8.2, including fork
+- HC: release `2.8.2-bluray.1` at `b8695cf132ee`, based on MPC-HC 2.8.2, including fork
   branding, release checks, mandatory portable import and offline HTML guides.
   Exact package and runtime results are in [Validation](VALIDATION.md).
 - Donor release `1.9.1-bluray.1` was built at `c671077`; the compared donor commit
@@ -20,8 +21,8 @@ four-clip guarded byte-read test. This does not advance the overall donor
 baseline or qualify the donor's problem disc on HC; see [Porting](PORTING.md).
 
 Selected update on 2026-09-29: donor `ce1bf61a` HDMV HDR palette conversion is
-adapted in HC source with component/build checks. It is absent from the older
-cloud ZIP above; candidate playback qualification remains separate.
+adapted in HC and included in its first release. Component/build and exact-ZIP
+HDR HDMV/SDR/BD-J checks pass; see [Validation](VALIDATION.md).
 
 ## Added functionality
 
@@ -39,7 +40,7 @@ with every disc or qualification of a downloadable package.
 | Region/country/languages, compatibility preferences and BD-J storage | Present | Present | Different native settings layouts; no identified missing preference |
 | Disc-data catalogue, aliases, per-disc reset retaining old data | Present | Present | Shared catalogue/storage algorithms, HC dialogs |
 | Explicit Java architecture check and cancellable startup diagnostic | Limited file checks in this donor revision | Implemented | HC has additional diagnostics; later donor Java work is outside this baseline |
-| Fork version and own published-release checker | Present | Present in current candidate | HC uses its own releases, including prereleases |
+| Fork version and own published-release checker | Present | Present in first release | HC uses its own releases, including prereleases |
 | First-run settings import and mandatory writable portable profile | Present | Adapted | HC registry/INI formats, source preservation, native EN/RU checks |
 | Offline HTML guides inside the ZIP | Present | Adapted | Local pages/anchors verified; source links pin exact commit |
 
@@ -50,11 +51,11 @@ with BE filters. A similar feature name alone is not evidence of identical code.
 
 ## Boundaries and remaining work
 
-1. Expand the HC disc matrix. The current `c4d242333bed` ZIP has HDMV/BD-J checks,
+1. Expand the HC disc matrix. The released `b8695cf132ee` ZIP has HDMV HDR/SDR and BD-J checks,
    including BD-J tracks, chapters and authored resume. The earlier cloud BD-J
    gap is closed for this candidate using an externally mounted drive. The user
    identified its native attachment issue as storage-specific; it is excluded
-   from player defects. HC has no published Release yet. Positive BD-J mouse
+   from player defects. HC [2.8.2-bluray.1](https://github.com/ttonych/mpc-hc_bluray/releases/tag/2.8.2-bluray.1) is published. Positive BD-J mouse
    and broader Java/saves coverage remain open.
 2. Read-error behavior was checked on actual HC/LAV. The donor's
    [e857bdc fix](https://github.com/ttonych/mpc-be_bluray/commit/e857bdcef19a4a8975cc2fb2fb4709b32ee7b1de)
@@ -77,7 +78,9 @@ Java-controlled video layout/pause synchronization are not established parity
 claims. Neither comparison nor menu playback qualifies HDR accuracy or full
 MVC/stereo output. See each project's limitations and the HC [roadmap](ROADMAP.md).
 
-Donor Java-selection experiments were uncommitted at comparison time and are
-excluded. Reassess them only at a fixed reviewed commit, with the associated
-tests. No missing core library patch was found in the compared committed set;
+Donor Java-selection experiments were uncommitted at the baseline comparison date.
+Later committed Java-selection improvements remain outside this selected transfer
+and require their own review/tests. This table is not a full comparison with the
+donor release `1.9.1-bluray.2`. No missing core library patch was found in the
+compared committed set;
 this is a bounded source review, not a claim of complete playback equivalence.

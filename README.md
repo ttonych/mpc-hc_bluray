@@ -9,25 +9,19 @@ This independent, experimental Windows x64 fork is based on official **MPC-HC
 comes from [MPC-BE Blu-ray](https://github.com/ttonych/mpc-be_bluray). MPC-HC keeps
 its own interface, playback graph and LAV filters, with a maintained LAV adapter.
 
-The target for the first fork release is **2.8.2-bluray.1**. The prefix identifies
+The first fork release is **2.8.2-bluray.1**. The prefix identifies
 the MPC-HC base; the final number counts fork releases on that base. See
 [versioning and releases](bluray/docs/RELEASING.md). Current sources show the
 fork version in the EXE/About and check this fork's published GitHub releases.
 
-## Test build and quick start
+## Download and quick start
 
-There is no qualified Release yet. The current cloud candidate is available from
-[Actions run 35828150183](https://github.com/ttonych/mpc-hc_bluray/actions/runs/35828150183),
-artifact `mpc-hc-bluray-candidate-x64`. GitHub sign-in may be required; artifacts
-are retained for 14 days. Its exact commit, ZIP SHA-256 and completed checks are
-recorded in [Validation](bluray/docs/VALIDATION.md). This exact ZIP passes LAV v4
-read-error/recovery, portable import, ordinary decoding and bounded HDMV/BD-J
-visual checks with madVR 210 in D3D11 fullscreen windowed mode.
+First prerelease: **[2.8.2-bluray.1](https://github.com/ttonych/mpc-hc_bluray/releases/tag/2.8.2-bluray.1)**.
+[Download the portable x64 ZIP](https://github.com/ttonych/mpc-hc_bluray/releases/download/2.8.2-bluray.1/mpc-hc_bluray-2.8.2-bluray.1-b8695cf132ee-x64.zip) or use the release page.
+It includes the HDMV HDR menu colour fix. The exact commit, SHA-256 and checks
+of this archive are recorded in [Validation](bluray/docs/VALIDATION.md).
 
-Current source additionally fixes HDMV HDR menu colours. That change requires
-a new candidate; it is absent from the ZIP linked above.
-
-1. Extract the inner player ZIP into a new writable folder. On first launch,
+1. Extract the player ZIP into a new writable folder. On first launch,
    choose settings import or defaults; the profile always stays beside the EXE.
 2. Make sure the x64 Microsoft Visual C++ v14 runtime is installed; see
    [requirements](bluray/docs/USAGE.md#requirements-and-first-launch).
@@ -66,7 +60,7 @@ and BD-J saves are not imported. A write failure reports an error. madVR and
 external filters may still share system settings. See the
 [profile guide](bluray/docs/USAGE.md#profiles-and-updates).
 
-The current candidate checks published releases of **ttonych/mpc-hc_bluray**,
+The fork checks published releases of **ttonych/mpc-hc_bluray**,
 including prereleases, and offers their GitHub page without installing anything.
 See [profiles and updates](bluray/docs/USAGE.md#profiles-and-updates).
 
