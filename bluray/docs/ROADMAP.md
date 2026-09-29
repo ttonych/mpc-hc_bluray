@@ -64,11 +64,15 @@
   HDMV/BD-J menu/film/return, BD-J tracks/chapters/resume, Casino Royale
   startup still and ordinary-file checks passed. See [Validation](VALIDATION.md).
 
+- Published the first prerelease [2.8.2-bluray.1](https://github.com/ttonych/mpc-hc_bluray/releases/tag/2.8.2-bluray.1) from `b8695cf132ee`.
+  It includes the HDMV HDR colour fix; exact-ZIP qualification and anonymous
+  download/hash checks pass within the scope recorded in [Validation](VALIDATION.md).
+
 ## Next open work
 
 1. Broader BD-J matrix: a mouse-capable menu, Java/saves lifecycle, other discs,
    menu audio/stills, language combinations and additional decoder paths.
-2. Continue the remaining release matrix against the preserved exact ZIP;
+2. Extend the documented compatibility matrix for subsequent candidates;
    see [Validation](VALIDATION.md). The storage-specific ISO attachment result
    is excluded from player defects following the user's clarification.
 
@@ -76,7 +80,7 @@
 
 - Later Java-selection improvements require a reviewed fixed donor commit;
   uncommitted experiments are not a transfer baseline.
-- HC/LAV v4 is built in cloud candidate `c4d242333bed`. Its exact ZIP passes
+- HC/LAV v4 is included in release `2.8.2-bluray.1` (`b8695cf132ee`). Its exact ZIP passes
   read-failure/recovery, ordinary decode and EN/RU native-control checks.
   Local-desktop HDMV/BD-J, madVR video recovery and portable import also pass
   within the recorded scope. Long OS/network timeouts remain outside these

@@ -14,7 +14,7 @@
     "commit": "f4e6552a4f769d41a95e3ce428b7a5755ee1ec9b",
     "ffmpeg_commit": "29e0b0813d855d55536cd11ae4a8b6de88ee6461",
     "internal_libbluray_commit": "f1312826d3de9e8804212734243f8692d6bc0b72",
-    "integration_status": "hc-menu-bridge-v4; exact cloud ZIP c4d242333bed passes read-failure/recovery, ordinary decode, HC EN/RU, portable import and bounded local-desktop HDMV/BD-J/madVR checks; broader coverage remains documented",
+    "integration_status": "hc-menu-bridge-v4; released exact cloud ZIP b8695cf132ee passes read-failure/recovery, ordinary decode, HC EN/RU, portable import and bounded local-desktop HDMV HDR/SDR, BD-J and madVR checks; broader coverage remains documented",
     "qsdecoder_commit": "72e6b6a944460d3cbeffe13e78b88dd773a85602",
     "libudfread_commit": "139a2194525f2745b98a98e4d8fa627d07440176"
   },
@@ -30,7 +30,7 @@
     "java_patch_order": [
       "bdj-toggle-v1"
     ],
-    "integration_status": "native DLL and Java JAR built; HC graph adapter built; HDMV and one BD-J menu/film-start/return cycle observed with madVR; broader runtime validation pending"
+    "integration_status": "native DLL and Java JAR built and included in release 2.8.2-bluray.1; bounded exact-ZIP HDMV/BD-J checks pass; broader compatibility remains unqualified"
   },
   "runtime_target": {
     "platform": "Windows x64",
@@ -44,7 +44,7 @@
       "archive_sha256": "2d714db856b8012a6676d809c59689f2f8752d2c2afeb7cb3f42137cf818276a",
       "madVR64_ax_sha256": "c4093c6dfc2f549fab5f08bc940587c6fcb35195f8a589b1130d58bf5e4460e4"
     },
-    "validation": "docs/VALIDATION.md; local development checks, not cloud ZIP qualification"
+    "validation": "docs/VALIDATION.md; separate first-release exact-ZIP, earlier cloud candidate and local development records"
   },
   "build_dependencies": {
     "vcpkg_commit": "d015e31e90838a4c9dfa3eed45979bc70d9357fc",

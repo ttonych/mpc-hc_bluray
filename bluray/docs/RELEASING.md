@@ -9,7 +9,7 @@ Blu-ray: the upstream player version and the fork's release number are distinct.
 
 | Version | Meaning |
 | --- | --- |
-| `2.8.2-bluray.1` | First fork release on the MPC-HC 2.8.2 base; currently the planned first release |
+| `2.8.2-bluray.1` | First fork release on the MPC-HC 2.8.2 base; published as an experimental prerelease on 2026-09-29 |
 | `2.8.2-bluray.2` | Next fork release on that same base |
 | `2.8.3-bluray.1` | First release after a deliberate migration to MPC-HC 2.8.3; example, not a selected update |
 

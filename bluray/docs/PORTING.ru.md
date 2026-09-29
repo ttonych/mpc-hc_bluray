@@ -6,8 +6,8 @@
 Основа HC: [2.8.2 / a84d0cf](https://github.com/clsid2/mpc-hc/commit/a84d0cf38a1866f3518bb819c901300dacff5a9b).
 Назначение: первичный коммит переноса `5004099` и последующие исправления,
 принятые через [PR №1](https://github.com/ttonych/mpc-hc_bluray/pull/1).
-Опубликованного Release нет. Проверки текущего кандидата и ограничения —
-в [Validation](VALIDATION.ru.md).
+Опубликован первый предварительный выпуск [2.8.2-bluray.1](https://github.com/ttonych/mpc-hc_bluray/releases/tag/2.8.2-bluray.1).
+Проверки и ограничения — в [Validation](VALIDATION.ru.md).
 
 ## Начальное состояние переноса, 22.09.2026
 
@@ -386,8 +386,10 @@ Present с метаданными: региональный DRAW и сохран
 HDR/SDR, alpha, прозрачный индекс, WIPE/CLEAR/HIDE/FLUSH/CLOSE. Прежний код HC
 проваливает отрицательный контроль; исправленный проходит. Полные компонентные проверки/настоящий JAR и локальные сборки x64/RU проходят.
 В отдельном HC с madVR 210 визуально проверены HDR главное меню, главы/подсветка,
-фильм, popup и возврат в D3D11 fullscreen windowed. Перед публикацией нужны точный облачный ZIP и визуальный
-прогон madVR; прежний кандидат `c4d242333bed` этого исправления не содержит.
+фильм, popup и возврат в D3D11 fullscreen windowed. Правка слита через [PR #11](https://github.com/ttonych/mpc-hc_bluray/pull/11)
+(исходный коммит `9b660b29246e`, merge `b8695cf132ee`). Точный облачный ZIP прошёл
+HDMV HDR/SDR и BD-J и опубликован без изменений как [2.8.2-bluray.1](https://github.com/ttonych/mpc-hc_bluray/releases/tag/2.8.2-bluray.1);
+см. [проверки](VALIDATION.ru.md). В прежнем ZIP `c4d242333bed` этой правки нет.
 
 Более поздние Java/release-правки донора не входят в выбранный перенос. Запись
 не меняет общую базу донора и не подтверждает полную совместимость HDR/MVC.

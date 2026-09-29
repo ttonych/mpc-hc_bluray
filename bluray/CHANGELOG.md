@@ -8,9 +8,12 @@ Entries become dated version sections when a release is published.
 
 ## Unreleased
 
-Planned first release: **2.8.2-bluray.1**, based on official MPC-HC **2.8.2**.
-No Release has been published. Candidate identities and verification results
-are recorded separately in [Validation](docs/VALIDATION.md).
+No unreleased changes.
+
+## 2.8.2-bluray.1 — 2026-09-29
+
+[First prerelease](https://github.com/ttonych/mpc-hc_bluray/releases/tag/2.8.2-bluray.1), based on MPC-HC 2.8.2.
+The exact archive and checks are in [Validation](docs/VALIDATION.md).
 
 ### Added
 

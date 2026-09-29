@@ -576,7 +576,7 @@
     "status": "not_applicable_to_hc_bluray_reader",
     "reason": "HC Blu-ray uses LAV bd_read with clip-boundary returns and per-copy pointer/capacity updates; no donor cumulative-offset advance.",
     "test": "bluray/tools/test-bluray-multipart-read.py",
-    "validation": "Both libbluray DLLs from cloud candidate c4d242333bed: four 12288-byte synthetic clips, 13 request sizes, 49993 reads per DLL, exact bytes and guards pass; no real-disc playback claim.",
+    "validation": "Both libbluray DLLs from cloud candidate c4d242333bed: four 12288-byte synthetic clips, 13 request sizes, 49993 reads per DLL, exact bytes and guards pass; no real-disc playback claim. Repeated successfully on both DLLs in released ZIP b8695cf132ee.",
     "process_query_clarification": "HC and reviewed BE disable NtQueryInformationProcess hook installation with #if 0. Prior function-body regression is not evidence of a runtime crash fix."
   },
   "hdmv_hdr_menu_color": {
@@ -598,6 +598,9 @@
     ],
     "adaptation": "Shared colour header unchanged; selected Paint/Present changes in HC engine; test include path adapted and added to component runner. Preserve per-region Y/Cr/Cb/alpha until OSD conversion; both HDMV and BD-J follow current clip metadata.",
     "scope": "Bitmap OSD conversion only. No libbluray/LAV/video renderer change; 203-nit OSD policy is not full HDR video qualification.",
-    "validation": "Full component/built-JAR suite, donor colour and actual HC overlay tests, old-source negative control, x64/RU builds pass. Local madVR210 D3D11 fullscreen windowed: HDMV HDR menu/chapters/highlights/film/popup/return observed. New exact-cloud-ZIP qualification pending."
+    "validation": "Component/built-JAR, colour/production overlay tests with old-code negative control and x64/RU builds pass. Exact cloud ZIP36602619838 at b8695cf132ee passes HDR/SDR HDMV, BD-J and madVR210 D3D11 fullscreen windowed checks; published unchanged as 2.8.2-bluray.1. See docs/VALIDATION.md.",
+    "hc_commit": "9b660b29246e0be65dbbe41dbc9048fcd6d6a54f",
+    "hc_merge_commit": "b8695cf132ee649219c337e81582332c9614365a",
+    "hc_pull_request": "https://github.com/ttonych/mpc-hc_bluray/pull/11"
   }
 }

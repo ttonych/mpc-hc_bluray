@@ -5,8 +5,8 @@
 Donor snapshot: [270cfdd](https://github.com/ttonych/mpc-be_bluray/commit/270cfdd4369224dd4108d0b1d1b8a4ab7b8fc56d).
 HC baseline: [2.8.2 / a84d0cf](https://github.com/clsid2/mpc-hc/commit/a84d0cf38a1866f3518bb819c901300dacff5a9b).
 Destination: initial port commit `5004099` and follow-up fixes, accepted through
-[PR #1](https://github.com/ttonych/mpc-hc_bluray/pull/1). There is no published
-Release. Current candidate checks and outstanding limits are in [Validation](VALIDATION.md).
+[PR #1](https://github.com/ttonych/mpc-hc_bluray/pull/1). The first prerelease is
+[2.8.2-bluray.1](https://github.com/ttonych/mpc-hc_bluray/releases/tag/2.8.2-bluray.1); checks and limits are in [Validation](VALIDATION.md).
 
 ## Initial port snapshot, 2026-09-22
 
@@ -377,8 +377,10 @@ part of Present: regional DRAW and palette retention, HDR/SDR repaint, alpha,
 reserved transparent index, WIPE/CLEAR/HIDE/FLUSH/CLOSE. The previous HC source
 fails its negative control; corrected source passes. Full components/built-JAR checks and local x64/RU builds pass. A separate local
 HC/madVR 210 session shows the HDR main menu, chapters/highlights, film, popup
-and top-menu return in D3D11 fullscreen windowed. Exact cloud ZIP and madVR visual qualification are required before publication;
-the older `c4d242333bed` candidate does not include this fix.
+and top-menu return in D3D11 fullscreen windowed. The change was merged in [PR #11](https://github.com/ttonych/mpc-hc_bluray/pull/11)
+(source `9b660b29246e`, merge `b8695cf132ee`). The exact cloud ZIP passed HDR/SDR
+HDMV and BD-J checks and was published unchanged as [2.8.2-bluray.1](https://github.com/ttonych/mpc-hc_bluray/releases/tag/2.8.2-bluray.1);
+see [Validation](VALIDATION.md). The older `c4d242333bed` ZIP lacks this fix.
 
 Later donor Java/release work is outside this selected transfer. This entry does
 not advance the overall donor baseline or establish full HDR/MVC compatibility.

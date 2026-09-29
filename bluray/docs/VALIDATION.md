@@ -2,8 +2,51 @@
 
 [Русский](VALIDATION.ru.md) · [Roadmap](ROADMAP.md)
 
-The first section records local development results from 2026-09-22. The cloud
-candidate is covered separately below. Dependency revisions are in [sources.json](../sources.json).
+## First prerelease: 2.8.2-bluray.1
+
+[Published on 2026-09-29](https://github.com/ttonych/mpc-hc_bluray/releases/tag/2.8.2-bluray.1).
+[Cloud build 36602619838](https://github.com/ttonych/mpc-hc_bluray/actions/runs/36602619838)
+built commit `b8695cf132ee649219c337e81582332c9614365a` after
+[PR #11](https://github.com/ttonych/mpc-hc_bluray/pull/11), including the HDMV HDR fix.
+Player, RU resources, component tests and tests of the built Java JAR passed.
+
+ZIP: `mpc-hc_bluray-2.8.2-bluray.1-b8695cf132ee-x64.zip`.
+SHA-256: `553bcb7148b220d72d1180c25ae033836ab4038068b8b333a601757753d2c0b4`.
+All **101 payload hashes**, CRC/membership, clean profile seed, **20 HTML pages**,
+local links and the LAV v4 manifest passed. Product version is `2.8.2-bluray.1`;
+file version is `2.8.2.26 (b8695cf13) (main)`.
+
+The following observations use a separate portable copy of this exact ZIP in
+a local desktop session on 2026-09-29. They are agent checks, not new user reports.
+
+| Exact-ZIP check | Result |
+| --- | --- |
+| Portable setup/import | Actual packaged seed, EN/RU cancellation/defaults/restart and native synthetic INI/shader import pass. Source bytes and installed HC registry remain unchanged; write and association guards pass. |
+| HDR HDMV | Streets of Fire UHD: bright white/yellow menu graphics, selection highlights, chapter page, film, Alt+R popup and Alt+T return observed. This checks bitmap menu conversion, not HDR video accuracy. |
+| SDR HDMV | Baby Boom: direct ISO opening, menu, film, top return, mouse selection of scenes and chapter activation pass. Chapter markers appear in film and disappear in the menu. |
+| Initial still and BD-J | Casino Royale: the MPEG-2 startup notice is visible at sampled seconds 1, 4 and 6. BD-J menu, film, popup and top return pass. |
+| UHD BD-J | A Knight's Tale: version selection, main menu, film, popup and top return pass using an externally mounted drive. TrueHD to DTS-HD changes the checked stream and native status; English PGS subtitles are visible. Chapter commands move to authored positions, including approximately 06:19 and 14:25. |
+| BD-J restart | Restart in English shows the authored Resume Playback prompt; Yes resumes visible film from about 24:17 using only newly created private disc data. |
+| Renderer and modules | Navigation/LAV module hashes match the ZIP. External madVR matches beta 210 below; external Temurin 21.0.12.1+1 x64 JVM is loaded. OSD confirms D3D11 fullscreen windowed for HDR HDMV and BD-J; shared renderer configuration is unchanged. |
+| Read failures/recovery | All six injected LAV cases pass; transient retry and same-graph recovery match 576 baseline samples/timestamps, permanent errors produce bounded EC_ERRORABORT. HC displays the localized error in EN/RU; unlocking and reopening restores visible MPEG-2 video. |
+| Multi-part reads | Both packaged libbluray DLLs pass four synthetic 12,288-byte clips, 13 request sizes and 49,993 calls each, with exact bytes/EOF and intact guards. The donor's original crash disc was not replayed on HC. |
+| Ordinary files | Packaged filters decode H.264, HEVC Main10, AV1 and MPEG-2 to EOS through Null Renderer. H.264 is also visibly rendered through madVR after disc playback. |
+
+All own test windows and owned mounts were closed; the pre-existing user mount
+was preserved. ZIP, pristine extraction and packaged payload files remained
+unchanged. The release publishes those same bytes; anonymous ZIP/checksum
+downloads match and the release tag resolves to the built commit above.
+
+Positive mouse-capable BD-J coverage, broader Java/saves/disc compatibility,
+long OS/network timeouts, BD-Live/PiP, full MVC/stereo and HDR video accuracy
+remain unqualified. The storage-specific native ISO attachment result is
+excluded from player defects. Earlier Sony-intro observations below belong to
+their own candidates; that intro was not sampled in this run.
+
+## Earlier local checks
+
+This historical section records local development results from 2026-09-22. Earlier cloud
+candidates are covered below. Dependency revisions are in [sources.json](../sources.json).
 Compilation, automated checks, agent observations and user reports are distinct.
 
 | Scope | Evidence | Result |
@@ -37,7 +80,7 @@ tracks, chapters, warnings/stills and ordinary files using the exact cloud ZIP.
 Record its source commit and SHA-256. Broader BD-J mouse/lifecycle coverage,
 DVD ISO playback, HDR accuracy and MVC/stereo output remain unqualified.
 
-## Current cloud candidate: LAV v4
+## Earlier cloud candidate: LAV v4
 
 [Manual build 35828150183](https://github.com/ttonych/mpc-hc_bluray/actions/runs/35828150183)
 passed on 2026-09-23 from commit `c4d242333bed24cc48a23ab46650b597690f5637`
@@ -77,7 +120,7 @@ external mount was released. The storage-specific ISO issue was not investigated
 
 The deferred desktop checks are complete within the stated scope. Positive BD-J
 mouse coverage, broader Java/saves/disc coverage and long OS/network timeouts
-remain open. This is an experimental candidate; no Release has been published.
+remain open. This candidate was not published; the first release above supersedes it.
 
 ## Earlier portable cloud candidate
 
@@ -123,7 +166,7 @@ See the [opening guide](USAGE.md#opening-a-disc-or-iso).
 The earlier user-confirmed ISO drag gesture was not repeated for this exact ZIP.
 A mouse-capable BD-J menu, broader discs/Java/saves lifecycle, decoder/audio
 coverage, DVD ISO, HDR accuracy and MVC/stereo remain unqualified. This is an
-experimental candidate, with no Release published. Test players and owned mounts
+experimental candidate that was not published. Test players and owned mounts
 were closed; shared renderer settings and original profiles were not changed.
 Later documentation updates leave this candidate's source commit and bytes fixed.
 
