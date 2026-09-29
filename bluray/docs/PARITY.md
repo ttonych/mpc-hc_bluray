@@ -14,6 +14,15 @@ not every feature of upstream MPC-BE and MPC-HC.
   also includes later ISO lifetime and BD-J return fixes. Source and released ZIP
   capabilities must therefore be distinguished in both projects.
 
+Additional assessment: donor `635f418` fixes a BE multi-file buffer overflow.
+It does not apply to the HC/LAV read path; both existing cloud DLLs pass the
+four-clip guarded byte-read test. This does not advance the overall donor
+baseline or qualify the donor's problem disc on HC; see [Porting](PORTING.md).
+
+Selected update on 2026-09-29: donor `ce1bf61a` HDMV HDR palette conversion is
+adapted in HC source with component/build checks. It is absent from the older
+cloud ZIP above; candidate playback qualification remains separate.
+
 ## Added functionality
 
 “Present” describes implementation. It does not imply matching compatibility

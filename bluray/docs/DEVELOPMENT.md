@@ -340,3 +340,28 @@ python ./bluray/tools/test-bluray-read-error-ui.py
 Run the last two commands in the MSVC environment. The component suite includes
 patch/UI checks. Actual DLL fault injection is an explicit local test using only
 generated media; it does not interrupt shared storage or bundle disc content.
+
+## Testing tiny multi-clip reads
+
+Use x64 Python on Windows with an x64 DLL. Set BLURAY_DLL to either the packaged
+`LAVFilters64/libbluray.dll` or menu `bluray-4.dll`, and run once for each:
+
+```powershell
+python ./bluray/tools/test-bluray-multipart-read.py --dll $env:BLURAY_DLL
+```
+
+The test generates four small distinct clips in a temporary directory, checks
+exact bytes/EOF and buffer guards at 13 request sizes, then removes its inputs.
+No FFmpeg, disc, JVM or renderer is used. Expected libbluray diagnostics report
+missing menu metadata: the fixture contains only a playlist and null TS packets.
+The final JSON records the tested DLL SHA-256. This explicit local check is
+separate from fault injection and does not qualify menu/video playback.
+
+## Testing HDMV HDR graphics
+
+In the MSVC environment, run `test-menu-components.ps1 -Case menu-color` and
+`python bluray/tools/test-hdmv-overlay-color.py`. Both are included in
+`test-components.ps1`. The latter compiles production overlay update methods
+and metadata selection; it accepts `--source` for an old-source negative control.
+Bitmap allocation/presentation still require a separate madVR test on the
+candidate: HDMV HDR menu/chapters/highlights, film/popup/return, SDR HDMV and BD-J.

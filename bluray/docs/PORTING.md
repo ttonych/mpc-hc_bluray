@@ -15,7 +15,7 @@ follow-up work; an open item in this initial snapshot is not the current status.
 
 | Donor change | Purpose and HC adaptation | Status and HC checks, 2026-09-22 |
 | --- | --- | --- |
-| Process query hook, `4c11331253f27fee0e37c0ac369e2427af83bc42` | Replace the stale whole-PEB write with one byte, validate NTSTATUS/pointers/lengths, clear pointer-sized debug port. Apply to `src/mpc-hc/mplayerc.cpp`; retain HC formatting. | Applied. Actual HC function passes donor regression under MSVC x64. Original HC function fails the negative control on whole-PEB write. Player core Release x64 builds before and after. |
+| Process query hook, `4c11331253f27fee0e37c0ac369e2427af83bc42` | Replace the stale whole-PEB write with one byte, validate NTSTATUS/pointers/lengths, clear pointer-sized debug port. Apply to `src/mpc-hc/mplayerc.cpp`; retain HC formatting. | Applied. Actual HC function passes donor regression under MSVC x64. Original HC function fails the negative control on whole-PEB write. Player core Release x64 builds before and after. Hook installation is disabled by `#if 0`; see the later assessment below. |
 | `mouse-page-v1` then `playmark-seek-v1`, snapshot above | Native menu hit-testing and mark delivery at seek boundaries; patch bytes/manifests unchanged. | Imported. Hashes, clean/repeated application, known intermediate stage, refusal to overwrite edits and synthetic mark tracker pass. Fresh x64 DLL built; required exports/version verified and loaded by the HC menu engine. |
 | `bdj-toggle-v1`, snapshot above | HAVi toggle action/state handling; patch bytes/manifests unchanged. | Imported. Patch application/integrity checks pass. Both JARs built with pinned Java; HAVi regression passes against the actual JAR (toggle ordering, virtual dispatch, direct action, release, sounds and disabled/grouped controls). |
 | Navigation, overlays, clock, RLE and menu input | Share algorithms; adapt HC MainFrm/graph and madVR access. | Imported engine and component tests; new HC graph/input adapter compiles. One authored HDMV menu, scene page and film start were visually observed with madVR. Return from film is logged; its final frame and broader coverage remain unconfirmed. |
@@ -327,3 +327,58 @@ hashes and a separately hashed v3-to-v4 upgrade. Local patch/application, actual
 LAV fault injection, decoding, x64/RU builds and HC/madVR checks pass; see
 [Validation](VALIDATION.md). This entry describes the current change and does
 not change the earlier cloud candidate's provenance or bytes.
+
+## Donor multi-file overflow assessment, 2026-09-23
+
+Reviewed fixed donor commit `635f4181ce04bf8b8a0e55507d322696de2f038f`
+from its local branch; publication was not established by this review. Its
+`CMultiFiles::Read` advanced the destination by a cumulative byte count after
+each playlist part. A read spanning three or more parts could overwrite the
+caller buffer and unrelated heap memory. The donor replaces this with an
+unchanged base pointer plus the total read offset. No libbluray change is involved.
+
+**Disposition: not applicable to the HC Blu-ray read path.** HC uses
+`CBDDemuxer::BDByteStreamRead` and LAV's internal `bd_read`. That implementation
+returns at clip boundaries and advances the output by the current copy size,
+reducing the remaining capacity by the same size. HC's retained `CMultiFiles`
+also advances by the last read count, not the cumulative total. Its legacy
+playlist route has no `BuildPlaylist` override in the tracked HC sources; it
+is not the active Blu-ray reader. No player, LAV patch or DLL change is required
+for this donor defect.
+
+Added [test-bluray-multipart-read.py](../tools/test-bluray-multipart-read.py).
+On both DLLs from the unchanged `c4d242333bed` cloud ZIP, four synthetic clips
+of 12,288 bytes pass 13 request sizes from 1 to 122,880 bytes: 49,993 calls per
+DLL, exact concatenated bytes, EOF and intact buffer guards. This exercises
+the library byte-reading API; it does not establish playback of the donor's
+problem disc, Java behavior or renderer output. The command is documented in
+[Development](DEVELOPMENT.md).
+
+The earlier process-query import is also clarified: installation of
+`Mine_NtQueryInformationProcess` is disabled by an outer `#if 0` in HC and the
+reviewed donor. Its isolated function regression is valid, but does not prove
+that it caused or fixed an observed player crash. The hook remains disabled.
+The existing playmark fix is independent and remains in use.
+
+## HDMV HDR menu colours, 2026-09-29
+
+Source: donor `ce1bf61a673dd24aa6dd117fc8e65f3640cf7529`, reviewed at a fixed local
+commit. **Adapted to HC.** The old renderer selected HDR colour handling only
+for BD-J and decoded HDMV palettes using BT.709. HC now retains each region's
+original Y/Cr/Cb/alpha and chooses BT.2020 NCL plus the existing 203-nit
+PQ-to-sRGB OSD policy from current clip metadata for both graphics paths.
+Palette-only updates remain restricted to their rectangle; static planes are
+marked dirty on colour-mode changes. No library, LAV or movie tone-mapper change.
+
+The shared `BlurayMenuColor.h` is byte-identical to the donor. The colour test
+has an HC include path and is now part of the component suite. The additional
+`test-hdmv-overlay-color.py` compiles actual HC Paint/OnOverlay and the metadata
+part of Present: regional DRAW and palette retention, HDR/SDR repaint, alpha,
+reserved transparent index, WIPE/CLEAR/HIDE/FLUSH/CLOSE. The previous HC source
+fails its negative control; corrected source passes. Full components/built-JAR checks and local x64/RU builds pass. A separate local
+HC/madVR 210 session shows the HDR main menu, chapters/highlights, film, popup
+and top-menu return in D3D11 fullscreen windowed. Exact cloud ZIP and madVR visual qualification are required before publication;
+the older `c4d242333bed` candidate does not include this fix.
+
+Later donor Java/release work is outside this selected transfer. This entry does
+not advance the overall donor baseline or establish full HDR/MVC compatibility.

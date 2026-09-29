@@ -1,8 +1,8 @@
-param([ValidateSet('all','argb','menu-audio','menu-background','menu-coordinates','menu-rle','playback-clock')][string]$Case = 'all')
+param([ValidateSet('all','argb','menu-audio','menu-background','menu-color','menu-coordinates','menu-rle','playback-clock')][string]$Case = 'all')
 $ErrorActionPreference = 'Stop'
 $root = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'Enter-BuildEnvironment.ps1')
-$cases = if ($Case -eq 'all') { @('argb','menu-audio','menu-background','menu-coordinates','menu-rle','playback-clock') } else { @($Case) }
+$cases = if ($Case -eq 'all') { @('argb','menu-audio','menu-background','menu-color','menu-coordinates','menu-rle','playback-clock') } else { @($Case) }
 $out = Join-Path $root 'bluray/build/tests'
 New-Item -ItemType Directory -Force -Path $out | Out-Null
 Push-Location $out

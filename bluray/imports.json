@@ -204,8 +204,9 @@
     {
       "path": "src/mpc-hc/BlurayMenuColor.h",
       "donor_path": "src/apps/mplayerc/BlurayMenuColor.h",
-      "donor_sha256": "d1ff6044137b8dbc63389f86d869bcb6dc0a6415559d36656665a15899d3e255",
-      "adapted": false
+      "donor_sha256": "7db6bf99afb8ee6d4d1e8e7445f6ecad628fe1d1a7d5760fc13eeb7a412b80cc",
+      "adapted": false,
+      "donor_commit": "ce1bf61a673dd24aa6dd117fc8e65f3640cf7529"
     },
     {
       "path": "src/mpc-hc/BlurayMenuCoordinates.h",
@@ -567,5 +568,36 @@
     "verification": "Local source checks and component/built-JAR checks pass; cloud build and exact-ZIP runtime qualification are separate."
   },
   "initial_hc_port_commit": "5004099e31c7fb7833060b3d9b8c8d0fa4b1b9d5",
-  "initial_hc_pull_request": "https://github.com/ttonych/mpc-hc_bluray/pull/1"
+  "initial_hc_pull_request": "https://github.com/ttonych/mpc-hc_bluray/pull/1",
+  "donor_multifile_overrun_assessment": {
+    "repository": "https://github.com/ttonych/mpc-be_bluray.git",
+    "commit": "635f4181ce04bf8b8a0e55507d322696de2f038f",
+    "source": "src/filters/parser/BaseSplitter/MultiFiles.cpp",
+    "status": "not_applicable_to_hc_bluray_reader",
+    "reason": "HC Blu-ray uses LAV bd_read with clip-boundary returns and per-copy pointer/capacity updates; no donor cumulative-offset advance.",
+    "test": "bluray/tools/test-bluray-multipart-read.py",
+    "validation": "Both libbluray DLLs from cloud candidate c4d242333bed: four 12288-byte synthetic clips, 13 request sizes, 49993 reads per DLL, exact bytes and guards pass; no real-disc playback claim.",
+    "process_query_clarification": "HC and reviewed BE disable NtQueryInformationProcess hook installation with #if 0. Prior function-body regression is not evidence of a runtime crash fix."
+  },
+  "hdmv_hdr_menu_color": {
+    "repository": "https://github.com/ttonych/mpc-be_bluray.git",
+    "commit": "ce1bf61a673dd24aa6dd117fc8e65f3640cf7529",
+    "sources": [
+      {
+        "path": "src/apps/mplayerc/BlurayMenu.cpp",
+        "sha256": "ca4736e1c966eaedc6f173273210a6583bdaecf071327d8bca59c01aba23ee22"
+      },
+      {
+        "path": "src/apps/mplayerc/BlurayMenuColor.h",
+        "sha256": "7db6bf99afb8ee6d4d1e8e7445f6ecad628fe1d1a7d5760fc13eeb7a412b80cc"
+      },
+      {
+        "path": "bluray/probe/bluray-menu-color-test.cpp",
+        "sha256": "8c3f3b2959cb424cd5cd7a63fd2fddaab4a0a9309e415a6a3d7c6f16ff407419"
+      }
+    ],
+    "adaptation": "Shared colour header unchanged; selected Paint/Present changes in HC engine; test include path adapted and added to component runner. Preserve per-region Y/Cr/Cb/alpha until OSD conversion; both HDMV and BD-J follow current clip metadata.",
+    "scope": "Bitmap OSD conversion only. No libbluray/LAV/video renderer change; 203-nit OSD policy is not full HDR video qualification.",
+    "validation": "Full component/built-JAR suite, donor colour and actual HC overlay tests, old-source negative control, x64/RU builds pass. Local madVR210 D3D11 fullscreen windowed: HDMV HDR menu/chapters/highlights/film/popup/return observed. New exact-cloud-ZIP qualification pending."
+  }
 }
