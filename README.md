@@ -24,6 +24,9 @@ recorded in [Validation](bluray/docs/VALIDATION.md). This exact ZIP passes LAV v
 read-error/recovery, portable import, ordinary decoding and bounded HDMV/BD-J
 visual checks with madVR 210 in D3D11 fullscreen windowed mode.
 
+Current source additionally fixes HDMV HDR menu colours. That change requires
+a new candidate; it is absent from the ZIP linked above.
+
 1. Extract the inner player ZIP into a new writable folder. On first launch,
    choose settings import or defaults; the profile always stays beside the EXE.
 2. Make sure the x64 Microsoft Visual C++ v14 runtime is installed; see

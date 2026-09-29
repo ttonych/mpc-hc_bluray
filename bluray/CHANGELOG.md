@@ -44,6 +44,10 @@ are recorded separately in [Validation](docs/VALIDATION.md).
 
 ### Fixed
 
+- HDMV menu colours on HDR/BT.2020 clips now use the appropriate palette matrix
+  and the existing PQ-to-sRGB madVR OSD conversion. Regional palette changes,
+  alpha and static graphics survive HDR/SDR clip transitions.
+
 - Blu-ray read failures in LAV: retry a transient error once at the same byte
   position; report persistent failure instead of successful movie completion.
   MPC-HC closes the failed Blu-ray graph with an EN/RU message. Tests check
@@ -57,8 +61,10 @@ are recorded separately in [Validation](docs/VALIDATION.md).
 - Native fullscreen controls remain reachable when Blu-ray handles mouse movement.
 - Explicit 32-bit compatibility masks, including 0xFFFFFFFF, survive restart and
   remain distinct from automatic values across translations.
-- Process-query handling updates only the PEB debug byte, validates results and
-  buffers, and handles the full debug-port value.
+- The inactive process-query hook body updates only the PEB debug byte, validates
+  results/buffers and handles the full debug-port value. Hook installation remains
+  disabled by `#if 0`; this is defensive source maintenance, not a demonstrated
+  runtime crash fix.
 - Corrupted Russian navigation text in the English README; fast checks now reject
   invalid UTF-8 and missing/corrupted paired-language links.
 
