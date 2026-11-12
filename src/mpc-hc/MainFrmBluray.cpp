@@ -6,7 +6,11 @@
 #include "BlurayMenu.h"
 #include "BlurayOpen.h"
 #include "IBlurayStreamSelect.h"
+#include "FGFilterLAV.h"
 #include "resource.h"
+#include <DSUtil.h>
+
+static constexpr ULONGLONG BlurayNativeFrameTimeoutMs = 4000;
 
 bool CMainFrame::OpenDiscImage(const CString& path)
 {
@@ -102,6 +106,7 @@ void CMainFrame::UpdateBlurayTitle(const CString& root)
 void CMainFrame::StopBlurayMenu()
 {
     KillTimer(TIMER_BLURAY_MENU);
+    m_pendingBlurayPlaylist.Empty();
     if (m_blurayMenu) {
         m_blurayMenu->DetachRenderer();
         m_blurayMenu.reset();
@@ -112,7 +117,7 @@ void CMainFrame::StopBlurayMenu()
     m_blurayTitle.Empty();
 }
 
-HRESULT CMainFrame::SetBlurayPlaybackPosition(REFERENCE_TIME position)
+HRESULT CMainFrame::SetBlurayPlaybackPosition(REFERENCE_TIME position, bool reportFailure)
 {
     REFERENCE_TIME stop = 0;
     UINT endPlayItem = 0;
@@ -129,7 +134,14 @@ HRESULT CMainFrame::SetBlurayPlaybackPosition(REFERENCE_TIME position)
         hr = m_pMS->SetPositions(&position, AM_SEEKING_AbsolutePositioning,
                                 &stop, AM_SEEKING_AbsolutePositioning);
     }
-    if (FAILED(hr)) {
+    if (!m_pendingBlurayPlaylist.IsEmpty()) {
+        m_pendingBlurayStart = position;
+        if (FAILED(hr)) {
+            m_blurayDeliveryError = hr;
+        } else if (hr == S_OK) {
+            m_blurayFrameDeadline = GetTickCount64() + BlurayNativeFrameTimeoutMs;
+        }
+    } else if (FAILED(hr) && reportFailure) {
         m_blurayMenu->PlaybackFailed(hr);
     }
     return hr;
@@ -158,6 +170,107 @@ bool CMainFrame::BlurayMouse(HWND window, CPoint point, UINT message)
         m_blurayMouseDown = true;
     }
     return handled;
+}
+
+void CMainFrame::RebuildBlurayPlaylist(const CString& path, REFERENCE_TIME start)
+{
+    CAutoPtr<OpenFileData> data(DEBUG_NEW OpenFileData());
+    data->fns.AddTail(path);
+    data->rtStart = start;
+    data->bAddToRecent = false;
+    m_pendingBlurayPlaylist.Empty();
+    m_bluraySwitching = true;
+    OpenMedia(data);
+    m_bluraySwitching = false;
+}
+
+HRESULT CMainFrame::SwitchBlurayPlaylist(const CString& path, REFERENCE_TIME start)
+{
+    // A second graph for seek previews needs the normal file-open path as well.
+    auto* file = dynamic_cast<OpenFileData*>(m_lastOMD.m_p);
+    if (!m_pMVRC || m_bUseSeekPreview || !file || file->fns.GetCount() != 1 || m_blurayMenu->HoldsMenuStill()) {
+        return S_FALSE;
+    }
+    CComQIPtr<IBlurayPlaylistSwitch> source = m_pFSF;
+    IBaseFilter* decoder = FindFilter(GUID_LAVVideo, m_pGB);
+    CComQIPtr<IBlurayNativeDelivery> delivery = decoder;
+    CComQIPtr<ILAVVideoStatus> status = decoder;
+    const auto name = status ? status->GetActiveDecoderName() : nullptr;
+    if (!source || !delivery || !name || wcscmp(name, L"d3d11 native")) {
+        return S_FALSE;
+    }
+    HRESULT hr = m_pMC->Stop();
+    if (FAILED(hr)) {
+        return hr;
+    }
+    hr = source->SwitchPlaylist(path);
+    if (FAILED(hr)) {
+        return hr;
+    }
+    // Stop has flushed the old segment and joined its worker threads.
+    hr = delivery->WatchNextFrame();
+    if (FAILED(hr) || !m_blurayMenu->AttachRenderer(m_pCAP)) {
+        return FAILED(hr) ? hr : E_NOINTERFACE;
+    }
+    hr = SetBlurayPlaybackPosition(start, false);
+    if (hr != S_OK) {
+        return FAILED(hr) ? hr : VFW_E_WRONG_STATE;
+    }
+    m_fEndOfStream = false;
+    m_blurayMenu->SeekApplied(start);
+    m_CachedFilterState = State_Stopped;
+    m_blurayDeliveryError = S_OK;
+    m_pendingBlurayPlaylist = path;
+    m_pendingBlurayStart = start;
+    if (!MediaControlRun()) {
+        m_pendingBlurayPlaylist.Empty();
+        return E_FAIL;
+    }
+    m_blurayFrameDeadline = GetTickCount64() + BlurayNativeFrameTimeoutMs;
+
+    file->fns.SetAt(file->fns.GetHeadPosition(), path);
+    file->rtStart = start;
+    file->title = lastOpenFile = path;
+    // LAV delegates IKeyFrameInfo to its current demuxer.
+    m_pKFI.Release();
+    m_pKFI = m_pFSF;
+    LoadKeyFrames();
+    SetupChapters();
+    OpenSetupInfoBar();
+    return S_OK;
+}
+
+bool CMainFrame::CheckBlurayPlaylistSwitch()
+{
+    // Release all decoder interfaces before closing its graph.
+    HRESULT hr = m_blurayDeliveryError;
+    if (SUCCEEDED(hr)) {
+        IBaseFilter* decoder = FindFilter(GUID_LAVVideo, m_pGB);
+        CComQIPtr<IBlurayNativeDelivery> delivery = decoder;
+        hr = delivery ? delivery->GetFrameResult() : E_NOINTERFACE;
+        if (hr == S_FALSE) {
+            CComQIPtr<ILAVVideoStatus> status = decoder;
+            const auto name = status ? status->GetActiveDecoderName() : nullptr;
+            if (name && *name && wcscmp(name, L"d3d11 native")) {
+                hr = VFW_E_TYPE_NOT_ACCEPTED;
+            } else if (GetMediaState() != State_Running || m_blurayMenu->HoldsMenuStill()) {
+                m_blurayFrameDeadline = GetTickCount64() + BlurayNativeFrameTimeoutMs;
+            } else if (GetTickCount64() >= m_blurayFrameDeadline) {
+                hr = VFW_E_TIMEOUT;
+            }
+        }
+    }
+    if (hr == S_FALSE) {
+        return true;
+    }
+    m_blurayMenu->PlaylistSwitchResult(hr);
+    if (FAILED(hr)) {
+        RebuildBlurayPlaylist(m_pendingBlurayPlaylist, m_pendingBlurayStart);
+        return false;
+    }
+    m_pendingBlurayPlaylist.Empty();
+    UpdateDXVAStatus();
+    return true;
 }
 
 void CMainFrame::TickBlurayMenu()
@@ -193,11 +306,21 @@ void CMainFrame::TickBlurayMenu()
     if (m_blurayMenu->TakePlaylist(path)) {
         REFERENCE_TIME start = 0;
         m_blurayMenu->TakeSeek(start);
+        if (m_pendingBlurayPlaylist.CompareNoCase(path)) {
+            m_pendingBlurayPlaylist.Empty();
+        }
         CComHeapPtr<OLECHAR> current;
         if (m_pFSF && m_pMS && m_pMC && GetLoadState() == MLS::LOADED
-                && SUCCEEDED(m_pFSF->GetCurFile(&current, nullptr)) && current
-                && !path.CompareNoCase(current)) {
-            if (SUCCEEDED(SetBlurayPlaybackPosition(start))) {
+                && SUCCEEDED(m_pFSF->GetCurFile(&current, nullptr)) && current) {
+            if (path.CompareNoCase(current)) {
+                const HRESULT hr = SwitchBlurayPlaylist(path, start);
+                if (hr == S_OK) {
+                    return;
+                }
+                if (FAILED(hr)) {
+                    m_blurayMenu->PlaylistSwitchResult(hr);
+                }
+            } else if (SUCCEEDED(SetBlurayPlaybackPosition(start))) {
                 m_fEndOfStream = false;
                 m_blurayMenu->AttachRenderer(m_pCAP);
                 m_blurayMenu->SeekApplied(start);
@@ -206,13 +329,10 @@ void CMainFrame::TickBlurayMenu()
                 return;
             }
         }
-        CAutoPtr<OpenFileData> data(DEBUG_NEW OpenFileData());
-        data->fns.AddTail(path);
-        data->rtStart = start;
-        data->bAddToRecent = false;
-        m_bluraySwitching = true;
-        OpenMedia(data);
-        m_bluraySwitching = false;
+        RebuildBlurayPlaylist(path, start);
+        return;
+    }
+    if (!m_pendingBlurayPlaylist.IsEmpty() && !CheckBlurayPlaylistSwitch()) {
         return;
     }
     REFERENCE_TIME seek = 0;

@@ -366,13 +366,8 @@ BOOL CPPageOutput::OnApply()
                 }
             }
         } else if (m_iDSVideoRendererType == VIDRNDT_DS_MADVR) {
-            if (curhwa == HWAccel_D3D11) {
-                if (-1 == pApp->GetProfileInt(IDS_R_INTERNAL_LAVVIDEO_HWACCEL, _T("HWAccelDeviceD3D11"), -1)) {
-                    if (needcopyback || (AfxMessageBox(L"Change hardware decoding setting from \"D3D11 Native\" to \"D3D11 Copyback\"?\n\nThat gives better stability with MadVR. Native mode may causes freezes. It also does not support deinterlacing and black border detection.", MB_YESNO, 0) == IDYES)) {
-                        pApp->WriteProfileInt(IDS_R_INTERNAL_LAVVIDEO_HWACCEL, _T("HWAccelDeviceD3D11"), 0);
-                    }
-                }
-            } else if (curhwa == HWAccel_DXVA2Native || curhwa == HWAccel_DXVA2CopyBack) {
+            // Preserve the user's D3D11 decoder and adapter selection.
+            if (curhwa == HWAccel_DXVA2Native || curhwa == HWAccel_DXVA2CopyBack) {
                 GPUDetect gpuinfo = GPUDetect();
                 if (gpuinfo.SupportD3D11VA() && gpuinfo.GetHwaCaps() >= GPU_HWA_CAP_AV1_P0) {
                     if (AfxMessageBox(L"Change hardware decoding setting to \"D3D11 Copyback\"?\n\nThat supports more video formats than DXVA2.", MB_YESNO, 0) == IDYES) {

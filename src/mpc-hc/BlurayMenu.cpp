@@ -752,6 +752,9 @@ void CBlurayMenu::StreamResult(bool audio, int pid, HRESULT result) {
         : ResStr(IDS_BD_SUBTITLE_SELECTION_FAILED);
 }
 void CBlurayMenu::PlaylistReused() { m->Log("playlist_reused", m->playlist); }
+void CBlurayMenu::PlaylistSwitchResult(HRESULT result) {
+    m->Log(result == S_OK ? "playlist_native_frame" : "playlist_rebuild", m->playlist, result);
+}
 bool CBlurayMenu::TakePlaylist(CStringW& path) {
     if (m->readFailed || m->media.LossReason() || m->pendingPlaylist.IsEmpty()) return false;
     path = m->pendingPlaylist; m->pendingPlaylist.Empty(); return true;

@@ -83,6 +83,12 @@ def main():
         patch = path.parent / manifest.get('patch', path.with_suffix('.patch').name)
         if expected and hashlib.sha256(patch.read_bytes()).hexdigest() != expected:
             errors.append(f'Patch checksum mismatch: {path.name}')
+    # The host and LAV build separately, but must compile the same private COM ABI.
+    lav = json.loads((ROOT / 'bluray/patches/lav-menu-bridge.json').read_text())
+    adapter = next(f for f in lav['files'] if f['path'] == 'include/IBlurayStreamSelect.h')
+    header = (ROOT / adapter['path']).read_bytes().replace(b'\r\n', b'\n')
+    if hashlib.sha256(header).hexdigest() != adapter['after_sha256']:
+        errors.append('Host and LAV Blu-ray interface headers differ')
     imports = json.loads((ROOT / 'bluray/imports.json').read_text())
     for item in imports['files']:
         if not item.get('adapted') and hashlib.sha256((ROOT / item['path']).read_bytes()).hexdigest() != item['donor_sha256']:

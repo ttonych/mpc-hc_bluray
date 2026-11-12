@@ -3244,6 +3244,10 @@ LRESULT CMainFrame::OnGraphNotify(WPARAM wParam, LPARAM lParam)
                 }
                 break;
             case EC_ERRORABORT:
+                if (!m_pendingBlurayPlaylist.IsEmpty() && FAILED(HRESULT(evParam1))
+                        && HRESULT(evParam1) != HRESULT_FROM_WIN32(ERROR_READ_FAULT)) {
+                    m_blurayDeliveryError = HRESULT(evParam1);
+                }
                 UpdateCachedMediaState();
                 if ((HRESULT)evParam1 == HRESULT_FROM_WIN32(ERROR_READ_FAULT) &&
                     (m_blurayMenu || m_bIsBDPlay ||
@@ -12795,7 +12799,8 @@ bool CMainFrame::MediaControlRun(bool waitforcompletion)
     m_dwLastPause = 0ULL;
     if (m_pMC) {
         m_CachedFilterState = State_Running;
-        if (FAILED(m_pMC->Run())) {
+        const HRESULT hr = m_pMC->Run();
+        if (FAILED(hr)) {
             // still in transition to running state
             if (waitforcompletion) {
                 m_CachedFilterState = -1;
@@ -12804,7 +12809,7 @@ bool CMainFrame::MediaControlRun(bool waitforcompletion)
             }
         };
         MediaTransportControlUpdateState(State_Running);
-        return true;
+        return SUCCEEDED(hr);
     }
     return false;
 }

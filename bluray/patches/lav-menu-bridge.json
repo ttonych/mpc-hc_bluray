@@ -3,8 +3,8 @@
   "repository": "https://github.com/clsid2/LAVFilters.git",
   "commit": "f4e6552a4f769d41a95e3ce428b7a5755ee1ec9b",
   "patch": "lav-menu-bridge.patch",
-  "sha256": "8313223d3661554f713bf6164736def4d8e68b859c6221aed17cfe9d45dc3f09",
-  "revision": "hc-menu-bridge-v4",
+  "sha256": "04ed10bcf94c08b90910c8244e8549bbdb90114ae37156ee5f2f75075e2f1549",
+  "revision": "hc-menu-bridge-v7",
   "files": [
     {
       "path": "demuxer/Demuxers/BDDemuxer.cpp",
@@ -15,8 +15,9 @@
     {
       "path": "demuxer/Demuxers/BDDemuxer.h",
       "before_sha256": "f33b2475de4bf38ba1e86b3c44cb016ef925be680bd0e65b3991bb11f649e667",
-      "after_sha256": "b4c2f167a0adb80a798a79bc5cbb4b3c2fe985feb66c20bd1d1944de7e409504",
-      "previous_sha256": "0191e2700251a270060e410cfacc11fc7b4a6a93e269c615fc53fbca82de87fc"
+      "after_sha256": "8014bad0a8fbc44feb6f38387b56b36f0cd2d1b8fe9727a5653fc6e96458c65c",
+      "previous_sha256": "0191e2700251a270060e410cfacc11fc7b4a6a93e269c615fc53fbca82de87fc",
+      "v4_sha256": "b4c2f167a0adb80a798a79bc5cbb4b3c2fe985feb66c20bd1d1944de7e409504"
     },
     {
       "path": "demuxer/Demuxers/BaseDemuxer.h",
@@ -27,8 +28,10 @@
     {
       "path": "demuxer/Demuxers/LAVFDemuxer.cpp",
       "before_sha256": "51551ac1075d093887568af204bd19a8d5e2647912570746ca322a27eb9f1765",
-      "after_sha256": "d1cb7176b0bd99756b99c10ea679707772a94876705991443f64c71476259654",
-      "previous_sha256": "d1cb7176b0bd99756b99c10ea679707772a94876705991443f64c71476259654"
+      "after_sha256": "73441976a6e6f6ef9ad82765bffee5d4dad1ee7b2acf2d6b84fba0e7186fb2d6",
+      "previous_sha256": "d1cb7176b0bd99756b99c10ea679707772a94876705991443f64c71476259654",
+      "v4_sha256": "d1cb7176b0bd99756b99c10ea679707772a94876705991443f64c71476259654",
+      "v5_sha256": "fedc88d22f05b970b2f7a4c32fd8de87e6ca08e03334fe987138d25f9a788efc"
     },
     {
       "path": "demuxer/Demuxers/LAVFDemuxer.h",
@@ -39,20 +42,29 @@
     {
       "path": "demuxer/LAVSplitter/LAVSplitter.cpp",
       "before_sha256": "cdc2373735b452074fd597206206a5df4ff49bbd01b1034e1887d3196069a350",
-      "after_sha256": "adcaba2fee5658dd3a4843a3d83df936ed05756182664df67b014671600bf2b3",
-      "previous_sha256": "b883c643722b8d5dfd0cba466e8d65188d6e6460460337362e6a35435e21b6ac"
+      "after_sha256": "eece61e8539d2d209e4933c9efa21545f9fe1326ef032052a99e81e11e33748d",
+      "previous_sha256": "b883c643722b8d5dfd0cba466e8d65188d6e6460460337362e6a35435e21b6ac",
+      "v4_sha256": "adcaba2fee5658dd3a4843a3d83df936ed05756182664df67b014671600bf2b3",
+      "v5_sha256": "adcaba2fee5658dd3a4843a3d83df936ed05756182664df67b014671600bf2b3",
+      "v6_sha256": "adcaba2fee5658dd3a4843a3d83df936ed05756182664df67b014671600bf2b3"
     },
     {
       "path": "demuxer/LAVSplitter/LAVSplitter.h",
       "before_sha256": "84324398360aa03b083774c95d8740eeb0dc90965f5e648fad8ffd701388c87f",
-      "after_sha256": "786c33dc63041d3855c56d88e2ecdab3614701f4a600ee08c59f215595ac8c16",
-      "previous_sha256": "786c33dc63041d3855c56d88e2ecdab3614701f4a600ee08c59f215595ac8c16"
+      "after_sha256": "84bbd5c32937818a4d9c41f7e0f2afb905bf411956840351e7d48ec52be8de22",
+      "previous_sha256": "786c33dc63041d3855c56d88e2ecdab3614701f4a600ee08c59f215595ac8c16",
+      "v4_sha256": "786c33dc63041d3855c56d88e2ecdab3614701f4a600ee08c59f215595ac8c16",
+      "v5_sha256": "786c33dc63041d3855c56d88e2ecdab3614701f4a600ee08c59f215595ac8c16",
+      "v6_sha256": "786c33dc63041d3855c56d88e2ecdab3614701f4a600ee08c59f215595ac8c16"
     },
     {
       "path": "include/IBlurayStreamSelect.h",
       "before_sha256": null,
-      "after_sha256": "aed0822770df49159f8020f45c372778523143ffe23d2019dcb40632e59eaeba",
-      "previous_sha256": "aed0822770df49159f8020f45c372778523143ffe23d2019dcb40632e59eaeba"
+      "after_sha256": "2098200dfc848a42c76ebfeb1cf9284e425a25f3d3608059ae36cb0fa163a810",
+      "previous_sha256": "aed0822770df49159f8020f45c372778523143ffe23d2019dcb40632e59eaeba",
+      "v4_sha256": "aed0822770df49159f8020f45c372778523143ffe23d2019dcb40632e59eaeba",
+      "v5_sha256": "aed0822770df49159f8020f45c372778523143ffe23d2019dcb40632e59eaeba",
+      "v6_sha256": "aed0822770df49159f8020f45c372778523143ffe23d2019dcb40632e59eaeba"
     },
     {
       "path": "decoder/LAVVideo/decoders/avcodec.cpp",
@@ -69,20 +81,108 @@
     {
       "path": "decoder/LAVVideo/decoders/ILAVDecoder.h",
       "before_sha256": "6c9e3ca9aa31285eac4623c958864bacdac7878dbf53e19cf774ee0b14f1c7e5",
-      "after_sha256": "53019e0078ce96cc85f79057a3c78706aee50e5f806d317c82cd10a89ba3edbb",
-      "previous_sha256": "53019e0078ce96cc85f79057a3c78706aee50e5f806d317c82cd10a89ba3edbb"
+      "after_sha256": "093927ae2b74b0059ece059c5c650a94dd9070858bd8d3015ed84dce12ce3f78",
+      "previous_sha256": "53019e0078ce96cc85f79057a3c78706aee50e5f806d317c82cd10a89ba3edbb",
+      "v4_sha256": "53019e0078ce96cc85f79057a3c78706aee50e5f806d317c82cd10a89ba3edbb",
+      "v5_sha256": "53019e0078ce96cc85f79057a3c78706aee50e5f806d317c82cd10a89ba3edbb",
+      "v6_sha256": "53019e0078ce96cc85f79057a3c78706aee50e5f806d317c82cd10a89ba3edbb"
     },
     {
       "path": "decoder/LAVVideo/LAVVideo.h",
       "before_sha256": "802d8a34fbf162dbe2b89e08f4bfaeee7cab89574aecef847dce791f871c2326",
-      "after_sha256": "78872c7bdec1dd382e69231d1c665b65baebef6795fa23c9875ec969be8477ea",
-      "previous_sha256": "78872c7bdec1dd382e69231d1c665b65baebef6795fa23c9875ec969be8477ea"
+      "after_sha256": "1d9f95e1c01c3cdccd8e5ce1a38419c670d8d7b3257fbcc22cffec2375c4d3f2",
+      "previous_sha256": "78872c7bdec1dd382e69231d1c665b65baebef6795fa23c9875ec969be8477ea",
+      "v4_sha256": "78872c7bdec1dd382e69231d1c665b65baebef6795fa23c9875ec969be8477ea",
+      "v5_sha256": "78872c7bdec1dd382e69231d1c665b65baebef6795fa23c9875ec969be8477ea",
+      "v6_sha256": "78872c7bdec1dd382e69231d1c665b65baebef6795fa23c9875ec969be8477ea"
     },
     {
       "path": "libbluray/src/file/file_win32.c",
       "before_sha256": "9fc166ff0249a8aaada3e6f14533cae37da5faaceea5b9a0ef5b124f9b6db2df",
       "after_sha256": "0eba98b824aa9573a0937ceffabaa08708921fad27a0f3d4329ecb1a750a9a24",
       "previous_sha256": "9fc166ff0249a8aaada3e6f14533cae37da5faaceea5b9a0ef5b124f9b6db2df"
+    },
+    {
+      "path": "ffmpeg/libavformat/demux.c",
+      "before_sha256": "e40fa160131689963ff3f0278ec4473e08d80b8bb953b8fde791759bf0ced9aa",
+      "previous_sha256": "e40fa160131689963ff3f0278ec4473e08d80b8bb953b8fde791759bf0ced9aa",
+      "v4_sha256": "e40fa160131689963ff3f0278ec4473e08d80b8bb953b8fde791759bf0ced9aa",
+      "after_sha256": "7633f14f077a9199f5e85ec50ad16f8480e9a2ff6e95d28bb03a702c9b15ea3d"
+    },
+    {
+      "path": "ffmpeg/libavformat/internal.h",
+      "before_sha256": "a7b6c6f113ef93301e1b5791e1dd694a4fa5b00e83dc15fba5e9cc58a7015f1d",
+      "previous_sha256": "a7b6c6f113ef93301e1b5791e1dd694a4fa5b00e83dc15fba5e9cc58a7015f1d",
+      "v4_sha256": "a7b6c6f113ef93301e1b5791e1dd694a4fa5b00e83dc15fba5e9cc58a7015f1d",
+      "after_sha256": "fb79bc6a365b8d313d7abfe5fb36618e7721c3ba5b36f79f4c92f72fe443073e"
+    },
+    {
+      "path": "ffmpeg/libavformat/options_table.h",
+      "before_sha256": "63cba5167cbdd11ab16089698faa17590155858d94ad8eccb6848900c99ca73d",
+      "previous_sha256": "63cba5167cbdd11ab16089698faa17590155858d94ad8eccb6848900c99ca73d",
+      "v4_sha256": "63cba5167cbdd11ab16089698faa17590155858d94ad8eccb6848900c99ca73d",
+      "after_sha256": "40aca4ab6cb69a4345e38b4f83a5805e76c6e8da4a62db6110614bdfebe73f9d"
+    },
+    {
+      "path": "ffmpeg/libavcodec/hevc/hevcdec.c",
+      "before_sha256": "ded458aaf1a1d79ed21b22c94aa8c92aec46972b0b026905375879c5fdbdae9d",
+      "after_sha256": "ea2b6b1713102f61e4b7189c95f32ce217d6bc51f1a56a43f8f65c29fe35ea2c",
+      "previous_sha256": "ded458aaf1a1d79ed21b22c94aa8c92aec46972b0b026905375879c5fdbdae9d",
+      "v4_sha256": "ded458aaf1a1d79ed21b22c94aa8c92aec46972b0b026905375879c5fdbdae9d",
+      "v5_sha256": "ded458aaf1a1d79ed21b22c94aa8c92aec46972b0b026905375879c5fdbdae9d"
+    },
+    {
+      "path": "ffmpeg/libavcodec/hevc/hevcdec.h",
+      "before_sha256": "bb6c1a192e2845ae1ca578b82f5c9d416e1bef42324aa9b77f5879aa76a39d28",
+      "after_sha256": "ae2d6933d83e3b1576b4c84812fe4dd72ff48c3de44f1cc5e9355cbe76a7f664",
+      "previous_sha256": "bb6c1a192e2845ae1ca578b82f5c9d416e1bef42324aa9b77f5879aa76a39d28",
+      "v4_sha256": "bb6c1a192e2845ae1ca578b82f5c9d416e1bef42324aa9b77f5879aa76a39d28",
+      "v5_sha256": "bb6c1a192e2845ae1ca578b82f5c9d416e1bef42324aa9b77f5879aa76a39d28"
+    },
+    {
+      "path": "decoder/LAVVideo/LAVVideo.cpp",
+      "before_sha256": "576010c193d1232d6bb20a4c7c6eb83199b177074636795390459e4da0c06e2c",
+      "after_sha256": "e44ea45fdc9913965a17388732d601316269f319a2a0121997a6f3c884999b78",
+      "previous_sha256": "576010c193d1232d6bb20a4c7c6eb83199b177074636795390459e4da0c06e2c",
+      "v4_sha256": "576010c193d1232d6bb20a4c7c6eb83199b177074636795390459e4da0c06e2c",
+      "v5_sha256": "576010c193d1232d6bb20a4c7c6eb83199b177074636795390459e4da0c06e2c",
+      "v6_sha256": "576010c193d1232d6bb20a4c7c6eb83199b177074636795390459e4da0c06e2c"
+    },
+    {
+      "path": "demuxer/LAVSplitter/OutputPin.h",
+      "before_sha256": "ef7d6b187431e25556f944a1031373530f9f669553afc47be7221b850a8eb979",
+      "after_sha256": "46443ce6007bfc52eabffad693961cb4db6bc89e55ab1ae36ff58651be9fb7d4",
+      "previous_sha256": "ef7d6b187431e25556f944a1031373530f9f669553afc47be7221b850a8eb979",
+      "v4_sha256": "ef7d6b187431e25556f944a1031373530f9f669553afc47be7221b850a8eb979",
+      "v5_sha256": "ef7d6b187431e25556f944a1031373530f9f669553afc47be7221b850a8eb979",
+      "v6_sha256": "ef7d6b187431e25556f944a1031373530f9f669553afc47be7221b850a8eb979"
+    },
+    {
+      "path": "decoder/LAVVideo/decoders/d3d11va.cpp",
+      "before_sha256": "8c75864d046e38a3f52ec0b5132faeb5c4f4cfd7f3aa762243ab35353466ff65",
+      "after_sha256": "982aadad15c7fd02dfa49989abedaf18af038f5c638d3c1e69458e01e0c9fc26",
+      "previous_sha256": "8c75864d046e38a3f52ec0b5132faeb5c4f4cfd7f3aa762243ab35353466ff65",
+      "v4_sha256": "8c75864d046e38a3f52ec0b5132faeb5c4f4cfd7f3aa762243ab35353466ff65",
+      "v5_sha256": "8c75864d046e38a3f52ec0b5132faeb5c4f4cfd7f3aa762243ab35353466ff65",
+      "v6_sha256": "8c75864d046e38a3f52ec0b5132faeb5c4f4cfd7f3aa762243ab35353466ff65"
+    },
+    {
+      "path": "decoder/LAVVideo/decoders/d3d11/D3D11SurfaceAllocator.h",
+      "before_sha256": "dfd89bc2e5b7d7afd0c317fe3ed77d8a714bf804559e906965b80933715a4e71",
+      "after_sha256": "f00ccb4b581c9bff25f47c4a93f880dfa78db686a4d36f6ddbd274cdbec0890e",
+      "previous_sha256": "dfd89bc2e5b7d7afd0c317fe3ed77d8a714bf804559e906965b80933715a4e71",
+      "v4_sha256": "dfd89bc2e5b7d7afd0c317fe3ed77d8a714bf804559e906965b80933715a4e71",
+      "v5_sha256": "dfd89bc2e5b7d7afd0c317fe3ed77d8a714bf804559e906965b80933715a4e71",
+      "v6_sha256": "dfd89bc2e5b7d7afd0c317fe3ed77d8a714bf804559e906965b80933715a4e71"
+    },
+    {
+      "path": "decoder/LAVVideo/decoders/d3d11/D3D11SurfaceAllocator.cpp",
+      "before_sha256": "9c6ecc780ab23d39bec033f13bd676e2a52377b9e884a7abb8592f756cc6defa",
+      "after_sha256": "e3d0e7eb89b931a6cf1504168dce6f898f320dba6b24477cdb5f3940a2532fcb",
+      "previous_sha256": "9c6ecc780ab23d39bec033f13bd676e2a52377b9e884a7abb8592f756cc6defa",
+      "v4_sha256": "9c6ecc780ab23d39bec033f13bd676e2a52377b9e884a7abb8592f756cc6defa",
+      "v5_sha256": "9c6ecc780ab23d39bec033f13bd676e2a52377b9e884a7abb8592f756cc6defa",
+      "v6_sha256": "9c6ecc780ab23d39bec033f13bd676e2a52377b9e884a7abb8592f756cc6defa"
     }
   ],
   "mpeg2_still_provenance": {
@@ -95,16 +195,38 @@
     "adaptation": "Isolated I-picture repetition and sequence-end release in LAV avcodec; bounded size/count/time, input flush cancellation, cache lifecycle; LAV applies playback rate downstream."
   },
   "submodule_commits": {
-    "libbluray": "f1312826d3de9e8804212734243f8692d6bc0b72"
+    "libbluray": "f1312826d3de9e8804212734243f8692d6bc0b72",
+    "ffmpeg": "29e0b0813d855d55536cd11ae4a8b6de88ee6461"
   },
   "read_error_provenance": {
     "repository": "https://github.com/ttonych/mpc-be_bluray.git",
     "commit": "e857bdcef19a4a8975cc2fb2fb4709b32ee7b1de",
     "adaptation": "Bounded same-position retry in LAV internal libbluray Windows reader; report persistent BD read errors as EC_ERRORABORT, with process-local fault-injection regression."
   },
-  "upgrade": {
-    "from_revision": "hc-menu-bridge-v3",
-    "patch": "lav-menu-bridge-v3-to-v4.patch",
-    "sha256": "d4127af27797dc57ac11ad0a1e01a990515ba56aa1bf7cf93a4a8ed59b587a4b"
-  }
+  "upgrades": [
+    {
+      "from_revision": "hc-menu-bridge-v3",
+      "patch": "lav-menu-bridge-v3-to-v4.patch",
+      "sha256": "d4127af27797dc57ac11ad0a1e01a990515ba56aa1bf7cf93a4a8ed59b587a4b",
+      "input_hash": "previous_sha256"
+    },
+    {
+      "from_revision": "hc-menu-bridge-v4",
+      "patch": "lav-menu-bridge-v4-to-v5.patch",
+      "sha256": "d93048236e63865079d268028de7bf5f0ac103f2916226d8f88bb3668acd53ae",
+      "input_hash": "v4_sha256"
+    },
+    {
+      "from_revision": "hc-menu-bridge-v5",
+      "patch": "lav-menu-bridge-v5-to-v6.patch",
+      "sha256": "988cce1103f6288edca7b4ffa79c53cb9666f6282af59994ed2a7d16b28c5032",
+      "input_hash": "v5_sha256"
+    },
+    {
+      "from_revision": "hc-menu-bridge-v6",
+      "patch": "lav-menu-bridge-v6-to-v7.patch",
+      "sha256": "f12ee04b6cffda246ee7a27dc94af0a865be34a3c46739b60fad0228d409da00",
+      "input_hash": "v6_sha256"
+    }
+  ]
 }

@@ -2,6 +2,46 @@
 
 [Русский](VALIDATION.ru.md) · [Roadmap](ROADMAP.md)
 
+## HEVC header probing on a UHD menu
+
+On one HDMV disc the first HEVC menu packet was 1,633,861 bytes. The parser
+had identified 3840×2160 10-bit 4:2:0, while the temporary software decoder
+still had an unspecified pixel format. Processing that packet took a median
+of 202.4 ms in four baseline runs and 1.5 ms in five header-only runs.
+
+In four player sessions (baseline, candidate, candidate, baseline), each build
+completed eight direct menu → film → menu cycles with madVR 210 and D3D11
+Native. The first selection in each session went through an additional disc
+clip and was excluded. Median source creation and loading fell from 235 to
+23 ms for the menu and from 35 to 8 ms for the film. From the end of graph
+close to the first positive madVR drawn-frame count, the pooled menu median
+fell from 1,379 to 1,139 ms. This counter is sampled. The film's end-to-end
+timing varied between sessions. The portable player also played an ordinary
+H.264 file and returned from the feature to the disc menu.
+
+The first decoded menu and film pictures, stream formats, chapter marks and
+sampled audio and subtitle packets matched the baseline. The
+[HEVC regression](../tools/test-lav-hevc-probe.py) compares generated SDR and
+HDR10 inputs, including cropped size, sample aspect ratio, colour parameters,
+decoded pixels and HDR metadata. A two-slice picture exercises full decoding
+during probe. The test requires x64 MSVC, the built LAV FFmpeg and an ffmpeg
+executable with libx265.
+
+## Local LAV playlist opening checks
+
+Five HDMV menu → film → top menu cycles on a UHD disc used madVR 210 and
+reported D3D11 Native in both builds. Across the four direct replays, median
+source creation and loading took 215 and 32 ms for the film, and 280 and
+226 ms for the menu. The initial Play included an additional authored clip.
+Stream formats, duration and all 17 chapter positions matched. The first 12
+packets of each audio track and PGS matched in payload and timestamp after
+seeking to 600 seconds. Ordinary H.264 MKV playback was also checked.
+
+The [PGS regression](../tools/test-lav-pgs-probe.py) generates M2TS inputs
+with early and delayed PGS and checks initial read volume, packet delivery,
+timestamps and payloads against the built DLLs. It requires x64 MSVC, a built
+LAV FFmpeg and an ffmpeg executable for fixture generation.
+
 ## First prerelease: 2.8.2-bluray.1
 
 [Published on 2026-09-29](https://github.com/ttonych/mpc-hc_bluray/releases/tag/2.8.2-bluray.1).
@@ -235,3 +275,20 @@ Windows call. Network reconnection, invalid handles and damaged sectors are
 outside these checks. These local results do not qualify the separate cloud ZIP.
 User discs, mounts, profiles and global
 renderer settings were unchanged. The storage-specific ISO issue stays excluded.
+
+## Retaining madVR during playlist changes
+
+A local Release x64 build was exercised on an HDMV UHD disc with madVR 210,
+an RTX 4060 and a portable D3D11 Native profile. Three menu → feature → menu
+cycles showed the feature after seeking and the authored menu background and
+buttons after returning. A trailer with a different pin layout went through
+the normal file-open path. Compatible transitions confirmed delivery of a new
+native sample. The saved decoder setting was still D3D11 after exit.
+
+A separate authored test sequence played ten clips. Screenshots matched their
+expected colours across AVC/HEVC, 720p/1080p, SDR/HDR and the addition/removal
+of audio. An unsupported AVC High 10 stream triggered a late rebuild and
+played through the normal graph. The subsequent supported clip played too.
+Component tests exercise a flush during D3D11 surface starvation, including
+a concurrent surface release, and reject software delivery when native output
+is required. Ordinary MKV software decode reaches EOS in the Null Renderer.

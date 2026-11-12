@@ -8,7 +8,22 @@ Entries become dated version sections when a release is published.
 
 ## Unreleased
 
-No unreleased changes.
+- With madVR and active D3D11 Native decoding, Blu-ray menus can switch
+  playlists in the existing graph. If the connected tracks or the first new
+  video frame are incompatible, the player reopens the target playlist at
+  its authored position and keeps the selected decoder setting.
+
+- HEVC Blu-ray playlists can open faster. For a progressive single-layer
+  Main or Main 10 stream that starts with a single-slice IDR picture, LAV can
+  read the format from the headers and skip reconstructing that picture on
+  the CPU during stream detection. Playback uses the selected video decoder.
+
+- Blu-ray playlists open faster when subtitle graphics appear late or the final
+  access point is expensive to seek to. LAV uses the authored playlist duration
+  and can start as soon as the required stream headers are available.
+
+- Selecting madVR in Output settings now preserves an existing LAV D3D11 Native
+  selection, including when VSFilter is selected.
 
 ## 2.8.2-bluray.1 — 2026-09-29
 

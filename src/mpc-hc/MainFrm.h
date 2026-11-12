@@ -1046,7 +1046,14 @@ public:
     void TickBlurayMenu();
     void StopBlurayMenu();
     void UpdateBlurayTitle(const CString& root);
-    HRESULT SetBlurayPlaybackPosition(REFERENCE_TIME position);
+    HRESULT SetBlurayPlaybackPosition(REFERENCE_TIME position, bool reportFailure = true);
+    HRESULT SwitchBlurayPlaylist(const CString& path, REFERENCE_TIME start);
+    bool CheckBlurayPlaylistSwitch();
+    void RebuildBlurayPlaylist(const CString& path, REFERENCE_TIME start);
+    CString m_pendingBlurayPlaylist;
+    REFERENCE_TIME m_pendingBlurayStart = 0;
+    ULONGLONG m_blurayFrameDeadline = 0;
+    HRESULT m_blurayDeliveryError = S_OK;
     bool BlurayMouse(HWND window, CPoint point, UINT message);
     std::unique_ptr<CBlurayMenu> m_blurayMenu;
     bool m_bluraySwitching = false;

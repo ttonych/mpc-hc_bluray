@@ -53,9 +53,12 @@ int wmain(int argc, wchar_t** argv) {
     check(videoSettings->SetHWAccel(HWAccel_None), "software decoder");
     CComQIPtr<IBlurayStreamSelect> mapping(source);
     CComQIPtr<IBlurayPlaybackControl> control(source);
-    if (!mapping || !control) check(E_NOINTERFACE, "Blu-ray adapter interfaces");
+    CComQIPtr<IBlurayPlaylistSwitch> playlist(source);
+    CComQIPtr<IBlurayNativeDelivery> delivery(decoder);
+    if (!mapping || !control || !playlist || !delivery) check(E_NOINTERFACE, "Blu-ray adapter interfaces");
     CComQIPtr<IFileSourceFilter> file(source);
     check(file->Load(argv[2], nullptr), "load canvas MKV");
+    if (playlist->SwitchPlaylist(L"unused.mpls") != E_INVALIDARG) check(E_FAIL, "ordinary source isolation");
     CComQIPtr<IAMStreamSelect> streams(source);
     DWORD count = 0;
     check(streams->Count(&count), "stream count");
@@ -79,10 +82,22 @@ int wmain(int argc, wchar_t** argv) {
     CComQIPtr<IMediaControl> media(graph);
     CComQIPtr<IMediaEvent> events(graph);
     check(media->Run(), "run");
+    if (playlist->SwitchPlaylist(L"unused.mpls") != VFW_E_NOT_STOPPED) check(E_FAIL, "running source isolation");
     long event = 0;
     check(events->WaitForCompletion(15000, &event), "decode completion");
     check(media->Stop(), "stop");
     if (event != EC_COMPLETE) check(E_FAIL, "decode end event");
+    // Arm only for the second run. A software frame must trigger fallback.
+    check(delivery->WatchNextFrame(), "arm native delivery");
+    if (delivery->GetFrameResult() != S_FALSE) check(E_FAIL, "no confirmation before delivery");
+    CComQIPtr<IMediaSeeking> seek(graph);
+    LONGLONG start = 0;
+    check(seek->SetPositions(&start, AM_SEEKING_AbsolutePositioning, nullptr, AM_SEEKING_NoPositioning), "rewind canvas");
+    check(media->Run(), "run with native requirement");
+    const auto deadline = GetTickCount64() + 5000;
+    while (delivery->GetFrameResult() == S_FALSE && GetTickCount64() < deadline) Sleep(10);
+    if (delivery->GetFrameResult() != VFW_E_TYPE_NOT_ACCEPTED) check(E_FAIL, "reject non-native frame");
+    check(media->Stop(), "stop after rejection");
     std::puts("PASS: local LAV COM interfaces, MKV demux, software decode and EOS through Null Renderer.");
     return 0;
 }

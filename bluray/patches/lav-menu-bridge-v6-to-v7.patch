@@ -1,0 +1,487 @@
+diff --git a/include/IBlurayStreamSelect.h b/include/IBlurayStreamSelect.h
+--- a/include/IBlurayStreamSelect.h
++++ b/include/IBlurayStreamSelect.h
+@@ -16,3 +16,17 @@
+     // PTS origin used to normalize a standalone M2TS file's media positions.
+     STDMETHOD(GetPresentationStart)(REFERENCE_TIME* start) PURE;
+ };
++
++// The host must stop the graph before replacing a Blu-ray playlist.
++interface __declspec(uuid("9064A8E2-3786-4098-B72B-A3D5C0686CC8"))
++IBlurayPlaylistSwitch : public IUnknown {
++    STDMETHOD(SwitchPlaylist)(LPCWSTR playlist) PURE;
++};
++
++// Confirm delivery of a fresh native sample after the old segment was flushed.
++interface __declspec(uuid("41F47EBF-15EA-4520-A266-8F3AF9FB13CB"))
++IBlurayNativeDelivery : public IUnknown {
++    STDMETHOD(WatchNextFrame)() PURE;
++    // S_FALSE until delivered, S_OK on native delivery, or a failure HRESULT.
++    STDMETHOD(GetFrameResult)() PURE;
++};
+diff --git a/decoder/LAVVideo/LAVVideo.h b/decoder/LAVVideo/LAVVideo.h
+--- a/decoder/LAVVideo/LAVVideo.h
++++ b/decoder/LAVVideo/LAVVideo.h
+@@ -19,6 +19,7 @@
+
+ #pragma once
+
++#include "IBlurayStreamSelect.h"
+ #include "decoders/ILAVDecoder.h"
+ #include "DecodeManager.h"
+ #include "ILAVPinInfo.h"
+@@ -64,6 +65,7 @@
+     , public ISpecifyPropertyPages2
+     , public ILAVVideoSettings
+     , public ILAVVideoStatus
++    , public IBlurayNativeDelivery
+     , public ILAVVideoCallback
+     , public IPropertyBag
+     , public ILAVVideoSettingsMPCHCCustom
+@@ -71,6 +73,9 @@
+   public:
+     CLAVVideo(LPUNKNOWN pUnk, HRESULT *phr);
+     ~CLAVVideo();
++
++    STDMETHODIMP WatchNextFrame() override;
++    STDMETHODIMP GetFrameResult() override;
+
+     // IUnknown
+     DECLARE_IUNKNOWN;
+@@ -199,6 +204,7 @@
+             return FilterInGraphSafe(m_pOutput, clsid);
+     }
+     STDMETHODIMP_(DWORD) GetDecodeFlags() { return m_dwDecodeFlags; }
++    STDMETHODIMP_(HANDLE) GetInputFlushEvent() { return m_inputFlush; }
+     STDMETHODIMP_(BOOL) IsInputFlushing() { return m_pInput && m_pInput->IsFlushing(); }
+     STDMETHODIMP_(CMediaType &) GetInputMediaType() { return m_pInput->CurrentMediaType(); }
+     STDMETHODIMP GetLAVPinInfo(LAVPinInfo &info)
+@@ -281,6 +287,8 @@
+     }
+
+   private:
++    CAMEvent m_inputFlush{TRUE};
++    volatile LONG m_nativeFrameResult = S_OK;
+     friend class CVideoInputPin;
+     friend class CVideoOutputPin;
+     friend class CDecodeManager;
+diff --git a/decoder/LAVVideo/LAVVideo.cpp b/decoder/LAVVideo/LAVVideo.cpp
+--- a/decoder/LAVVideo/LAVVideo.cpp
++++ b/decoder/LAVVideo/LAVVideo.cpp
+@@ -443,7 +443,7 @@
+
+     return QI(ISpecifyPropertyPages) QI(ISpecifyPropertyPages2) QI(IPropertyBag) QI2(ILAVVideoSettings)
+         QI2(ILAVVideoSettingsMPCHCCustom)
+-        QI2(ILAVVideoStatus) __super::NonDelegatingQueryInterface(riid, ppv);
++        QI2(ILAVVideoStatus) QI(IBlurayNativeDelivery) __super::NonDelegatingQueryInterface(riid, ppv);
+
+ }
+
+@@ -946,6 +946,7 @@
+ {
+     DbgLog((LOG_TRACE, 1, L"::BeginFlush"));
+     m_bFlushing = TRUE;
++    m_inputFlush.Set();
+
+     if (m_pCCOutputPin)
+         m_pCCOutputPin->DeliverBeginFlush();
+@@ -969,6 +970,7 @@
+
+     if (m_pCCOutputPin)
+         m_pCCOutputPin->DeliverEndFlush();
++    m_inputFlush.Reset();
+     m_bFlushing = FALSE;
+
+     return hr;
+@@ -1962,9 +1964,30 @@
+     return S_OK;
+ }
+
++STDMETHODIMP CLAVVideo::WatchNextFrame()
++{
++    InterlockedExchange(&m_nativeFrameResult, S_FALSE);
++    return S_OK;
++}
++
++STDMETHODIMP CLAVVideo::GetFrameResult()
++{
++    return InterlockedCompareExchange(&m_nativeFrameResult, S_FALSE, S_FALSE);
++}
++
+ HRESULT CLAVVideo::DeliverToRenderer(LAVFrame *pFrame)
+ {
+     HRESULT hr = S_OK;
++
++    // A redraw can deliver the last picture from the preceding playlist.
++    const bool watchedFrame = m_nativeFrameResult == S_FALSE &&
++        !(pFrame->flags & (LAV_FRAME_FLAG_REDRAW | LAV_FRAME_FLAG_FLUSH | LAV_FRAME_FLAG_END_OF_SEQUENCE));
++    if (watchedFrame && pFrame->format != LAVPixFmt_D3D11)
++    {
++        InterlockedExchange(&m_nativeFrameResult, VFW_E_TYPE_NOT_ACCEPTED);
++        ReleaseFrame(&pFrame);
++        return VFW_E_TYPE_NOT_ACCEPTED;
++    }
+
+     // This should never get here, but better check
+     if (pFrame->flags & LAV_FRAME_FLAG_FLUSH)
+@@ -2386,6 +2409,8 @@
+     ReleaseFrame(&pFrame);
+
+     hr = m_pOutput->Deliver(pSampleOut);
++    if (watchedFrame && (hr == S_OK || FAILED(hr)))
++        InterlockedCompareExchange(&m_nativeFrameResult, hr, S_FALSE);
+     if (FAILED(hr))
+     {
+         DbgLog((LOG_ERROR, 10, L"::Decode(): Deliver failed with hr: %x", hr));
+diff --git a/demuxer/LAVSplitter/LAVSplitter.h b/demuxer/LAVSplitter/LAVSplitter.h
+--- a/demuxer/LAVSplitter/LAVSplitter.h
++++ b/demuxer/LAVSplitter/LAVSplitter.h
+@@ -71,6 +71,7 @@
+     , public IBufferInfo
+     , public IBlurayStreamSelect
+     , public IBlurayPlaybackControl
++    , public IBlurayPlaylistSwitch
+ {
+   public:
+     CLAVSplitter(LPUNKNOWN pUnk, HRESULT *phr);
+@@ -120,6 +121,7 @@
+
+     // Blu-ray navigator (opt-in, separate from persistent filter settings).
+     STDMETHODIMP FindStream(WORD pid, DWORD *index, DWORD *group, DWORD *ordinal);
++    STDMETHODIMP SwitchPlaylist(LPCWSTR playlist);
+     STDMETHODIMP SetPlayItemStop(UINT endExclusive);
+     STDMETHODIMP GetPresentationStart(REFERENCE_TIME *start);
+
+@@ -271,6 +273,13 @@
+     STDMETHODIMP Close();
+     STDMETHODIMP DeleteOutputs();
+
++    struct OutputStream
++    {
++        CBaseDemuxer::StreamType type;
++        const CBaseDemuxer::stream *stream;
++    };
++    std::vector<OutputStream> SelectOutputStreams(CBaseDemuxer *demuxer);
++    void ResetPlaylistPositions();
+     STDMETHODIMP InitDemuxer();
+
+     friend class CLAVOutputPin;
+diff --git a/demuxer/LAVSplitter/LAVSplitter.cpp b/demuxer/LAVSplitter/LAVSplitter.cpp
+--- a/demuxer/LAVSplitter/LAVSplitter.cpp
++++ b/demuxer/LAVSplitter/LAVSplitter.cpp
+@@ -31,6 +31,7 @@
+
+ #include <Shlwapi.h>
+ #include <string>
++#include <memory>
+ #include <regex>
+ #include <algorithm>
+
+@@ -336,7 +337,7 @@
+
+     return QI(IMediaSeeking) QI(IAMStreamSelect) QI(ISpecifyPropertyPages) QI(ISpecifyPropertyPages2) QI2(ILAVFSettings)
+         QI2(ILAVFSettingsMPCHCCustom)
+-        QI2(ILAVFSettingsInternal) QI2(ILAVFSettingsEnhancementLayers) QI(IObjectWithSite) QI(IBufferInfo) QI(IBlurayStreamSelect) QI(IBlurayPlaybackControl) __super::NonDelegatingQueryInterface(riid, ppv);
++        QI2(ILAVFSettingsInternal) QI2(ILAVFSettingsEnhancementLayers) QI(IObjectWithSite) QI(IBufferInfo) QI(IBlurayStreamSelect) QI(IBlurayPlaybackControl) QI(IBlurayPlaylistSwitch) __super::NonDelegatingQueryInterface(riid, ppv);
+
+ }
+
+@@ -638,108 +639,115 @@
+     return S_OK;
+ }
+
+-STDMETHODIMP CLAVSplitter::InitDemuxer()
+-{
+-    HRESULT hr = S_OK;
+-
+-    // Disable subtitles in applications known to fail with them (explorer thumbnail generator, power point, basically
+-    // all applications using MCI)
+-    bool bNoSubtitles =
+-        _wcsicmp(m_processName.c_str(), L"dllhost.exe") == 0 || _wcsicmp(m_processName.c_str(), L"explorer.exe") == 0 ||
+-        _wcsicmp(m_processName.c_str(), L"powerpnt.exe") == 0 || _wcsicmp(m_processName.c_str(), L"pptview.exe") == 0;
+-
++std::vector<CLAVSplitter::OutputStream> CLAVSplitter::SelectOutputStreams(CBaseDemuxer *demuxer)
++{
++    std::vector<OutputStream> streams;
++    const auto *video = demuxer->SelectVideoStream();
++    if (video)
++        streams.push_back({CBaseDemuxer::video, video});
++    const auto *audio = demuxer->SelectAudioStream(GetPreferredAudioLanguageList());
++    if (audio)
++        streams.push_back({CBaseDemuxer::audio, audio});
++
++    // Explorer thumbnail generators cannot consume subtitle pins.
++    if (_wcsicmp(m_processName.c_str(), L"dllhost.exe") && _wcsicmp(m_processName.c_str(), L"mplay32.exe") &&
++        _wcsicmp(m_processName.c_str(), L"explorer.exe") && _wcsicmp(m_processName.c_str(), L"potplayermini.exe"))
++    {
++        const auto *subs = demuxer->SelectSubtitleStream(GetSubtitleSelectors(), audio ? audio->language : "");
++        if (subs)
++            streams.push_back({CBaseDemuxer::subpic, subs});
++    }
++    if (video && m_settings.DemuxEnhancementLayer)
++    {
++        const auto *el = demuxer->SelectVideoELStream(video->pid);
++        if (el)
++            streams.push_back({CBaseDemuxer::video_el, el});
++    }
++    return streams;
++}
++
++void CLAVSplitter::ResetPlaylistPositions()
++{
+     m_rtStart = m_rtNewStart = m_rtCurrent = 0;
+     m_rtStop = m_rtNewStop = m_pDemuxer->GetDuration();
+     m_bPlaybackStarted = FALSE;
+-
+-    const CBaseDemuxer::stream *videoStream = m_pDemuxer->SelectVideoStream();
+-    if (videoStream)
+-    {
+-        CLAVOutputPin *pPin = new CLAVOutputPin(videoStream->streamInfo->mtypes,
+-                                                CBaseDemuxer::CStreamList::ToStringW(CBaseDemuxer::video), this, this,
+-                                                &hr, CBaseDemuxer::video, m_pDemuxer->GetContainerFormat());
+-        if (SUCCEEDED(hr))
+-        {
+-            pPin->SetStreamId(videoStream->pid);
+-            m_pPins.push_back(pPin);
+-            m_pDemuxer->SetActiveStream(CBaseDemuxer::video, videoStream->pid);
+-        }
+-        else
+-        {
+-            delete pPin;
+-        }
+-    }
+-
+-    std::list<std::string> audioLangs = GetPreferredAudioLanguageList();
+-    const CBaseDemuxer::stream *audioStream = m_pDemuxer->SelectAudioStream(audioLangs);
+-    if (audioStream)
+-    {
+-        CLAVOutputPin *pPin = new CLAVOutputPin(audioStream->streamInfo->mtypes,
+-                                                CBaseDemuxer::CStreamList::ToStringW(CBaseDemuxer::audio), this, this,
+-                                                &hr, CBaseDemuxer::audio, m_pDemuxer->GetContainerFormat());
+-        if (SUCCEEDED(hr))
+-        {
+-            pPin->SetStreamId(audioStream->pid);
+-            m_pPins.push_back(pPin);
+-            m_pDemuxer->SetActiveStream(CBaseDemuxer::audio, audioStream->pid);
+-        }
+-        else
+-        {
+-            delete pPin;
+-        }
+-    }
+-
+-    std::string audioLanguage = audioStream ? audioStream->language : std::string();
+-
+-    std::list<CSubtitleSelector> subtitleSelectors = GetSubtitleSelectors();
+-    const CBaseDemuxer::stream *subtitleStream = m_pDemuxer->SelectSubtitleStream(subtitleSelectors, audioLanguage);
+-    if (subtitleStream && !bNoSubtitles)
+-    {
+-        CLAVOutputPin *pPin = new CLAVOutputPin(subtitleStream->streamInfo->mtypes,
+-                                                CBaseDemuxer::CStreamList::ToStringW(CBaseDemuxer::subpic), this, this,
+-                                                &hr, CBaseDemuxer::subpic, m_pDemuxer->GetContainerFormat());
+-        if (SUCCEEDED(hr))
+-        {
+-            pPin->SetStreamId(subtitleStream->pid);
+-            m_pPins.push_back(pPin);
+-            m_pDemuxer->SetActiveStream(CBaseDemuxer::subpic, subtitleStream->pid);
+-        }
+-        else
+-        {
+-            delete pPin;
+-        }
+-    }
+-
+-    // video enhancement layer stream
+-    if (videoStream && m_settings.DemuxEnhancementLayer)
+-    {
+-        const CBaseDemuxer::stream *videoELStream = m_pDemuxer->SelectVideoELStream(videoStream->pid);
+-        if (videoELStream)
+-        {
+-            CLAVOutputPin *pPin = new CLAVOutputPin(videoELStream->streamInfo->mtypes, L"~EL", this,
+-                                                    this, &hr, CBaseDemuxer::video_el, m_pDemuxer->GetContainerFormat());
+-            if (SUCCEEDED(hr))
+-            {
+-                pPin->SetStreamId(videoELStream->pid);
+-                m_pPins.push_back(pPin);
+-                m_pDemuxer->SetActiveStream(CBaseDemuxer::video_el, videoELStream->pid);
+-            }
+-            else
+-            {
+-                delete pPin;
+-            }
+-        }
+-    }
+-
+-    if (SUCCEEDED(hr))
+-    {
+-        // If there are no pins, what good are we?
+-        return !m_pPins.empty() ? S_OK : E_FAIL;
+-    }
+-    else
+-    {
++}
++
++STDMETHODIMP CLAVSplitter::InitDemuxer()
++{
++    ResetPlaylistPositions();
++    for (const auto &output : SelectOutputStreams(m_pDemuxer))
++    {
++        const auto *name = output.type == CBaseDemuxer::video_el ? L"~EL" : CBaseDemuxer::CStreamList::ToStringW(output.type);
++        HRESULT hr = S_OK;
++        auto *pin = new CLAVOutputPin(output.stream->streamInfo->mtypes, name, this, this, &hr, output.type,
++                                      m_pDemuxer->GetContainerFormat());
++        if (FAILED(hr))
++        {
++            delete pin;
++            return hr;
++        }
++        pin->SetStreamId(output.stream->pid);
++        m_pPins.push_back(pin);
++        m_pDemuxer->SetActiveStream(output.type, output.stream->pid);
++    }
++    return m_pPins.empty() ? E_FAIL : S_OK;
++}
++
++STDMETHODIMP CLAVSplitter::SwitchPlaylist(LPCWSTR playlist)
++{
++    CheckPointer(playlist, E_POINTER);
++    CAutoLock lock(this);
++    if (m_State != State_Stopped)
++        return VFW_E_NOT_STOPPED;
++    if (!m_pDemuxer || _wcsicmp(PathFindExtensionW(m_fileName.c_str()), L".mpls") ||
++        _wcsicmp(PathFindExtensionW(playlist), L".mpls"))
++        return E_INVALIDARG;
++
++    std::unique_ptr<CBDDemuxer> next(new CBDDemuxer(this, this));
++    HRESULT hr = next->Open(playlist, nullptr, nullptr);
++    if (FAILED(hr))
+         return hr;
+-    }
++    const auto streams = SelectOutputStreams(next.get());
++    if (streams.size() != m_pPins.size())
++        return VFW_E_CANNOT_CONNECT;
++
++    // Stage the selected media types. A rejection on the last pin must leave
++    // every connected pin and the current demuxer on the original playlist.
++    std::vector<CMediaType> accepted;
++    accepted.reserve(streams.size());
++    for (size_t i = 0; i < streams.size(); ++i)
++    {
++        const auto &output = streams[i];
++        auto *pin = m_pPins[i];
++        if (pin->GetPinType() != output.type || !pin->IsConnected() || output.type == CBaseDemuxer::video_el)
++            return VFW_E_CANNOT_CONNECT;
++        auto &types = output.stream->streamInfo->mtypes;
++        auto it = std::find_if(types.begin(), types.end(), [pin](const CMediaType &type) {
++            return pin->GetConnected()->QueryAccept(&type) == S_OK;
++        });
++        if (it == types.end())
++            return VFW_E_TYPE_NOT_ACCEPTED;
++        accepted.push_back(*it);
++        next->SetActiveStream(output.type, output.stream->pid);
++    }
++
++    for (size_t i = 0; i < streams.size(); ++i)
++    {
++        auto *pin = m_pPins[i];
++        pin->SetStreamId(streams[i].stream->pid);
++        pin->SetNewMediaTypes(streams[i].stream->streamInfo->mtypes);
++        pin->SendMediaType(pin->GetActiveMediaType() == accepted[i] ? nullptr : new CMediaType(accepted[i]));
++    }
++    SafeRelease(&m_pDemuxer);
++    m_pDemuxer = next.release();
++    m_pDemuxer->AddRef();
++    m_fileName = playlist;
++    ResetPlaylistPositions();
++    m_rtLastStart = m_rtLastStop = _I64_MIN;
++    m_LastSeekers.clear();
++    m_bStopValid = FALSE;
++    return S_OK;
+ }
+
+ STDMETHODIMP CLAVSplitter::DeleteOutputs()
+diff --git a/demuxer/LAVSplitter/OutputPin.h b/demuxer/LAVSplitter/OutputPin.h
+--- a/demuxer/LAVSplitter/OutputPin.h
++++ b/demuxer/LAVSplitter/OutputPin.h
+@@ -116,6 +116,8 @@
+     void SendMediaType(CMediaType *mt)
+     {
+         CAutoLock lock(&m_csMT);
++        // A stopped pin may still have a pending type from the preceding playlist.
++        SAFE_DELETE(m_newMT);
+         m_newMT = mt;
+     }
+     void SetStreamMediaType(CMediaType *mt)
+diff --git a/decoder/LAVVideo/decoders/ILAVDecoder.h b/decoder/LAVVideo/decoders/ILAVDecoder.h
+--- a/decoder/LAVVideo/decoders/ILAVDecoder.h
++++ b/decoder/LAVVideo/decoders/ILAVDecoder.h
+@@ -328,6 +328,9 @@
+      * Get the x264 build info
+      */
+     STDMETHOD_(int, GetX264Build)() PURE;
++
++    // Signalled until the input flush completes. Owned by the video filter.
++    STDMETHOD_(HANDLE, GetInputFlushEvent)() PURE;
+ };
+
+ /**
+diff --git a/decoder/LAVVideo/decoders/d3d11va.cpp b/decoder/LAVVideo/decoders/d3d11va.cpp
+--- a/decoder/LAVVideo/decoders/d3d11va.cpp
++++ b/decoder/LAVVideo/decoders/d3d11va.cpp
+@@ -854,7 +854,7 @@
+     else if (pDec->m_bReadBackFallback == false && pDec->m_pAllocator)
+     {
+         IMediaSample *pSample = nullptr;
+-        hr = pDec->m_pAllocator->GetBuffer(&pSample, nullptr, nullptr, 0);
++        hr = pDec->m_pAllocator->GetDecoderBuffer(&pSample, pDec->m_pCallback->GetInputFlushEvent());
+         if (SUCCEEDED(hr))
+         {
+             CD3D11MediaSample *pD3D11Sample = dynamic_cast<CD3D11MediaSample *>(pSample);
+diff --git a/decoder/LAVVideo/decoders/d3d11/D3D11SurfaceAllocator.h b/decoder/LAVVideo/decoders/d3d11/D3D11SurfaceAllocator.h
+--- a/decoder/LAVVideo/decoders/d3d11/D3D11SurfaceAllocator.h
++++ b/decoder/LAVVideo/decoders/d3d11/D3D11SurfaceAllocator.h
+@@ -74,6 +74,7 @@
+         return m_bCommitted;
+     }
+
++    HRESULT GetDecoderBuffer(IMediaSample **sample, HANDLE flush);
+     STDMETHODIMP_(void) ForceDecommit();
+
+     // LAV interface
+diff --git a/decoder/LAVVideo/decoders/d3d11/D3D11SurfaceAllocator.cpp b/decoder/LAVVideo/decoders/d3d11/D3D11SurfaceAllocator.cpp
+--- a/decoder/LAVVideo/decoders/d3d11/D3D11SurfaceAllocator.cpp
++++ b/decoder/LAVVideo/decoders/d3d11/D3D11SurfaceAllocator.cpp
+@@ -223,6 +223,33 @@
+     av_buffer_unref(&m_pFramesCtx);
+ }
+
++// The decoder holds the receive lock here. EndFlush needs that same lock,
++// so a seek must be able to cancel an outstanding surface request.
++HRESULT CD3D11SurfaceAllocator::GetDecoderBuffer(IMediaSample **sample, HANDLE flush)
++{
++    HANDLE events[] = {flush, m_hSem};
++    for (;;)
++    {
++        HRESULT hr = GetBuffer(sample, nullptr, nullptr, AM_GBF_NOWAIT);
++        if (hr != VFW_E_TIMEOUT)
++            return hr;
++
++        DWORD wait = WaitForMultipleObjects(2, events, FALSE, INFINITE);
++        if (wait == WAIT_OBJECT_0 + 1)
++            continue;
++
++        hr = wait == WAIT_FAILED ? HRESULT_FROM_WIN32(GetLastError()) : VFW_E_WRONG_STATE;
++        // GetBuffer registered one waiter. ReleaseBuffer may already have
++        // transferred that reservation from m_lWaiting to the semaphore.
++        CAutoLock lock(this);
++        if (m_lWaiting)
++            --m_lWaiting;
++        else
++            WaitForSingleObject(m_hSem, 0);
++        return hr;
++    }
++}
++
+ STDMETHODIMP CD3D11SurfaceAllocator::ReleaseBuffer(IMediaSample *pSample)
+ {
+     CD3D11MediaSample *pD3D11Sample = dynamic_cast<CD3D11MediaSample *>(pSample);

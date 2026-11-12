@@ -23,6 +23,10 @@ installation. The primary tested fullscreen configuration is **D3D11 fullscreen
 windowed**. The fork does not enable exclusive or configure global madVR settings.
 Those settings and external-filter preferences may be shared with other players.
 
+If you selected D3D11 with the automatic adapter in LAV Video, selecting madVR
+in Output settings preserves that preference. You can change the decoder and
+adapter in the LAV Video settings.
+
 ## Java for BD-J
 
 HDMV menus do not need Java; BD-J menus do. The tested installation is **Temurin

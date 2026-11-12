@@ -4,6 +4,8 @@
 
 ## Completed work
 
+- Blu-ray playlist changes can retain the madVR output with D3D11 Native.
+  A rejected connection or native video sample triggers a full graph reopen.
 - MPC-HC 2.8.2 history and dependency pins; x64 player, EN/RU resources,
   libbluray 1.5.0 DLL/JAR and the LAV adapter are built.
 - Graphics, clocks, coordinates, menus, actual-JAR HAVi, PID/PlayItem,

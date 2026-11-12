@@ -365,3 +365,7 @@ In the MSVC environment, run `test-menu-components.ps1 -Case menu-color` and
 and metadata selection; it accepts `--source` for an old-source negative control.
 Bitmap allocation/presentation still require a separate madVR test on the
 candidate: HDMV HDR menu/chapters/highlights, film/popup/return, SDR HDMV and BD-J.
+
+## Blu-ray playlist changes with madVR
+
+The host stops the existing graph and asks the LAV source to open the next MPLS in a separate demuxer. The source checks the connected pin layout and negotiates the selected stream types before committing. The host reapplies the authored playback range and starts the graph. LAV Video reports delivery of a fresh D3D11 surface, excluding redraws of the previous playlist. Rejection, loss of native decoding or four seconds of running video without confirmation reopens the target through the normal file-open path. An active seek-preview graph uses the normal reopen directly. The menu log records the target playlist in `playlist_native_frame` and the error code in `playlist_rebuild`.
