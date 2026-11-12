@@ -384,3 +384,5 @@ see [Validation](VALIDATION.md). The older `c4d242333bed` ZIP lacks this fix.
 
 Later donor Java/release work is outside this selected transfer. This entry does
 not advance the overall donor baseline or establish full HDR/MVC compatibility.
+
+The HC/LAV adapter extends the stream-selection header from donor commit `270cfdd43692` with two independent interfaces for stopped-graph playlist switching and native frame delivery. The two original interfaces retain their methods and UUIDs. The source check compares the host header with the pinned LAV patch manifest. D3D11 surface allocation also responds to an input flush so a seek can finish while the renderer holds the available surfaces.

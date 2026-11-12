@@ -22,6 +22,8 @@ code = r'''
 struct Playlist { CString name; CString GetCurFileName() { return name; } };
 struct Frame {
     bool m_blurayMenu = false, m_bIsBDPlay = false;
+    CString m_pendingBlurayPlaylist;
+    HRESULT m_blurayDeliveryError = S_OK;
     Playlist m_wndPlaylistBar;
     int closed = 0, message = 0, updated = 0;
     void UpdateCachedMediaState() { ++updated; }
@@ -36,6 +38,12 @@ struct Frame {
 int main() {
     _set_error_mode(_OUT_TO_STDERR);
     _set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
+    Frame pending;
+    pending.Event(VFW_E_TYPE_NOT_ACCEPTED);
+    assert(pending.m_blurayDeliveryError == S_OK);
+    pending.m_pendingBlurayPlaylist = L"target.mpls";
+    pending.Event(VFW_E_INVALIDMEDIATYPE);
+    assert(pending.m_blurayDeliveryError == VFW_E_INVALIDMEDIATYPE && !pending.closed);
     for (int mode = 0; mode < 4; ++mode) {
         Frame f;
         f.m_blurayMenu = mode == 0; f.m_bIsBDPlay = mode == 1;

@@ -236,7 +236,8 @@
     {
       "path": "include/IBlurayStreamSelect.h",
       "donor_sha256": "aed0822770df49159f8020f45c372778523143ffe23d2019dcb40632e59eaeba",
-      "adapted": false
+      "adapted": true,
+      "adaptation": "Append separate HC/LAV playlist-switch and native-delivery interfaces; preserve both donor interfaces and their UUIDs."
     },
     {
       "path": "bluray/assets/bdj-canvas.mkv",

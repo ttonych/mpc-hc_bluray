@@ -8,6 +8,11 @@ Entries become dated version sections when a release is published.
 
 ## Unreleased
 
+- With madVR and active D3D11 Native decoding, Blu-ray menus can switch
+  playlists in the existing graph. If the connected tracks or the first new
+  video frame are incompatible, the player reopens the target playlist at
+  its authored position and keeps the selected decoder setting.
+
 - HEVC Blu-ray playlists can open faster. For a progressive single-layer
   Main or Main 10 stream that starts with a single-slice IDR picture, LAV can
   read the format from the headers and skip reconstructing that picture on

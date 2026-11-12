@@ -43,6 +43,7 @@ public:
     bool TakeStreams(int& audioPid, int& subtitlePid);
     void StreamResult(bool audio, int pid, HRESULT result);
     void PlaylistReused();
+    void PlaylistSwitchResult(HRESULT result);
     bool TakePlaylist(CStringW& path);
     bool TakeSeek(REFERENCE_TIME& position);
     void SeekApplied(REFERENCE_TIME position);

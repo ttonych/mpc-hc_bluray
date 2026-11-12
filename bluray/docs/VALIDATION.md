@@ -275,3 +275,20 @@ Windows call. Network reconnection, invalid handles and damaged sectors are
 outside these checks. These local results do not qualify the separate cloud ZIP.
 User discs, mounts, profiles and global
 renderer settings were unchanged. The storage-specific ISO issue stays excluded.
+
+## Retaining madVR during playlist changes
+
+A local Release x64 build was exercised on an HDMV UHD disc with madVR 210,
+an RTX 4060 and a portable D3D11 Native profile. Three menu → feature → menu
+cycles showed the feature after seeking and the authored menu background and
+buttons after returning. A trailer with a different pin layout went through
+the normal file-open path. Compatible transitions confirmed delivery of a new
+native sample. The saved decoder setting was still D3D11 after exit.
+
+A separate authored test sequence played ten clips. Screenshots matched their
+expected colours across AVC/HEVC, 720p/1080p, SDR/HDR and the addition/removal
+of audio. An unsupported AVC High 10 stream triggered a late rebuild and
+played through the normal graph. The subsequent supported clip played too.
+Component tests exercise a flush during D3D11 surface starvation, including
+a concurrent surface release, and reject software delivery when native output
+is required. Ordinary MKV software decode reaches EOS in the Null Renderer.
