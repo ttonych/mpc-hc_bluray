@@ -3,8 +3,8 @@
   "repository": "https://github.com/clsid2/LAVFilters.git",
   "commit": "f4e6552a4f769d41a95e3ce428b7a5755ee1ec9b",
   "patch": "lav-menu-bridge.patch",
-  "sha256": "51a3de4657e5b5f8675611ba2efa7aae7408b6700dffeb5dc60d9dd2822c1c88",
-  "revision": "hc-menu-bridge-v5",
+  "sha256": "8a3a3a5d747d1d5ab02025246a4fe26b3291787886b5c6e78f79911f435f8b99",
+  "revision": "hc-menu-bridge-v6",
   "files": [
     {
       "path": "demuxer/Demuxers/BDDemuxer.cpp",
@@ -28,9 +28,10 @@
     {
       "path": "demuxer/Demuxers/LAVFDemuxer.cpp",
       "before_sha256": "51551ac1075d093887568af204bd19a8d5e2647912570746ca322a27eb9f1765",
-      "after_sha256": "fedc88d22f05b970b2f7a4c32fd8de87e6ca08e03334fe987138d25f9a788efc",
+      "after_sha256": "73441976a6e6f6ef9ad82765bffee5d4dad1ee7b2acf2d6b84fba0e7186fb2d6",
       "previous_sha256": "d1cb7176b0bd99756b99c10ea679707772a94876705991443f64c71476259654",
-      "v4_sha256": "d1cb7176b0bd99756b99c10ea679707772a94876705991443f64c71476259654"
+      "v4_sha256": "d1cb7176b0bd99756b99c10ea679707772a94876705991443f64c71476259654",
+      "v5_sha256": "fedc88d22f05b970b2f7a4c32fd8de87e6ca08e03334fe987138d25f9a788efc"
     },
     {
       "path": "demuxer/Demuxers/LAVFDemuxer.h",
@@ -106,6 +107,22 @@
       "previous_sha256": "63cba5167cbdd11ab16089698faa17590155858d94ad8eccb6848900c99ca73d",
       "v4_sha256": "63cba5167cbdd11ab16089698faa17590155858d94ad8eccb6848900c99ca73d",
       "after_sha256": "40aca4ab6cb69a4345e38b4f83a5805e76c6e8da4a62db6110614bdfebe73f9d"
+    },
+    {
+      "path": "ffmpeg/libavcodec/hevc/hevcdec.c",
+      "before_sha256": "ded458aaf1a1d79ed21b22c94aa8c92aec46972b0b026905375879c5fdbdae9d",
+      "after_sha256": "ea2b6b1713102f61e4b7189c95f32ce217d6bc51f1a56a43f8f65c29fe35ea2c",
+      "previous_sha256": "ded458aaf1a1d79ed21b22c94aa8c92aec46972b0b026905375879c5fdbdae9d",
+      "v4_sha256": "ded458aaf1a1d79ed21b22c94aa8c92aec46972b0b026905375879c5fdbdae9d",
+      "v5_sha256": "ded458aaf1a1d79ed21b22c94aa8c92aec46972b0b026905375879c5fdbdae9d"
+    },
+    {
+      "path": "ffmpeg/libavcodec/hevc/hevcdec.h",
+      "before_sha256": "bb6c1a192e2845ae1ca578b82f5c9d416e1bef42324aa9b77f5879aa76a39d28",
+      "after_sha256": "ae2d6933d83e3b1576b4c84812fe4dd72ff48c3de44f1cc5e9355cbe76a7f664",
+      "previous_sha256": "bb6c1a192e2845ae1ca578b82f5c9d416e1bef42324aa9b77f5879aa76a39d28",
+      "v4_sha256": "bb6c1a192e2845ae1ca578b82f5c9d416e1bef42324aa9b77f5879aa76a39d28",
+      "v5_sha256": "bb6c1a192e2845ae1ca578b82f5c9d416e1bef42324aa9b77f5879aa76a39d28"
     }
   ],
   "mpeg2_still_provenance": {
@@ -138,6 +155,12 @@
       "patch": "lav-menu-bridge-v4-to-v5.patch",
       "sha256": "d93048236e63865079d268028de7bf5f0ac103f2916226d8f88bb3668acd53ae",
       "input_hash": "v4_sha256"
+    },
+    {
+      "from_revision": "hc-menu-bridge-v5",
+      "patch": "lav-menu-bridge-v5-to-v6.patch",
+      "sha256": "988cce1103f6288edca7b4ffa79c53cb9666f6282af59994ed2a7d16b28c5032",
+      "input_hash": "v5_sha256"
     }
   ]
 }

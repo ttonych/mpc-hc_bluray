@@ -8,6 +8,11 @@ Entries become dated version sections when a release is published.
 
 ## Unreleased
 
+- HEVC Blu-ray playlists can open faster. For a progressive single-layer
+  Main or Main 10 stream that starts with a single-slice IDR picture, LAV can
+  read the format from the headers and skip reconstructing that picture on
+  the CPU during stream detection. Playback uses the selected video decoder.
+
 - Blu-ray playlists open faster when subtitle graphics appear late or the final
   access point is expensive to seek to. LAV uses the authored playlist duration
   and can start as soon as the required stream headers are available.

@@ -1,0 +1,103 @@
+diff --git a/demuxer/Demuxers/LAVFDemuxer.cpp b/demuxer/Demuxers/LAVFDemuxer.cpp
+--- a/demuxer/Demuxers/LAVFDemuxer.cpp
++++ b/demuxer/Demuxers/LAVFDemuxer.cpp
+@@ -684,6 +684,20 @@
+     {AV_CODEC_ID_TIFF, L"image/tiff", L".tiff"},
+ };
+
++static int FindPlaylistStreamInfo(AVFormatContext *format)
++{
++    std::vector<AVDictionary *> options(format->nb_streams, nullptr);
++    for (unsigned i = 0; i < options.size(); ++i)
++    {
++        if (format->streams[i]->codecpar->codec_id == AV_CODEC_ID_HEVC)
++            av_dict_set_int(&options[i], "probe_idr_headers", 1, 0);
++    }
++    int ret = avformat_find_stream_info(format, options.data());
++    for (auto &entry : options)
++        av_dict_free(&entry);
++    return ret;
++}
++
+ STDMETHODIMP CLAVFDemuxer::InitAVFormat(LPCOLESTR pszFileName, BOOL bForce)
+ {
+     HRESULT hr = S_OK;
+@@ -759,7 +773,8 @@
+     }
+
+     m_timeOpening = time(nullptr);
+-    int ret = avformat_find_stream_info(m_avFormat, nullptr);
++    int ret = m_pBluRay && m_pBluRay->HasPlaylistDuration() ? FindPlaylistStreamInfo(m_avFormat)
++                                                            : avformat_find_stream_info(m_avFormat, nullptr);
+     if (ret < 0)
+     {
+         DbgLog((LOG_ERROR, 0, TEXT("::InitAVFormat(): av_find_stream_info failed (%d)"), ret));
+diff --git a/ffmpeg/libavcodec/hevc/hevcdec.c b/ffmpeg/libavcodec/hevc/hevcdec.c
+--- a/ffmpeg/libavcodec/hevc/hevcdec.c
++++ b/ffmpeg/libavcodec/hevc/hevcdec.c
+@@ -3637,6 +3637,32 @@
+     return 0;
+ }
+
++// The probe consumes no pictures. Use the active PPS/SPS only for a
++// single-slice base-layer IDR after its parameter sets and prefix SEI.
++static int can_probe_idr_headers(const HEVCContext *s, unsigned nal_idx)
++{
++    const HEVCSPS *sps = s->ps.pps_list[s->sh.pps_id]->sps;
++    if (s->vps || s->avctx->active_thread_type || s->avctx->hw_device_ctx ||
++        s->dovi_ctx.cfg.dv_profile || sps->vui.field_seq_flag ||
++        (sps->ptl.general_ptl.profile_idc != AV_PROFILE_HEVC_MAIN &&
++         sps->ptl.general_ptl.profile_idc != AV_PROFILE_HEVC_MAIN_10))
++        return 0;
++    if (!IS_IDR(s) || s->sh.slice_type != HEVC_SLICE_I ||
++        !s->sh.first_slice_in_pic_flag || s->nuh_layer_id || sps->vps->nb_layers != 1 ||
++        nal_idx + 1 != s->pkt.nb_nals || s->avctx->hwaccel || s->rpu_buf)
++        return 0;
++
++    for (unsigned i = 0; i < nal_idx; i++) {
++        const H2645NAL *nal = &s->pkt.nals[i];
++        if (nal->nuh_layer_id ||
++            (nal->type != HEVC_NAL_AUD && nal->type != HEVC_NAL_VPS &&
++             nal->type != HEVC_NAL_SPS && nal->type != HEVC_NAL_PPS &&
++             nal->type != HEVC_NAL_SEI_PREFIX))
++            return 0;
++    }
++    return 1;
++}
++
+ static int decode_slice(HEVCContext *s, unsigned nal_idx, GetBitContext *gb)
+ {
+     const int layer_idx = s->vps ? s->vps->layer_idx[s->nuh_layer_id] : 0;
+@@ -3657,6 +3683,12 @@
+     s->slice_initialized = 0;
+     if (ret < 0) {
+         return ret;
++    }
++
++    if (s->probe_idr_headers && can_probe_idr_headers(s, nal_idx)) {
++        s->probe_idr_headers = 0;
++        export_stream_params(s, s->ps.pps_list[s->sh.pps_id]->sps);
++        return export_stream_params_from_sei(s);
+     }
+
+     if ((s->avctx->skip_frame >= AVDISCARD_BIDIR && s->sh.slice_type == HEVC_SLICE_B) ||
+@@ -4322,6 +4354,8 @@
+ #define PAR (AV_OPT_FLAG_DECODING_PARAM | AV_OPT_FLAG_VIDEO_PARAM)
+
+ static const AVOption options[] = {
++    { "probe_idr_headers", "Read single-slice IDR parameters without reconstructing pixels during stream probing",
++        OFFSET(probe_idr_headers), AV_OPT_TYPE_BOOL, {.i64 = 0}, 0, 1, PAR },
+     { "apply_defdispwin", "Apply default display window from VUI", OFFSET(apply_defdispwin),
+         AV_OPT_TYPE_BOOL, {.i64 = 0}, 0, 1, PAR },
+     { "strict-displaywin", "strictly apply default display window size", OFFSET(apply_defdispwin),
+diff --git a/ffmpeg/libavcodec/hevc/hevcdec.h b/ffmpeg/libavcodec/hevc/hevcdec.h
+--- a/ffmpeg/libavcodec/hevc/hevcdec.h
++++ b/ffmpeg/libavcodec/hevc/hevcdec.h
+@@ -560,6 +560,7 @@
+     int is_nalff;           ///< this flag is != 0 if bitstream is encapsulated
+                             ///< as a format defined in 14496-15
+     int apply_defdispwin;
++    int probe_idr_headers;
+
+     // multi-layer AVOptions
+     int         *view_ids;

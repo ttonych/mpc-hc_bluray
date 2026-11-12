@@ -14,7 +14,7 @@
     "commit": "f4e6552a4f769d41a95e3ce428b7a5755ee1ec9b",
     "ffmpeg_commit": "29e0b0813d855d55536cd11ae4a8b6de88ee6461",
     "internal_libbluray_commit": "f1312826d3de9e8804212734243f8692d6bc0b72",
-    "integration_status": "Local hc-menu-bridge-v5 adds authored playlist probing to LAV and its pinned FFmpeg; hc-menu-bridge-v4 in released exact cloud ZIP b8695cf132ee passes read-failure/recovery, ordinary decode, HC EN/RU, portable import and bounded local-desktop HDMV HDR/SDR, BD-J and madVR checks; broader coverage remains documented",
+    "integration_status": "Local hc-menu-bridge-v6 adds header-only probing for eligible HEVC IDR pictures in authored Blu-ray playlists on top of v5 playlist probing. Released hc-menu-bridge-v4 in exact cloud ZIP b8695cf132ee passes read-failure/recovery, ordinary decode, HC EN/RU, portable import and bounded local-desktop HDMV HDR/SDR, BD-J and madVR checks. See the validation record for coverage.",
     "qsdecoder_commit": "72e6b6a944460d3cbeffe13e78b88dd773a85602",
     "libudfread_commit": "139a2194525f2745b98a98e4d8fa627d07440176"
   },

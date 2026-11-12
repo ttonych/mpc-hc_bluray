@@ -2,6 +2,31 @@
 
 [Русский](VALIDATION.ru.md) · [Roadmap](ROADMAP.md)
 
+## HEVC header probing on a UHD menu
+
+On one HDMV disc the first HEVC menu packet was 1,633,861 bytes. The parser
+had identified 3840×2160 10-bit 4:2:0, while the temporary software decoder
+still had an unspecified pixel format. Processing that packet took a median
+of 202.4 ms in four baseline runs and 1.5 ms in five header-only runs.
+
+In four player sessions (baseline, candidate, candidate, baseline), each build
+completed eight direct menu → film → menu cycles with madVR 210 and D3D11
+Native. The first selection in each session went through an additional disc
+clip and was excluded. Median source creation and loading fell from 235 to
+23 ms for the menu and from 35 to 8 ms for the film. From the end of graph
+close to the first positive madVR drawn-frame count, the pooled menu median
+fell from 1,379 to 1,139 ms. This counter is sampled. The film's end-to-end
+timing varied between sessions. The portable player also played an ordinary
+H.264 file and returned from the feature to the disc menu.
+
+The first decoded menu and film pictures, stream formats, chapter marks and
+sampled audio and subtitle packets matched the baseline. The
+[HEVC regression](../tools/test-lav-hevc-probe.py) compares generated SDR and
+HDR10 inputs, including cropped size, sample aspect ratio, colour parameters,
+decoded pixels and HDR metadata. A two-slice picture exercises full decoding
+during probe. The test requires x64 MSVC, the built LAV FFmpeg and an ffmpeg
+executable with libx265.
+
 ## Local LAV playlist opening checks
 
 Five HDMV menu → film → top menu cycles on a UHD disc used madVR 210 and
