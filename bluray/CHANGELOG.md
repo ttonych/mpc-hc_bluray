@@ -8,7 +8,8 @@ Entries become dated version sections when a release is published.
 
 ## Unreleased
 
-No unreleased changes.
+- Selecting madVR in Output settings now preserves an existing LAV D3D11 Native
+  selection, including when VSFilter is selected.
 
 ## 2.8.2-bluray.1 — 2026-09-29
 
