@@ -8,6 +8,10 @@ Entries become dated version sections when a release is published.
 
 ## Unreleased
 
+- Blu-ray playlists open faster when subtitle graphics appear late or the final
+  access point is expensive to seek to. LAV uses the authored playlist duration
+  and can start as soon as the required stream headers are available.
+
 - Selecting madVR in Output settings now preserves an existing LAV D3D11 Native
   selection, including when VSFilter is selected.
 

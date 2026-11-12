@@ -2,6 +2,21 @@
 
 [Русский](VALIDATION.ru.md) · [Roadmap](ROADMAP.md)
 
+## Local LAV playlist opening checks
+
+Five HDMV menu → film → top menu cycles on a UHD disc used madVR 210 and
+reported D3D11 Native in both builds. Across the four direct replays, median
+source creation and loading took 215 and 32 ms for the film, and 280 and
+226 ms for the menu. The initial Play included an additional authored clip.
+Stream formats, duration and all 17 chapter positions matched. The first 12
+packets of each audio track and PGS matched in payload and timestamp after
+seeking to 600 seconds. Ordinary H.264 MKV playback was also checked.
+
+The [PGS regression](../tools/test-lav-pgs-probe.py) generates M2TS inputs
+with early and delayed PGS and checks initial read volume, packet delivery,
+timestamps and payloads against the built DLLs. It requires x64 MSVC, a built
+LAV FFmpeg and an ffmpeg executable for fixture generation.
+
 ## First prerelease: 2.8.2-bluray.1
 
 [Published on 2026-09-29](https://github.com/ttonych/mpc-hc_bluray/releases/tag/2.8.2-bluray.1).

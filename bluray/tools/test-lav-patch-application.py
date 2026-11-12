@@ -1,4 +1,4 @@
-"""Exercise clean apply, v3 migration, idempotence and refusal of edited LAV files."""
+"""Exercise clean apply, older revision upgrades, idempotence and refusal of edited LAV files."""
 import hashlib
 import json
 from pathlib import Path
@@ -33,16 +33,20 @@ def apply(ok=True):
 
 apply()
 apply()
-git('apply', '--reverse', str(root / 'bluray/patches' / manifest['upgrade']['patch']))
-for item in manifest['files']:
-    f = lav / item['path']
-    actual = hashlib.sha256(f.read_bytes().replace(b'\r\n', b'\n')).hexdigest() if f.exists() else None
-    assert actual == item['previous_sha256'], item['path']
-apply()
-apply()
+# Reconstruct every supported older revision from the verified current tree.
+steps = manifest['upgrades']
+for index, step in enumerate(steps):
+    for undo in reversed(steps[index:]):
+        git('apply', '--reverse', str(root / 'bluray/patches' / undo['patch']))
+    for item in manifest['files']:
+        f = lav / item['path']
+        actual = hashlib.sha256(f.read_bytes().replace(b'\r\n', b'\n')).hexdigest() if f.exists() else None
+        assert actual == item.get(step['input_hash'], item['after_sha256']), item['path']
+    apply()
+    apply()
 victim = lav / manifest['files'][0]['path']
 edited = victim.read_bytes() + b'\n// Unrelated local edit must survive.\n'
 victim.write_bytes(edited)
 apply(ok=False)
 assert victim.read_bytes() == edited
-print('LAV patch: clean apply, idempotence, v3 upgrade and edited-input refusal PASS')
+print('LAV patch: clean apply, idempotence, verified upgrades and edited-input refusal PASS')

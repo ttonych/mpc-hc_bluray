@@ -3,8 +3,8 @@
   "repository": "https://github.com/clsid2/LAVFilters.git",
   "commit": "f4e6552a4f769d41a95e3ce428b7a5755ee1ec9b",
   "patch": "lav-menu-bridge.patch",
-  "sha256": "8313223d3661554f713bf6164736def4d8e68b859c6221aed17cfe9d45dc3f09",
-  "revision": "hc-menu-bridge-v4",
+  "sha256": "51a3de4657e5b5f8675611ba2efa7aae7408b6700dffeb5dc60d9dd2822c1c88",
+  "revision": "hc-menu-bridge-v5",
   "files": [
     {
       "path": "demuxer/Demuxers/BDDemuxer.cpp",
@@ -15,8 +15,9 @@
     {
       "path": "demuxer/Demuxers/BDDemuxer.h",
       "before_sha256": "f33b2475de4bf38ba1e86b3c44cb016ef925be680bd0e65b3991bb11f649e667",
-      "after_sha256": "b4c2f167a0adb80a798a79bc5cbb4b3c2fe985feb66c20bd1d1944de7e409504",
-      "previous_sha256": "0191e2700251a270060e410cfacc11fc7b4a6a93e269c615fc53fbca82de87fc"
+      "after_sha256": "8014bad0a8fbc44feb6f38387b56b36f0cd2d1b8fe9727a5653fc6e96458c65c",
+      "previous_sha256": "0191e2700251a270060e410cfacc11fc7b4a6a93e269c615fc53fbca82de87fc",
+      "v4_sha256": "b4c2f167a0adb80a798a79bc5cbb4b3c2fe985feb66c20bd1d1944de7e409504"
     },
     {
       "path": "demuxer/Demuxers/BaseDemuxer.h",
@@ -27,8 +28,9 @@
     {
       "path": "demuxer/Demuxers/LAVFDemuxer.cpp",
       "before_sha256": "51551ac1075d093887568af204bd19a8d5e2647912570746ca322a27eb9f1765",
-      "after_sha256": "d1cb7176b0bd99756b99c10ea679707772a94876705991443f64c71476259654",
-      "previous_sha256": "d1cb7176b0bd99756b99c10ea679707772a94876705991443f64c71476259654"
+      "after_sha256": "fedc88d22f05b970b2f7a4c32fd8de87e6ca08e03334fe987138d25f9a788efc",
+      "previous_sha256": "d1cb7176b0bd99756b99c10ea679707772a94876705991443f64c71476259654",
+      "v4_sha256": "d1cb7176b0bd99756b99c10ea679707772a94876705991443f64c71476259654"
     },
     {
       "path": "demuxer/Demuxers/LAVFDemuxer.h",
@@ -83,6 +85,27 @@
       "before_sha256": "9fc166ff0249a8aaada3e6f14533cae37da5faaceea5b9a0ef5b124f9b6db2df",
       "after_sha256": "0eba98b824aa9573a0937ceffabaa08708921fad27a0f3d4329ecb1a750a9a24",
       "previous_sha256": "9fc166ff0249a8aaada3e6f14533cae37da5faaceea5b9a0ef5b124f9b6db2df"
+    },
+    {
+      "path": "ffmpeg/libavformat/demux.c",
+      "before_sha256": "e40fa160131689963ff3f0278ec4473e08d80b8bb953b8fde791759bf0ced9aa",
+      "previous_sha256": "e40fa160131689963ff3f0278ec4473e08d80b8bb953b8fde791759bf0ced9aa",
+      "v4_sha256": "e40fa160131689963ff3f0278ec4473e08d80b8bb953b8fde791759bf0ced9aa",
+      "after_sha256": "7633f14f077a9199f5e85ec50ad16f8480e9a2ff6e95d28bb03a702c9b15ea3d"
+    },
+    {
+      "path": "ffmpeg/libavformat/internal.h",
+      "before_sha256": "a7b6c6f113ef93301e1b5791e1dd694a4fa5b00e83dc15fba5e9cc58a7015f1d",
+      "previous_sha256": "a7b6c6f113ef93301e1b5791e1dd694a4fa5b00e83dc15fba5e9cc58a7015f1d",
+      "v4_sha256": "a7b6c6f113ef93301e1b5791e1dd694a4fa5b00e83dc15fba5e9cc58a7015f1d",
+      "after_sha256": "fb79bc6a365b8d313d7abfe5fb36618e7721c3ba5b36f79f4c92f72fe443073e"
+    },
+    {
+      "path": "ffmpeg/libavformat/options_table.h",
+      "before_sha256": "63cba5167cbdd11ab16089698faa17590155858d94ad8eccb6848900c99ca73d",
+      "previous_sha256": "63cba5167cbdd11ab16089698faa17590155858d94ad8eccb6848900c99ca73d",
+      "v4_sha256": "63cba5167cbdd11ab16089698faa17590155858d94ad8eccb6848900c99ca73d",
+      "after_sha256": "40aca4ab6cb69a4345e38b4f83a5805e76c6e8da4a62db6110614bdfebe73f9d"
     }
   ],
   "mpeg2_still_provenance": {
@@ -95,16 +118,26 @@
     "adaptation": "Isolated I-picture repetition and sequence-end release in LAV avcodec; bounded size/count/time, input flush cancellation, cache lifecycle; LAV applies playback rate downstream."
   },
   "submodule_commits": {
-    "libbluray": "f1312826d3de9e8804212734243f8692d6bc0b72"
+    "libbluray": "f1312826d3de9e8804212734243f8692d6bc0b72",
+    "ffmpeg": "29e0b0813d855d55536cd11ae4a8b6de88ee6461"
   },
   "read_error_provenance": {
     "repository": "https://github.com/ttonych/mpc-be_bluray.git",
     "commit": "e857bdcef19a4a8975cc2fb2fb4709b32ee7b1de",
     "adaptation": "Bounded same-position retry in LAV internal libbluray Windows reader; report persistent BD read errors as EC_ERRORABORT, with process-local fault-injection regression."
   },
-  "upgrade": {
-    "from_revision": "hc-menu-bridge-v3",
-    "patch": "lav-menu-bridge-v3-to-v4.patch",
-    "sha256": "d4127af27797dc57ac11ad0a1e01a990515ba56aa1bf7cf93a4a8ed59b587a4b"
-  }
+  "upgrades": [
+    {
+      "from_revision": "hc-menu-bridge-v3",
+      "patch": "lav-menu-bridge-v3-to-v4.patch",
+      "sha256": "d4127af27797dc57ac11ad0a1e01a990515ba56aa1bf7cf93a4a8ed59b587a4b",
+      "input_hash": "previous_sha256"
+    },
+    {
+      "from_revision": "hc-menu-bridge-v4",
+      "patch": "lav-menu-bridge-v4-to-v5.patch",
+      "sha256": "d93048236e63865079d268028de7bf5f0ac103f2916226d8f88bb3668acd53ae",
+      "input_hash": "v4_sha256"
+    }
+  ]
 }

@@ -16,23 +16,40 @@ assert subprocess.check_output(['git', '-C', str(lav), 'rev-parse', 'HEAD'], tex
 for folder, commit in manifest.get('submodule_commits', {}).items():
     assert subprocess.check_output(['git', '-C', str(lav / folder), 'rev-parse', 'HEAD'], text=True).strip() == commit, 'LAV submodule commit mismatch: ' + folder
 
-upgrade = manifest.get('upgrade')
-if upgrade:
-    upgrade_patch = root / 'bluray/patches' / upgrade['patch']
+upgrades = manifest['upgrades']
+for upgrade in upgrades:
+    upgrade_patch = patch.parent / upgrade['patch']
     assert hashlib.sha256(upgrade_patch.read_bytes()).hexdigest() == upgrade['sha256'], 'Upgrade patch checksum mismatch'
 
-def checksum(path):
-    return hashlib.sha256(path.read_bytes().replace(b'\r\n', b'\n')).hexdigest() if path.exists() else None
+def file_states():
+    states = []
+    for item in manifest['files']:
+        path = lav / item['path']
+        digest = hashlib.sha256(path.read_bytes().replace(b'\r\n', b'\n')).hexdigest() if path.exists() else None
+        states.append(digest)
+    return states
 
-states = [checksum(lav / f['path']) for f in manifest['files']]
-if states == [f['after_sha256'] for f in manifest['files']]:
+def expected(field):
+    return [item.get(field, item['after_sha256']) for item in manifest['files']]
+
+def apply(path, target):
+    subprocess.run(['git', '-C', str(lav), 'apply', '--check', str(path)], check=True)
+    subprocess.run(['git', '-C', str(lav), 'apply', str(path)], check=True)
+    assert file_states() == target, 'Patched LAV checksum mismatch'
+
+states = file_states()
+final = expected('after_sha256')
+if states == final:
     print('LAV menu adapter already applied and verified.')
-elif states == [f['before_sha256'] for f in manifest['files']] or (upgrade and states == [f['previous_sha256'] for f in manifest['files']]):
-    if upgrade and states == [f['previous_sha256'] for f in manifest['files']]:
-        patch = upgrade_patch
-    subprocess.run(['git', '-C', str(lav), 'apply', '--check', str(patch)], check=True)
-    subprocess.run(['git', '-C', str(lav), 'apply', str(patch)], check=True)
-    assert all(checksum(lav / f['path']) == f['after_sha256'] for f in manifest['files']), 'Patched LAV checksum mismatch'
+elif states == expected('before_sha256'):
+    apply(patch, final)
     print('LAV menu adapter applied and verified.')
 else:
-    raise SystemExit('LAV adapter files differ from both pinned input and expected output; preserve and inspect local edits.')
+    inputs = [expected(step['input_hash']) for step in upgrades]
+    if states not in inputs:
+        raise SystemExit('Unknown LAV adapter files; preserve and inspect local edits.')
+    start = inputs.index(states)
+    targets = inputs[1:] + [final]
+    for step, target in zip(upgrades[start:], targets[start:]):
+        apply(patch.parent / step['patch'], target)
+    print('LAV menu adapter upgraded and verified.')

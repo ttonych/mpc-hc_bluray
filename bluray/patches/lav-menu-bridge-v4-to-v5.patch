@@ -1,0 +1,68 @@
+diff --git a/demuxer/Demuxers/BDDemuxer.h b/demuxer/Demuxers/BDDemuxer.h
+--- a/demuxer/Demuxers/BDDemuxer.h
++++ b/demuxer/Demuxers/BDDemuxer.h
+@@ -52,6 +52,7 @@
+     STDMETHODIMP Open(LPCOLESTR pszFileName, LPCOLESTR pszUserAgent = NULL, LPCOLESTR pszReferrer = NULL);
+     STDMETHODIMP Start();
+     REFERENCE_TIME GetDuration() const;
++    bool HasPlaylistDuration() const { return m_pTitle && m_pTitle->duration > 0; }
+     int GetTransportPID(DWORD stream) const override
+     {
+         return m_lavfDemuxer ? m_lavfDemuxer->GetTransportPID(stream) : -1;
+diff --git a/demuxer/Demuxers/LAVFDemuxer.cpp b/demuxer/Demuxers/LAVFDemuxer.cpp
+--- a/demuxer/Demuxers/LAVFDemuxer.cpp
++++ b/demuxer/Demuxers/LAVFDemuxer.cpp
+@@ -747,6 +747,16 @@
+     }
+
+     av_opt_set_int(m_avFormat, "correct_ts_overflow", !m_pBluRay, 0);
++
++    if (m_pBluRay && m_pBluRay->HasPlaylistDuration())
++    {
++        // libbluray supplies the playlist duration. A seek to its end can require
++        // a long forward read from the preceding access point.
++        m_avFormat->skip_estimate_duration_from_pts = 1;
++        // FORMAT_SubtitleInfo does not need PGS canvas dimensions. The subtitle
++        // decoder reads them from presentation segments during playback.
++        av_opt_set_int(m_avFormat, "probe_pgs_size", 0, 0);
++    }
+
+     m_timeOpening = time(nullptr);
+     int ret = avformat_find_stream_info(m_avFormat, nullptr);
+diff --git a/ffmpeg/libavformat/demux.c b/ffmpeg/libavformat/demux.c
+--- a/ffmpeg/libavformat/demux.c
++++ b/ffmpeg/libavformat/demux.c
+@@ -2769,7 +2769,9 @@
+             int fps_analyze_framecount = 20;
+             int count;
+
+-            if (!has_codec_parameters(st, NULL))
++            // A PGS presentation segment can arrive long after the A/V headers.
++            if (!has_codec_parameters(st, NULL) &&
++                (si->probe_pgs_size || st->codecpar->codec_id != AV_CODEC_ID_HDMV_PGS_SUBTITLE))
+                 break;
+             /* If the timebase is coarse (like the usual millisecond precision
+              * of mkv), we need to analyze more frames to reliably arrive at
+diff --git a/ffmpeg/libavformat/internal.h b/ffmpeg/libavformat/internal.h
+--- a/ffmpeg/libavformat/internal.h
++++ b/ffmpeg/libavformat/internal.h
+@@ -125,6 +125,8 @@
+      * scoped to this context.
+      */
+     struct CurlLoop *curl_loop;
++    /** Wait for HDMV PGS canvas dimensions during stream analysis. */
++    int probe_pgs_size;
+ } FFFormatContext;
+
+ static av_always_inline FFFormatContext *ffformatcontext(AVFormatContext *s)
+diff --git a/ffmpeg/libavformat/options_table.h b/ffmpeg/libavformat/options_table.h
+--- a/ffmpeg/libavformat/options_table.h
++++ b/ffmpeg/libavformat/options_table.h
+@@ -108,6 +108,7 @@
+ {"protocol_blacklist", "List of protocols that are not allowed to be used", OFFSET(protocol_blacklist), AV_OPT_TYPE_STRING, { .str = NULL },  0, 0, D },
+ {"max_streams", "maximum number of streams", OFFSET(max_streams), AV_OPT_TYPE_INT, { .i64 = 1000 }, 0, INT_MAX, D },
+ {"skip_estimate_duration_from_pts", "skip duration calculation in estimate_timings_from_pts", OFFSET(skip_estimate_duration_from_pts), AV_OPT_TYPE_BOOL, {.i64 = 0}, 0, 1, D},
++{"probe_pgs_size", "wait for HDMV PGS canvas dimensions during stream analysis", offsetof(FFFormatContext, probe_pgs_size), AV_OPT_TYPE_BOOL, {.i64 = 1}, 0, 1, D},
+ {"max_probe_packets", "Maximum number of packets to probe a codec", OFFSET(max_probe_packets), AV_OPT_TYPE_INT, { .i64 = 2500 }, 0, INT_MAX, D },
+ {"duration_probesize", "Maximum number of bytes to probe the durations of the streams in estimate_timings_from_pts", OFFSET(duration_probesize), AV_OPT_TYPE_INT64, {.i64 = 0 }, 0, (double)INT64_MAX, D},
+ {"recursion_limit", "Maximum number of times a demuxer can recursively be opened", OFFSET(recursion_limit), AV_OPT_TYPE_INT, {.i64 = 10 }, 0, INT_MAX, D},
