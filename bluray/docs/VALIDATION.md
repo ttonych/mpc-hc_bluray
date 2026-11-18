@@ -2,6 +2,22 @@
 
 [Русский](VALIDATION.ru.md) · [Roadmap](ROADMAP.md)
 
+## UHD BD-J video size and menu return
+
+The JAR from the x64 ZIP built at `8844c486d77f` returned 3840×2160
+for video format 0x08, 1920×1080 for 0x04 and null for an unknown format.
+The previous JAR failed the UHD assertion. The HAVi regression also passed
+against the packaged JAR. ZIP SHA-256 was
+`5a9520d6716c4210aa6f23772d765f63a036a448da3f8a433970cc2aba84dc8b`.
+[Cloud build](https://github.com/ttonych/mpc-hc_bluray/actions/runs/44243663676)
+
+On one UHD BD-J disc, a clean portable copy from that ZIP completed three
+menu → film → menu cycles with madVR 210. The menu responded to an arrow key
+after each return, including after a change of audio language and chapter.
+The graph reopened on all three returns. MPC-HC reported D3D11 Native in
+the film and in the restored menu. The median time from the menu command to
+visible menu title and buttons was 2.20 seconds across the three runs.
+
 ## HEVC header probing on a UHD menu
 
 On one HDMV disc the first HEVC menu packet was 1,633,861 bytes. The parser
