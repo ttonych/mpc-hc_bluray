@@ -1,4 +1,4 @@
-"""Verify/extract the pinned archive and apply the complete donor patch chain."""
+"""Verify/extract the pinned archive and apply the maintained patch chain."""
 import hashlib
 import json
 from pathlib import Path
@@ -24,7 +24,7 @@ if not source.exists():
     with tarfile.open(archive) as tar:
         tar.extractall(root / 'vendor', filter='data')
 # Existing trees are checked, never extracted over local work.
-for component in ('native', 'bdj-toggle'):
+for component in ('native', 'bdj-toggle', 'bdj-uhd-size'):
     subprocess.run([sys.executable, str(root / 'tools/libbluray-local-patch.py'),
                     '--source', str(source), '--component', component], check=True)
 print('Verified source archive and complete native/Java patch chain.')

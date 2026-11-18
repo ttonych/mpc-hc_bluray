@@ -4,6 +4,8 @@
 
 ## Completed work
 
+- BD-J applications can query UHD video dimensions during menu transitions.
+  A built-JAR regression covers UHD, HD and unknown format codes.
 - Blu-ray playlist changes can retain the madVR output with D3D11 Native.
   A rejected connection or native video sample triggers a full graph reopen.
 - MPC-HC 2.8.2 history and dependency pins; x64 player, EN/RU resources,

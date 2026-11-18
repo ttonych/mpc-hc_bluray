@@ -28,7 +28,8 @@
       "playmark-seek-v1"
     ],
     "java_patch_order": [
-      "bdj-toggle-v1"
+      "bdj-toggle-v1",
+      "bdj-uhd-size-v1"
     ],
     "integration_status": "native DLL and Java JAR built and included in release 2.8.2-bluray.1; bounded exact-ZIP HDMV/BD-J checks pass; broader compatibility remains unqualified"
   },
