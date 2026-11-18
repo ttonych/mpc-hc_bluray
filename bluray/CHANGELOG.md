@@ -8,6 +8,9 @@ Entries become dated version sections when a release is published.
 
 ## Unreleased
 
+- Fixed a failure to return to the menu on UHD BD-J discs whose application
+  queries the video dimensions while stopping the film.
+
 - With madVR and active D3D11 Native decoding, Blu-ray menus can switch
   playlists in the existing graph. If the connected tracks or the first new
   video frame are incompatible, the player reopens the target playlist at

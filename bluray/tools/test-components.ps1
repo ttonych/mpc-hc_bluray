@@ -11,3 +11,4 @@ foreach ($name in @('fork-release','bluray-compatibility','bluray-opening-settin
     if ($LASTEXITCODE) { throw "Failed: $name" }
 }
 & (Join-Path $PSScriptRoot 'test-bdj-toggle.ps1') -JavaHome $JavaHome
+& (Join-Path $PSScriptRoot 'test-bdj-video-size.ps1') -JavaHome $JavaHome

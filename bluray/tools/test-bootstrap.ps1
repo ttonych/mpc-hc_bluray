@@ -8,6 +8,7 @@ try {
         @('bluray/tools/prepare-libbluray-source.py'),
         @('bluray/tools/test-libbluray-local-patch.py', '--component', 'native'),
         @('bluray/tools/test-libbluray-local-patch.py', '--component', 'bdj-toggle'),
+        @('bluray/tools/test-libbluray-local-patch.py', '--component', 'bdj-uhd-size'),
         @('bluray/tools/test-playmark-seek.py'),
         @('bluray/tools/test-process-query-hook.py')
     )

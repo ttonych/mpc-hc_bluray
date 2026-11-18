@@ -47,12 +47,12 @@ git submodule update --init --recursive
 ```
 
 Скрипт проверяет/загружает архив libbluray, применяет native-патчи по порядку
-(`mouse-page-v1`, `playmark-seek-v1`) и независимый Java-патч `bdj-toggle-v1`.
+(`mouse-page-v1`, `playmark-seek-v1`) и Java-патчи `bdj-toggle-v1` и `bdj-uhd-size-v1`.
 Проверяет чистое и повторное применение, отказ затирать неожиданные правки,
 затем компилирует извлечённые рабочие функции обработки меток и запроса
 состояния процесса с искусственными тестовыми окружениями компилятором x64.
-DLL/JAR libbluray и диски не проверяются этим скриптом. Байты патчей и манифесты
-сохраняют хеши донора; `imports.json` отмечает адаптированные запускатели тестов.
+DLL/JAR libbluray и диски не проверяются этим скриптом. Исправление размера UHD сопровождается в MPC-HC для libbluray 1.5.0.
+Для перенесённых патчей сохранены хеши донора.
 
 До плеера соберите runtime меню: он предоставляет закреплённые заголовки.
 `$javaRoot` должен указывать на Temurin JDK 21.0.12.1+1 x64 с javac 21.0.12.1.
@@ -64,6 +64,7 @@ DLL/JAR libbluray и диски не проверяются этим скрип�
 ./bluray/tools/build-libbluray.ps1 -DependencyRoot ./bluray/build/vcpkg_installed/x64-windows
 ./bluray/tools/build-bdj.ps1 -JavaHome $javaRoot
 ./bluray/tools/test-bdj-toggle.ps1 -JavaHome $javaRoot
+./bluray/tools/test-bdj-video-size.ps1 -JavaHome $javaRoot
 ./bluray/tools/test-menu-components.ps1
 ```
 

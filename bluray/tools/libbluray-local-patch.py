@@ -106,14 +106,14 @@ def export_patch(source, base_source=None):
     PATCH.parent.mkdir(exist_ok=True)
     PATCH.write_bytes(patch.encode())
     manifest['patch_sha256'] = digest(PATCH.read_bytes())
-    MANIFEST.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
+    MANIFEST.write_bytes((json.dumps(manifest, indent=2) + '\n').encode('utf-8'))
     print(PATCH)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', type=Path, default=ROOT / 'vendor/libbluray-1.5.0')
     parser.add_argument('--export', action='store_true')
-    parser.add_argument('--component', choices=['native', 'mouse-page', 'playmark-seek', 'bdj-toggle'], default='mouse-page')
+    parser.add_argument('--component', choices=['native', 'mouse-page', 'playmark-seek', 'bdj-toggle', 'bdj-uhd-size'], default='mouse-page')
     parser.add_argument('--base-source', type=Path)
     args = parser.parse_args()
     if args.component == 'bdj-toggle':
@@ -122,6 +122,11 @@ if __name__ == '__main__':
         PATCH = ROOT / 'patches/libbluray-1.5.0-bdj-toggle.patch'
         MANIFEST = PATCH.with_suffix('.json')
         REVISION = 'bdj-toggle-v1'
+    elif args.component == 'bdj-uhd-size':
+        FILES = ['src/libbluray/bdj/java/org/videolan/StreamInfo.java']
+        PATCH = ROOT / 'patches/libbluray-1.5.0-bdj-uhd-size.patch'
+        MANIFEST = PATCH.with_suffix('.json')
+        REVISION = 'bdj-uhd-size-v1'
     elif args.component == 'playmark-seek':
         FILES = ['src/libbluray/bluray.c']
         PATCH = ROOT / 'patches/libbluray-1.5.0-playmark-seek.patch'

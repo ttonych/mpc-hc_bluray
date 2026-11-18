@@ -34,12 +34,12 @@
     {
       "path": "bluray/tools/libbluray-local-patch.py",
       "donor_sha256": "7ec41ff2644325429f9e073d938241105d48cd22be1d6474b06c89034c92f594",
-      "adapted": false
+      "adapted": true
     },
     {
       "path": "bluray/tools/test-libbluray-local-patch.py",
       "donor_sha256": "9d097e2b59633feb189f102441c21d1a9745aadd74887c4a91dc57d102f30e73",
-      "adapted": false
+      "adapted": true
     },
     {
       "path": "bluray/tools/test-playmark-seek.py",

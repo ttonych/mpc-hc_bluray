@@ -47,12 +47,13 @@ revisions when recovering a failed download.
 ```
 
 This verifies/downloads the libbluray archive, applies the native patches in
-order (`mouse-page-v1`, `playmark-seek-v1`) and the independent Java patch
-`bdj-toggle-v1`. It checks clean/repeated application and refusal to overwrite
+order (`mouse-page-v1`, `playmark-seek-v1`) and the Java patches
+`bdj-toggle-v1` and `bdj-uhd-size-v1`. It checks clean/repeated application and refusal to overwrite
 unexpected edits, then compiles extracted production mark-tracker and process
 query functions against synthetic test fixtures using the x64 C++ compiler.
-It does not build libbluray DLLs/JARs or run a disc. Patch bytes and manifests
-retain donor hashes; `imports.json` distinguishes adapted test launchers.
+It does not build libbluray DLLs/JARs or run a disc. Imported patches retain
+their donor hashes and `imports.json` records adapted test launchers. The
+UHD video size fix is maintained in MPC-HC against libbluray 1.5.0.
 
 Build the menu runtime before the player (it supplies the pinned headers).
 `$javaRoot` must name Temurin JDK 21.0.12.1+1 x64, with javac 21.0.12.1.
@@ -64,6 +65,7 @@ already verified x64 dependency prefix with the recorded vcpkg baseline.
 ./bluray/tools/build-libbluray.ps1 -DependencyRoot ./bluray/build/vcpkg_installed/x64-windows
 ./bluray/tools/build-bdj.ps1 -JavaHome $javaRoot
 ./bluray/tools/test-bdj-toggle.ps1 -JavaHome $javaRoot
+./bluray/tools/test-bdj-video-size.ps1 -JavaHome $javaRoot
 ./bluray/tools/test-menu-components.ps1
 ```
 
